@@ -25,6 +25,7 @@ public class Grandmother : MonoBehaviour
     private int lives;
     private const string InitialTextLives = "Lives:";
     private const string InitialTextPowers = "Powers Left:";
+    private const int StartLife = 1;
 
     private BombManager[] bombs;
     private const int NumBombs = 6;
@@ -37,12 +38,12 @@ public class Grandmother : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        lives = 10;
+        lives = StartLife;
         livesText.text = InitialTextLives + lives;
         // powersText.text = InitialTextPowers + NumBombs;
         firstShoot = true;
         curBombs = 0;
-        fireCoolDown = 3;
+        fireCoolDown = 4;
         Grandmas[id - 1] = grandma;
         bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
@@ -72,7 +73,7 @@ public class Grandmother : MonoBehaviour
         if (lives <= 0)
         {
             t.position = startPosition;
-            lives = 10;
+            lives = StartLife;
             livesText.text = InitialTextLives + lives;
         }
         // powersText.text = InitialTextPowers + (NumBombs - curBombs);
@@ -80,7 +81,7 @@ public class Grandmother : MonoBehaviour
         StartCoroutine(Move());
         fireCoolDown -= Time.deltaTime;
         // print("Bombs: " + curBombs);
-        if (canFire && ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
+        if ( ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
                         (id == 2 && Input.GetKeyDown(KeyCode.RightControl))) && curBombs < NumBombs && 
                         (fireCoolDown <= 0 || firstShoot))
         {
@@ -175,6 +176,8 @@ public class Grandmother : MonoBehaviour
     {
         if (collision.collider.name.StartsWith("Car"))
         {
+            lives -= 2;
+            livesText.text = InitialTextLives + lives;
             carHit = true;
         }
 
@@ -183,20 +186,7 @@ public class Grandmother : MonoBehaviour
             t.position = startPosition;
         }
 
-        // if (collision.gameObject.name.StartsWith("Car"))
-        // {
-        //     Debug.Log("Car trigger");
-        //     switch (id)
-        //     {
-        //         case 1:
-        //             t.position += Vector3.left;
-        //             break;
-        //         case 2:
-        //             t.position += Vector3.right;
-        //             break;
-        //         
-        //     }
-        // }
+        
     }
 
     private void OnCollisionExit2D(Collision2D other)
@@ -204,8 +194,6 @@ public class Grandmother : MonoBehaviour
         if (other.collider.name.StartsWith("Car"))
         {
             carHit = false;
-            lives -= 2;
-            livesText.text = InitialTextLives + lives;
         }
     }
 
