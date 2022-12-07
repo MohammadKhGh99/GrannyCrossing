@@ -10,6 +10,7 @@ public class Car : MonoBehaviour
     private Vector3 direction;
     private Vector3 startPosition;
     private static readonly int[] HighWayCars = { 1, 2, 5, 6 };
+    private bool flag = false;
 
     // Start is called before the first frame update
     void Start()
@@ -45,12 +46,20 @@ public class Car : MonoBehaviour
         t.position = startPosition;
     }
     
-    private void OnCollisionEnter2D(Collision2D col)
+    private void OnCollisionExit2D(Collision2D col)
     {
         // Debug.Log(col.collider.name);
         if (col.collider.name.EndsWith("Wall"))
         {
-            Reused();
+            if (flag)
+            {
+                Reused();
+                flag = false;
+            }
+            else
+            {
+                flag = true;
+            }
         }
     }
 }

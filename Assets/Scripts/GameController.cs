@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
         Screen.SetResolution(1920, 1080, true);
         for (int i = 0; i < MaxCars; i++)
         {
-            var curPos = downToUpCars.Contains(i) ? new Vector3(carsPos[i], -16.5f, 0) : new Vector3(carsPos[i], 16.5f, 0);
+            var curPos = downToUpCars.Contains(i) ? new Vector3(carsPos[i], -23, 0) : new Vector3(carsPos[i], 23, 0);
             
             GameObject temp = Instantiate(Resources.Load("Car"), curPos, Quaternion.identity, carsParent.transform) as GameObject;
             print(temp.transform.position);
