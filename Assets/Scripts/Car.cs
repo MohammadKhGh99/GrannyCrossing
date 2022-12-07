@@ -4,9 +4,10 @@ using Random = UnityEngine.Random;
 
 public class Car : MonoBehaviour
 {
+    [SerializeField] private int speed;
     private Transform t;
     private int id;
-    private int speed;
+    // private int speed;
     private Vector3 direction;
     private Vector3 startPosition;
     private static readonly int[] HighWayCars = { 1, 2, 5, 6 };
@@ -16,7 +17,7 @@ public class Car : MonoBehaviour
     void Start()
     {
         t = GetComponent<Transform>();
-        speed = HighWayCars.Contains(id) ? Random.Range(12, 20) : Random.Range(7, 15);
+        speed = speed == 0 ? HighWayCars.Contains(id) ? Random.Range(12, 20) : Random.Range(7, 15) : speed;
         SetStartPosition(t.position);
     }
 
