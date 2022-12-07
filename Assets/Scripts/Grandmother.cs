@@ -23,8 +23,8 @@ public class Grandmother : MonoBehaviour
     private bool canFire;
     private int curBombs;
     private int lives;
-    private const string InitialTextLives = "Lives: ";
-    private const string InitialTextPowers = "Powers Left: ";
+    private const string InitialTextLives = "Lives:";
+    private const string InitialTextPowers = "Powers Left:";
 
     private BombManager[] bombs;
     private const int NumBombs = 6;
