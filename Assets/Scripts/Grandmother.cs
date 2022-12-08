@@ -39,7 +39,6 @@ public class Grandmother : MonoBehaviour
     private float fireCoolDown = 3;
     private float fireCoolDownMax = 3;
 
-    private bool firstShoot;
     private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
     private float rightIslandX = 27.7f;
     private float middleIslandX = -1.8f;
@@ -105,7 +104,6 @@ public class Grandmother : MonoBehaviour
         lives = StartLife;
         //livesText.text = InitialTextLives + lives;
         // powersText.text = InitialTextPowers + NumBombs;
-        firstShoot = true;
         curBombs = 0;
         loadingBombsPercentage = fireCoolDownMax - fireCoolDown / fireCoolDownMax;
         Grandmas[id - 1] = grandma;
@@ -162,18 +160,17 @@ public class Grandmother : MonoBehaviour
         loadingBombsPercentage = isBeaten ? 0 : loadingBombsPercentage;
 
         // print("Bombs: " + curBombs);
-        if (!isBeaten && ((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
+        if (((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
                         (id == 2 && Input.GetKeyDown(KeyCode.RightAlt))) && curBombs < NumBombs && 
-                        (fireCoolDown <= 0 || firstShoot))
+                        loadingBombsPercentage == 1)
         {
             // print("What Now: " + curBombs);
-            firstShoot = false;
             int i = Random.Range(0, NumBombs);
             while (bombs[i].gameObject.activeInHierarchy)
             {
                 i = Random.Range(0, NumBombs);
             }
-            bombs[i].transform.position = t.position;
+            bombs[i].transform.position = pointer.position;
             bombs[i].gameObject.SetActive(true);
             bombs[i].Fire();
             curBombs++;
@@ -327,6 +324,7 @@ public class Grandmother : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
+        
         // if (col.gameObject.name.StartsWith("Island"))
         // {
         //     canFire = true;
@@ -341,7 +339,7 @@ public class Grandmother : MonoBehaviour
             // col.transform.position = t.position;
             // col.transform.SetParent(t);
             isBeaten = true;
-            curBomb.ActivateBomb(gameObject.GetComponent<Grandmother>());
+            curBomb.ActivateBomb(gameObject);
             //int enemyId = id == 1 ? 2 : 1;
             //Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
             //enemy.AddToCurBombs(enemy.GetCurBombs() - 1);

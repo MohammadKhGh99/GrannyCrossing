@@ -87,9 +87,9 @@ public class BombManager : MonoBehaviour
         shooterId = other;
     }
 
-    public void ActivateBomb(Grandmother grandmother)
+    public void ActivateBomb(GameObject grandmother)
     {
-        grandmother.GoBack();
+        grandmother.GetComponent<Grandmother>().GoBack();
         t.gameObject.SetActive(false);
         isFired = false;
         t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
