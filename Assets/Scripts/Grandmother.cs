@@ -10,32 +10,17 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private int id;
     [SerializeField] private float movementTime;
     [SerializeField] private float movementDistance;
-    [SerializeField] private GameObject grandma;
-    [SerializeField] private GameObject parent;
     [SerializeField] private float fireCollDownTime = 0.8f;
-    //[SerializeField] private Text livesText;
-
-    // [SerializeField] private Text livesText;
-
-    // [SerializeField] private Text powersText;
-    // [SerializeField] private GameObject redParent;
+    [SerializeField] private float loadingBombsPercentage;
 
     private Vector3 moveDirection;
     private Transform t;
-    private bool carHit;
-    private bool canFire;
     private int curBombs;
-    private int lives;
-    private const string InitialTextLives = "Lives:";
-    private const string InitialTextPowers = "Powers Left:";
-    private const int StartLife = 1;
     private const float recoveryTime = 2;
 
     private BombManager[] bombs;
     private const int NumBombs = 15;
-    public static readonly GameObject[] Grandmas = new GameObject[2];
     private Vector3 startPosition;
-    private Quaternion fireDirection;
     private float fireCoolDown = 3;
     private float fireCoolDownMax = 3;
 
@@ -49,7 +34,6 @@ public class Grandmother : MonoBehaviour
     private float pointerSpeed = 150;
     private float maxPointerSpeed = 800;
     private float minPointerSpeed = 50;
-    [SerializeField] private float loadingBombsPercentage;
 
     
 
@@ -63,17 +47,6 @@ public class Grandmother : MonoBehaviour
 
     private void PointerMove()
     {
-        /*if (moveDirection != Vector3.zero && pointerSpeed <= maxPointerSpeed)
-        {
-            pointerSpeed += 300 * Time.deltaTime;
-            pointerSpeed = pointerSpeed > maxPointerSpeed ? maxPointerSpeed : pointerSpeed;
-
-        }
-        else if (moveDirection == Vector3.zero && pointerSpeed >= minPointerSpeed)
-        {
-            pointerSpeed -= 30 * Time.deltaTime;
-            pointerSpeed = pointerSpeed < minPointerSpeed ? minPointerSpeed : pointerSpeed;
-        }*/
         pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
     }
 
@@ -86,10 +59,6 @@ public class Grandmother : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        // lastIsland = 0;
-        lives = 1;
-        // livesText.text = InitialTextLives + lives;
-        
         for (int i = 0; i < transform.childCount; i++)
         {
             if (transform.GetChild(i).name == "Pointer")
@@ -97,19 +66,10 @@ public class Grandmother : MonoBehaviour
                 pointer = transform.GetChild(i);
             }
         }
-        
         InitPointerPosition();
-        
-        
-        lives = StartLife;
-        //livesText.text = InitialTextLives + lives;
-        // powersText.text = InitialTextPowers + NumBombs;
         curBombs = 0;
         loadingBombsPercentage = fireCoolDownMax - fireCoolDown / fireCoolDownMax;
-        Grandmas[id - 1] = grandma;
         bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
-        carHit = false;
-        canFire = false;
         moveDirection = Vector3.zero;
         t = GetComponent<Transform>();
         startPosition = t.position;
@@ -118,64 +78,55 @@ public class Grandmother : MonoBehaviour
         
         for (int i = 0; i < NumBombs; i++)
         {
-            // Quaternion curRotate = id == 1 ? new Quaternion(0, 0, -90, 1) : new Quaternion(0, 0, 90, 1);
             GameObject temp = Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, transform) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
-            
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetShooterId(id);
-            //bombs[i].SetSpeed(bombsSpeed);
             bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
-            // bombs[NumBombs].SetActive(false);
         }
-        // fireDirection = id == 1 ? new Quaternion(0, 90, 0, 1) : new Quaternion(90, 0, 0, 1);
     }
 
     void Update()
     {
-        /*if (lives <= 0)
-        {
-            
-            t.position = startPosition;
-            lives = StartLife;
-            livesText.text = InitialTextLives + lives;
-        }*/
-        // powersText.text = InitialTextPowers + (NumBombs - curBombs);
         SetMoveDirection();
         if (!isBeaten)
         {
             StartCoroutine(Move());
+            PointerMove();
         }
         else
         {
-            StartCoroutine(Recovery());
+            t.position = startPosition; //I don't know why but without it there is a weird bug...
+                                        //you can go one more step after going back when hit by a car or a bomb
+            //StartCoroutine(Recovery());
         }
-        PointerMove();
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
-        loadingBombsPercentage = (fireCoolDownMax - fireCoolDown) / fireCoolDownMax;
-        loadingBombsPercentage = isBeaten ? 0 : loadingBombsPercentage;
+        loadingBombsPercentage = isBeaten ? 0 : (fireCoolDownMax - fireCoolDown) / fireCoolDownMax;
 
-        // print("Bombs: " + curBombs);
         if (((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
                         (id == 2 && Input.GetKeyDown(KeyCode.RightAlt))) && curBombs < NumBombs && 
                         loadingBombsPercentage == 1)
         {
-            // print("What Now: " + curBombs);
-            int i = Random.Range(0, NumBombs);
-            while (bombs[i].gameObject.activeInHierarchy)
-            {
-                i = Random.Range(0, NumBombs);
-            }
-            bombs[i].transform.position = pointer.position;
-            bombs[i].gameObject.SetActive(true);
-            bombs[i].Fire();
-            curBombs++;
-            fireCoolDown = fireCollDownTime;
+            Fire();
         }
+    }
+
+    private void Fire()
+    {
+        int i = Random.Range(0, NumBombs);
+        while (bombs[i].gameObject.activeInHierarchy)
+        {
+            i = Random.Range(0, NumBombs);
+        }
+        bombs[i].transform.position = pointer.position;
+        bombs[i].gameObject.SetActive(true);
+        bombs[i].Fire();
+        curBombs++;
+        fireCoolDown = fireCollDownTime;
     }
 
     public void GoBack()
@@ -298,68 +249,33 @@ public class Grandmother : MonoBehaviour
     {
         if (collision.collider.name.StartsWith("Car"))
         {
-            //lives -= 2;
-            //livesText.text = InitialTextLives + lives;
             t.position = startPosition;
             InitPointerPosition();
-            //carHit = true;
+            pointer.gameObject.SetActive(false);
             isBeaten = true;
+            StartCoroutine(Recovery());
         }
-
-        /*if (collision.collider.name.EndsWith("Wall") && carHit)
-        {
-            t.position = startPosition;
-        }*/
-
-        
     }
-
-    /*private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.collider.name.StartsWith("Car"))
-        {
-            carHit = false;
-        }
-    }*/
+    
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        
-        // if (col.gameObject.name.StartsWith("Island"))
-        // {
-        //     canFire = true;
-        // }
-
         BombManager curBomb = col.gameObject.GetComponent<BombManager>();
         if (col.gameObject.name.StartsWith("Bomb") && curBomb.GetShooterId() != id)
-        {
-            //lives -= 1;
-            //livesText.text = InitialTextLives + lives;
-            //col.gameObject.SetActive(false);
-            // col.transform.position = t.position;
-            // col.transform.SetParent(t);
+        { 
             isBeaten = true;
             curBomb.ActivateBomb(gameObject);
-            //int enemyId = id == 1 ? 2 : 1;
-            //Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
-            //enemy.AddToCurBombs(enemy.GetCurBombs() - 1);
+            pointer.gameObject.SetActive(false);
         }
     }
 
-    // private void OnTriggerExit2D(Collider2D other)
-    // {
-    //     if (other.gameObject.name.StartsWith("Island"))
-    //     {
-    //         canFire = false;
-    //     }
-    // }
-
-    
-    private IEnumerator Recovery()
+    public IEnumerator Recovery()
     {
         StartCoroutine(FadeInOut());
         yield return new WaitForSeconds(recoveryTime);
         isBeaten = false;
+        pointer.gameObject.SetActive(true);
+        InitPointerPosition();
         Color c = spriteRenderer.color;
         spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
 
@@ -369,7 +285,6 @@ public class Grandmother : MonoBehaviour
     {
         Color c = spriteRenderer.color;
         
-        // for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
         while (isBeaten)
         {
             for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
