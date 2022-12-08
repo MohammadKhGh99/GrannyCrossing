@@ -15,6 +15,7 @@ public class BombManager : MonoBehaviour
     private float speed = 18;
     private bool isFired;
     private float bombLifeTime = 10;
+    private Grandmother parentGrandma;
     
 
     public void Fire()
@@ -30,7 +31,7 @@ public class BombManager : MonoBehaviour
         yield return new WaitForSeconds(bombLifeTime);
         t.gameObject.SetActive(false);
         isFired = false;
-        t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
+        parentGrandma.AddToCurBombs(-1);
     }
     
     
@@ -38,8 +39,9 @@ public class BombManager : MonoBehaviour
     void Start()
     {
         t = GetComponent<Transform>();
-        
-        direction = t.parent.GetComponent<Grandmother>().GetPointerPosition() - t.parent.position;
+        Transform parent = t.parent;
+        parentGrandma = parent.GetComponent<Grandmother>();
+        direction = parentGrandma.GetPointerPosition() - parent.position;
         direction = direction.normalized;
         // Vector3 curPos = bomb.transform.position;
         /*float enemyX = 
@@ -59,7 +61,7 @@ public class BombManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        t.position += direction * speed * Time.deltaTime;
+        t.position += direction * (speed * Time.deltaTime);
         /*Vector3 position = t.position;
         if (shooterId == 2 && position != goalPos)  // grandma 2
         {

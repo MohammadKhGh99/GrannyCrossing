@@ -341,7 +341,7 @@ public class Grandmother : MonoBehaviour
             // col.transform.position = t.position;
             // col.transform.SetParent(t);
             isBeaten = true;
-            col.gameObject.GetComponent<BombManager>().ActivateBomb(gameObject.GetComponent<Grandmother>());
+            curBomb.ActivateBomb(gameObject.GetComponent<Grandmother>());
             //int enemyId = id == 1 ? 2 : 1;
             //Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
             //enemy.AddToCurBombs(enemy.GetCurBombs() - 1);
