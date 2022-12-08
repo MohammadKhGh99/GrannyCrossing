@@ -60,7 +60,7 @@ public class BombManager : MonoBehaviour
     void Update()
     {
         Vector3 position = t.position;
-        if (shooterId == 2 && position != goalPos)  // grandma 2
+        /*if (shooterId == 2 && position != goalPos)  // grandma 2
         {
             t.position += (goalPos - position) * (3 * Time.deltaTime);
         } else if (shooterId == 1 && position != goalPos)  // grandma 1
