@@ -12,6 +12,7 @@ public class Car : MonoBehaviour
     private Vector3 startPosition;
     private static readonly int[] HighWayCars = { 1, 2, 5, 6 };
     private bool flag = false;
+    private float fieldLimit;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +20,7 @@ public class Car : MonoBehaviour
         t = GetComponent<Transform>();
         speed = speed == 0 ? HighWayCars.Contains(id) ? Random.Range(12, 20) : Random.Range(7, 15) : speed;
         SetStartPosition(t.position);
+        fieldLimit = t.parent.GetComponent<GameController>().GetFieldLimit();
     }
 
     // Update is called once per frame
