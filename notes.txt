@@ -5,7 +5,7 @@ cool down for shooting
 the types of the bombs
 energy
 name of game
-alt <= ctrl
+V - 21:30 08/12/2022alt <= ctrl
 loading for bombs
 
-bug in bombs - infinite
+V - bug in bombs - infinite
