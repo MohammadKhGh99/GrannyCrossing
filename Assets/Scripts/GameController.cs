@@ -7,11 +7,13 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject carsParent;
     [SerializeField] private float fieldLimit = 30;
+    [SerializeField] private bool controlCarsPositions;
+    [SerializeField] private float[] carsPositions;
 
     private const int MaxCars = 10;
 
     private readonly Car[] cars = new Car[MaxCars];
-    private readonly float[] carsPos = {-35.5f, -25f, -19.8f, -14.2f, -8.7f, 6.1f, 11.6f, 16.9f, 22.1f, 35.5f};
+    private float[] carsPos = {-35.5f, -25f, -19.8f, -14.2f, -8.7f, 6.1f, 11.6f, 16.9f, 22.1f, 35.5f};
     private readonly int[] downToUpCars = { 0, 2, 4, 6,8};
     private readonly string[] carsToLoad = { "Car", "Car 1", "Car 2", "Car 3" };
     private int fpsCounter;
@@ -21,6 +23,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (controlCarsPositions)
+            carsPos = carsPositions;
         carsParent = gameObject;
         Quaternion carDirection;
         Screen.SetResolution(1920, 1080, true);

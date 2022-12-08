@@ -30,7 +30,7 @@ public class Grandmother : MonoBehaviour
     private const float recoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int NumBombs = 6;
+    private const int NumBombs = 12;
     public static readonly GameObject[] Grandmas = new GameObject[2];
     private Vector3 startPosition;
     private Quaternion fireDirection;
@@ -57,7 +57,7 @@ public class Grandmother : MonoBehaviour
         curBombs = 0;
         fireCoolDown = 4;
         Grandmas[id - 1] = grandma;
-        bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
+        bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
         canFire = false;
         moveDirection = Vector3.zero;
@@ -339,9 +339,8 @@ public class Grandmother : MonoBehaviour
         StartCoroutine(FadeInOut());
         yield return new WaitForSeconds(recoveryTime);
         isBeaten = false;
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        Color c = sprite.color;
-        sprite.color = new Color(c.r, c.g, c.b, 1);
+        Color c = spriteRenderer.color;
+        spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
 
     }
 

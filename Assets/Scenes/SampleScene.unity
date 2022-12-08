@@ -4066,6 +4066,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carsParent: {fileID: 1599215439}
+  fieldLimit: 30
+  controlCarsPositions: 1
+  carsPositions:
+  - -35.5
+  - -25
+  - -19.8
+  - -14.2
+  - -8.7
+  - 6.1
+  - 11.6
+  - 16.9
+  - 22.1
+  - 35.5
 --- !u!212 &2007771450
 SpriteRenderer:
   m_ObjectHideFlags: 0
