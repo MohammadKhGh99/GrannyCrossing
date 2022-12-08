@@ -6,25 +6,27 @@ public class GameController : MonoBehaviour
 {
     [SerializeField] private GameObject carsParent;
 
-    private const int MaxCars = 8;
+    private const int MaxCars = 10;
 
     private readonly Car[] cars = new Car[MaxCars];
-    private readonly float[] carsPos = {-33f, -20.5f, -15.5f, -5, 5, 15.5f, 20.5f, 31.5f};
-    private readonly int[] downToUpCars = { 0, 2, 5, 7 };
+    private readonly float[] carsPos = {-35.5f, -25f, -19.8f, -14.2f, -8.7f, 6.1f, 11.6f, 16.9f, 22.1f, 35.5f};
+    private readonly int[] downToUpCars = { 0, 2, 4, 6,8};
     private int fpsCounter;
     private float fpsTime;
-    private const int InitialCarPosY = 26;
+    [SerializeField] private float fieldLimit = 30;
 
     // Start is called before the first frame update
     void Start()
     {
+        carsParent = gameObject;
+        Quaternion carDirection;
         Screen.SetResolution(1920, 1080, true);
         for (int i = 0; i < MaxCars; i++)
         {
-            var curPos = downToUpCars.Contains(i) ? new Vector2(carsPos[i], -1 * InitialCarPosY) : new Vector2(carsPos[i], InitialCarPosY);
-            
-            GameObject temp = Instantiate(Resources.Load("Car"), curPos, Quaternion.identity, carsParent.transform) as GameObject;
-            // print(temp.transform.position);
+            var curPos = downToUpCars.Contains(i) ? new Vector3(carsPos[i], -fieldLimit, 0) : new Vector3(carsPos[i], fieldLimit, 0);
+            carDirection = downToUpCars.Contains(i) ? Quaternion.AngleAxis(180, Vector3.right) : Quaternion.identity;
+            GameObject temp = Instantiate(Resources.Load("Car"), curPos, carDirection, transform) as GameObject;
+            print(temp.transform.position);
             if (temp == null)
             {
                 throw new NullReferenceException("Car Prefab Not Found!");
@@ -36,6 +38,11 @@ public class GameController : MonoBehaviour
         }
         fpsCounter = 0;
         fpsTime = 1;
+    }
+
+    public float GetFieldLimit()
+    {
+        return fieldLimit;
     }
 
     // Update is called once per frame

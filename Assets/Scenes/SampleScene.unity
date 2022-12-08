@@ -140,7 +140,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &65162242
 RectTransform:
   m_ObjectHideFlags: 0
@@ -469,7 +469,7 @@ RectTransform:
   m_GameObject: {fileID: 153561307}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.010000001, y: 0.010000001, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 382500128}
@@ -477,8 +477,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -481.00018, y: -209.99954}
-  m_SizeDelta: {x: 709.0397, y: 130.2359}
+  m_AnchoredPosition: {x: 24, y: -12.97}
+  m_SizeDelta: {x: 115.8737, y: 35.40961}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &153561309
 MonoBehaviour:
@@ -1841,7 +1841,7 @@ RectTransform:
   m_GameObject: {fileID: 1094221630}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.010000001, y: 0.010000001, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 382500128}
@@ -1849,8 +1849,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -550.00165, y: -209.99954}
-  m_SizeDelta: {x: 711.4207, y: 115.8245}
+  m_AnchoredPosition: {x: -24, y: -12.97}
+  m_SizeDelta: {x: 115.8737, y: 35.40961}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1094221632
 MonoBehaviour:
@@ -1874,7 +1874,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 100
+    m_FontSize: 18
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
@@ -2030,7 +2030,6 @@ MonoBehaviour:
   movementDistance: 0.5
   grandma: {fileID: 1201792779}
   parent: {fileID: 185178836}
-  livesText: {fileID: 2108919731}
 --- !u!58 &1201792782
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -2207,7 +2206,6 @@ MonoBehaviour:
   movementDistance: 0.5
   grandma: {fileID: 1250938521}
   parent: {fileID: 1472048945}
-  livesText: {fileID: 65162243}
 --- !u!58 &1250938524
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -4325,7 +4323,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2108919730
 RectTransform:
   m_ObjectHideFlags: 0

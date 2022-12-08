@@ -12,7 +12,7 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private GameObject grandma;
     [SerializeField] private GameObject parent;
 
-    [SerializeField] private Text livesText;
+    // [SerializeField] private Text livesText;
 
     // [SerializeField] private Text powersText;
     // [SerializeField] private GameObject redParent;
@@ -33,12 +33,18 @@ public class Grandmother : MonoBehaviour
     private Quaternion fireDirection;
     private float fireCoolDown;
     private bool firstShoot;
+    private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
+    private float rightIslandX = 27.7f;
+    private float middleIslandX = -1.8f;
+    private float leftIslandX = -29.3f;
+    private float TOLERANCE = 0.5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        lives = 10;
-        livesText.text = InitialTextLives + lives;
+        lastIsland = 0;
+        lives = 1;
+        // livesText.text = InitialTextLives + lives;
         // powersText.text = InitialTextPowers + NumBombs;
         firstShoot = true;
         curBombs = 0;
@@ -70,15 +76,26 @@ public class Grandmother : MonoBehaviour
 
     void Update()
     {
+        print(t.position);
         if (lives <= 0)
         {
             t.position = startPosition;
-            lives = 10;
-            livesText.text = InitialTextLives + lives;
+            lives = 1;
+            // livesText.text = InitialTextLives + lives;
         }
         // powersText.text = InitialTextPowers + (NumBombs - curBombs);
         SetMoveDirection();
         StartCoroutine(Move());
+        if (Math.Abs(t.position.x - leftIslandX) < TOLERANCE)
+        {
+            lastIsland = 1;
+        }else if (Math.Abs(t.position.x - middleIslandX) < TOLERANCE)
+        {
+            lastIsland = 2;
+        }else if (Math.Abs(t.position.x - rightIslandX) < TOLERANCE)
+        {
+            lastIsland = 3;
+        }
         fireCoolDown -= Time.deltaTime;
         // print("Bombs: " + curBombs);
         if (((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
@@ -205,8 +222,8 @@ public class Grandmother : MonoBehaviour
         if (other.collider.name.StartsWith("Car"))
         {
             carHit = false;
-            lives -= 2;
-            livesText.text = InitialTextLives + lives;
+            lives--;
+            // livesText.text = InitialTextLives + lives;
         }
     }
 
@@ -219,8 +236,22 @@ public class Grandmother : MonoBehaviour
 
         if (col.gameObject.name.StartsWith("Bomb") && col.gameObject.GetComponent<BombManager>().GetShooterId() != id)
         {
-            lives -= 1;
-            livesText.text = InitialTextLives + lives;
+            float curX = t.position.x;
+            if (lastIsland == 0)
+            {
+                t.position = startPosition;
+            }else if (lastIsland == 1)
+            {
+                t.position = new Vector3(leftIslandX, t.position.y, 0);
+            }else if (lastIsland == 2)
+            {
+                t.position = new Vector3(middleIslandX, t.position.y, 0);
+            }else if (lastIsland == 3)
+            {
+                t.position = new Vector3(rightIslandX, t.position.y, 0);
+            }
+            lives--;
+            // livesText.text = InitialTextLives + lives;
             col.gameObject.SetActive(false);
             // col.transform.position = t.position;
             // col.transform.SetParent(t);
