@@ -54,6 +54,7 @@ public class BombManager : MonoBehaviour
 
     public void ActivateBomb(Grandmother grandmother)
     {
+        grandmother.Beaten();
         Vector3 positin = grandmother.transform.position;
         switch (shooterId)
         {
