@@ -27,11 +27,16 @@ public class Car : MonoBehaviour
     void Update()
     {
         t.position += direction * (speed * Time.deltaTime);
+        if (t.position.y > fieldLimit || t.position.y < -fieldLimit)
+        {
+            Reused();
+        }
     }
 
     public void SetDirection(Vector3 direct)
     {
         direction = direct;
+        
     }
     
     public void SetId(int newId)
@@ -49,7 +54,7 @@ public class Car : MonoBehaviour
         t.position = startPosition;
     }
     
-    private void OnCollisionExit2D(Collision2D col)
+    /*private void OnCollisionExit2D(Collision2D col)
     {
         // Debug.Log(col.collider.name);
         if (col.collider.name.EndsWith("Wall"))
@@ -64,5 +69,5 @@ public class Car : MonoBehaviour
                 flag = true;
             }
         }
-    }
+    }*/
 }
