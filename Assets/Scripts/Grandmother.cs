@@ -36,7 +36,9 @@ public class Grandmother : MonoBehaviour
     public static readonly GameObject[] Grandmas = new GameObject[2];
     private Vector3 startPosition;
     private Quaternion fireDirection;
-    private float fireCoolDown;
+    private float fireCoolDown = 3;
+    private float fireCoolDownMax = 3;
+
     private bool firstShoot;
     private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
     private float rightIslandX = 27.7f;
@@ -48,6 +50,7 @@ public class Grandmother : MonoBehaviour
     private float pointerSpeed = 150;
     private float maxPointerSpeed = 800;
     private float minPointerSpeed = 50;
+    [SerializeField] private float loadingBombsPercentage;
 
     
 
@@ -69,7 +72,7 @@ public class Grandmother : MonoBehaviour
         }
         else if (moveDirection == Vector3.zero && pointerSpeed >= minPointerSpeed)
         {
-            pointerSpeed -= 10 * Time.deltaTime;
+            pointerSpeed -= 30 * Time.deltaTime;
             pointerSpeed = pointerSpeed < minPointerSpeed ? minPointerSpeed : pointerSpeed;
         }*/
         pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
@@ -104,7 +107,7 @@ public class Grandmother : MonoBehaviour
         // powersText.text = InitialTextPowers + NumBombs;
         firstShoot = true;
         curBombs = 0;
-        fireCoolDown = 4;
+        loadingBombsPercentage = fireCoolDownMax - fireCoolDown / fireCoolDownMax;
         Grandmas[id - 1] = grandma;
         bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
@@ -117,9 +120,8 @@ public class Grandmother : MonoBehaviour
         
         for (int i = 0; i < NumBombs; i++)
         {
-            Vector3 curPos = id == 1 ? Vector3.right + t.position : Vector3.left + t.position;
             // Quaternion curRotate = id == 1 ? new Quaternion(0, 0, -90, 1) : new Quaternion(0, 0, 90, 1);
-            GameObject temp = Instantiate(Resources.Load("Bomb"), curPos, Quaternion.identity, transform) as GameObject;
+            GameObject temp = Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, transform) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
@@ -155,6 +157,10 @@ public class Grandmother : MonoBehaviour
         }
         PointerMove();
         fireCoolDown -= Time.deltaTime;
+        fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
+        loadingBombsPercentage = (fireCoolDownMax - fireCoolDown) / fireCoolDownMax;
+        loadingBombsPercentage = isBeaten ? 0 : loadingBombsPercentage;
+
         // print("Bombs: " + curBombs);
         if (!isBeaten && ((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
                         (id == 2 && Input.GetKeyDown(KeyCode.RightAlt))) && curBombs < NumBombs && 
@@ -208,7 +214,6 @@ public class Grandmother : MonoBehaviour
                 }else if (position.x > leftIslandX)
                 {
                     t.position = new Vector3(leftIslandX, position.y, position.z);
-
                 }
                 else
                 {
@@ -300,25 +305,25 @@ public class Grandmother : MonoBehaviour
             //livesText.text = InitialTextLives + lives;
             t.position = startPosition;
             InitPointerPosition();
-            carHit = true;
+            //carHit = true;
             isBeaten = true;
         }
 
-        if (collision.collider.name.EndsWith("Wall") && carHit)
+        /*if (collision.collider.name.EndsWith("Wall") && carHit)
         {
             t.position = startPosition;
-        }
+        }*/
 
         
     }
 
-    private void OnCollisionExit2D(Collision2D other)
+    /*private void OnCollisionExit2D(Collision2D other)
     {
         if (other.collider.name.StartsWith("Car"))
         {
             carHit = false;
         }
-    }
+    }*/
 
     private void OnTriggerEnter2D(Collider2D col)
     {

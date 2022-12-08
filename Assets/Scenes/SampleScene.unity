@@ -2116,6 +2116,7 @@ MonoBehaviour:
   grandma: {fileID: 1201792779}
   parent: {fileID: 185178836}
   fireCollDownTime: 1
+  loadingBombsPercentage: 0
 --- !u!212 &1201792783
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2188,7 +2189,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!60 &1201792785
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -2315,6 +2316,7 @@ MonoBehaviour:
   grandma: {fileID: 1250938521}
   parent: {fileID: 1472048945}
   fireCollDownTime: 1
+  loadingBombsPercentage: 0
 --- !u!212 &1250938525
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2387,7 +2389,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!60 &1250938527
 PolygonCollider2D:
   m_ObjectHideFlags: 0
