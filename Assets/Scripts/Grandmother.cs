@@ -21,8 +21,8 @@ public class Grandmother : MonoBehaviour
     private BombManager[] bombs;
     private const int NumBombs = 15;
     private Vector3 startPosition;
-    private float fireCoolDown = 3;
-    private float fireCoolDownMax = 3;
+    private float fireCoolDown = 0.8f;
+    private float fireCoolDownMax = 0.8f;
 
     private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
     private float rightIslandX = 27.7f;
@@ -101,7 +101,6 @@ public class Grandmother : MonoBehaviour
         {
             t.position = startPosition; //I don't know why but without it there is a weird bug...
                                         //you can go one more step after going back when hit by a car or a bomb
-            //StartCoroutine(Recovery());
         }
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
@@ -266,6 +265,7 @@ public class Grandmother : MonoBehaviour
             isBeaten = true;
             curBomb.ActivateBomb(gameObject);
             pointer.gameObject.SetActive(false);
+            StartCoroutine(Recovery());
         }
     }
 
@@ -284,8 +284,7 @@ public class Grandmother : MonoBehaviour
     private IEnumerator FadeInOut()
     {
         Color c = spriteRenderer.color;
-        
-        while (isBeaten)
+        for (int n = 0; n <= recoveryTime * 2; n++)
         {
             for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
             {

@@ -34,11 +34,9 @@ public class BombManager : MonoBehaviour
     void Start()
     {
         t = GetComponent<Transform>();
-        Transform parent = t.parent;
-        parentGrandma = parent.GetComponent<Grandmother>();
-        direction = parentGrandma.GetPointerPosition() - parent.position;
+        direction = t.parent.GetComponent<Grandmother>().GetPointerPosition() - t.parent.position;
         direction = direction.normalized;
-        }
+    }
 
     // Update is called once per frame
     void Update()
@@ -58,10 +56,9 @@ public class BombManager : MonoBehaviour
 
     public void ActivateBomb(GameObject grandmother)
     {
-        grandmother.GetComponent<Grandmother>().GoBack();
-        StartCoroutine(grandmother.GetComponent<Grandmother>().Recovery());
         t.gameObject.SetActive(false);
         isFired = false;
         t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
+        grandmother.GetComponent<Grandmother>().GoBack();
     }
 }
