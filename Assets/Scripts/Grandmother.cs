@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -11,8 +12,10 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private float movementDistance;
     [SerializeField] private GameObject grandma;
     [SerializeField] private GameObject parent;
-
+    [SerializeField] private float fireCollDownTime = 0.8f;
     [SerializeField] private Text livesText;
+
+    //[SerializeField] private float bombsSpeed = 10;
 
     // [SerializeField] private Text powersText;
     // [SerializeField] private GameObject redParent;
@@ -29,18 +32,47 @@ public class Grandmother : MonoBehaviour
     private const float recoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int NumBombs = 6;
+    private const int NumBombs = 15;
     public static readonly GameObject[] Grandmas = new GameObject[2];
     private Vector3 startPosition;
     private Quaternion fireDirection;
     private float fireCoolDown;
     private bool firstShoot;
     private bool isBeaten;
-    
+    private Transform pointer;
+    private float pointerSpeed = 150;
 
+
+    private void InitPointerPosition()
+    {
+        pointer.RotateAround(transform.position, Vector3.forward, Random.value * 360);
+    }
+
+    private void PointerMove()
+    {
+        pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
+    }
+
+    public Vector3 GetPointerPosition()
+    {
+        return pointer.position;
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
+        
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name == "Pointer")
+            {
+                pointer = transform.GetChild(i);
+            }
+        }
+        
+        InitPointerPosition();
+        
+        
         lives = StartLife;
         livesText.text = InitialTextLives + lives;
         // powersText.text = InitialTextPowers + NumBombs;
@@ -48,7 +80,7 @@ public class Grandmother : MonoBehaviour
         curBombs = 0;
         fireCoolDown = 4;
         Grandmas[id - 1] = grandma;
-        bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
+        bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
         canFire = false;
         moveDirection = Vector3.zero;
@@ -61,13 +93,14 @@ public class Grandmother : MonoBehaviour
         {
             Vector3 curPos = id == 1 ? Vector3.right + t.position : Vector3.left + t.position;
             // Quaternion curRotate = id == 1 ? new Quaternion(0, 0, -90, 1) : new Quaternion(0, 0, 90, 1);
-            GameObject temp = Instantiate(Resources.Load("Bomb"), curPos, Quaternion.identity, parent.transform) as GameObject;
+            GameObject temp = Instantiate(Resources.Load("Bomb"), curPos, Quaternion.identity, transform) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetShooterId(id);
+            //bombs[i].SetSpeed(bombsSpeed);
             bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
             // bombs[NumBombs].SetActive(false);
         }
@@ -76,12 +109,13 @@ public class Grandmother : MonoBehaviour
 
     void Update()
     {
-        if (lives <= 0)
+        /*if (lives <= 0)
         {
+            
             t.position = startPosition;
             lives = StartLife;
             livesText.text = InitialTextLives + lives;
-        }
+        }*/
         // powersText.text = InitialTextPowers + (NumBombs - curBombs);
         SetMoveDirection();
         if (!isBeaten)
@@ -92,6 +126,7 @@ public class Grandmother : MonoBehaviour
         {
             StartCoroutine(Recovery());
         }
+        PointerMove();
         fireCoolDown -= Time.deltaTime;
         // print("Bombs: " + curBombs);
         if (!isBeaten && ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
@@ -107,8 +142,9 @@ public class Grandmother : MonoBehaviour
             }
             bombs[i].transform.position = t.position;
             bombs[i].gameObject.SetActive(true);
+            bombs[i].Fire();
             curBombs++;
-            fireCoolDown = 3;
+            fireCoolDown = fireCollDownTime;
         }
     }
 
@@ -153,7 +189,7 @@ public class Grandmother : MonoBehaviour
                 }
                 break;
         }
-
+        InitPointerPosition();
     }
 
     public int GetId()
@@ -166,9 +202,9 @@ public class Grandmother : MonoBehaviour
         return curBombs;
     }
 
-    public void SetCurBombs(int other)
+    public void AddToCurBombs(int other)
     {
-        curBombs = other;
+        curBombs += other;
     }
 
     private void SetMoveDirection()
@@ -233,8 +269,10 @@ public class Grandmother : MonoBehaviour
     {
         if (collision.collider.name.StartsWith("Car"))
         {
-            lives -= 2;
-            livesText.text = InitialTextLives + lives;
+            //lives -= 2;
+            //livesText.text = InitialTextLives + lives;
+            t.position = startPosition;
+            InitPointerPosition();
             carHit = true;
             isBeaten = true;
         }
@@ -270,10 +308,10 @@ public class Grandmother : MonoBehaviour
             // col.transform.position = t.position;
             // col.transform.SetParent(t);
             isBeaten = true;
-            col.gameObject.GetComponent<BombManager>().ActivateBomb(Grandmas[id-1].GetComponent<Grandmother>());
-            int enemyId = id == 1 ? 2 : 1;
-            Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
-            enemy.SetCurBombs(enemy.GetCurBombs() - 1);
+            col.gameObject.GetComponent<BombManager>().ActivateBomb(gameObject.GetComponent<Grandmother>());
+            //int enemyId = id == 1 ? 2 : 1;
+            //Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
+            //enemy.AddToCurBombs(enemy.GetCurBombs() - 1);
         }
     }
 
