@@ -112,6 +112,50 @@ public class Grandmother : MonoBehaviour
         }
     }
 
+    public void GoBack()
+    {
+        Vector3 position = t.position;
+        switch (id)
+        {
+            case 2:
+                if (position.x < -29.3f)
+                {
+                    t.position = new Vector3(-29.3f, position.y, position.z);
+                }else if (position.x < -1.8f)
+                {
+                    t.position = new Vector3(-1.8f, position.y, position.z);
+
+                }else if (position.x < 27.7f)
+                {
+                    t.position = new Vector3(27.7f, position.y, position.z);
+                }
+                else
+                {
+                    t.position = startPosition;
+                }
+                break;
+            case 1:
+                if (position.x > 27.7f)
+                {
+                    t.position = new Vector3(27.7f, position.y, position.z);
+                }else if (position.x > -1.8f)
+                {
+                    t.position = new Vector3(-1.8f, position.y, position.z);
+
+                }else if (position.x > -29.3f)
+                {
+                    t.position = new Vector3(-29.3f, position.y, position.z);
+
+                }
+                else
+                {
+                    t.position = startPosition;
+                }
+                break;
+        }
+
+    }
+
     public int GetId()
     {
         return id;
@@ -192,6 +236,7 @@ public class Grandmother : MonoBehaviour
             lives -= 2;
             livesText.text = InitialTextLives + lives;
             carHit = true;
+            isBeaten = true;
         }
 
         if (collision.collider.name.EndsWith("Wall") && carHit)
@@ -240,30 +285,34 @@ public class Grandmother : MonoBehaviour
         }
     }
 
-    public void Beaten()
-    {
-        //isBeaten = true;
-    }
+    
     private IEnumerator Recovery()
     {
         StartCoroutine(FadeInOut());
         yield return new WaitForSeconds(recoveryTime);
         isBeaten = false;
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color c = sprite.color;
+        sprite.color = new Color(c.r, c.g, c.b, 1);
+
     }
 
     private IEnumerator FadeInOut()
     {
-        Color c = t.GetComponent<Renderer>().GetComponent<Color>();
-        
-        for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
+        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+        Color c = sprite.color;
+        while (isBeaten)
         {
-            c = new Color(c.r, c.g, c.b, i * 4);
-            yield return null;
-        }
-        for (float i = 0; i <= 0.25f; i += Time.deltaTime)
-        {
-            c = new Color(c.r, c.g, c.b, i * 4);
-            yield return null;
+            for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
+            {
+                sprite.color = new Color(c.r, c.g, c.b, i * 4);
+                yield return null;
+            }
+            for (float i = 0; i <= 0.25f; i += Time.deltaTime)
+            {
+                sprite.color = new Color(c.r, c.g, c.b, i * 4);
+                yield return null;
+            }
         }
     }
 
