@@ -206,11 +206,12 @@ public class Grandmother : MonoBehaviour
 
         if (col.gameObject.name.StartsWith("Bomb") && col.gameObject.GetComponent<BombManager>().GetShooterId() != id)
         {
-            lives -= 1;
-            livesText.text = InitialTextLives + lives;
-            col.gameObject.SetActive(false);
+            //lives -= 1;
+            //livesText.text = InitialTextLives + lives;
+            //col.gameObject.SetActive(false);
             // col.transform.position = t.position;
             // col.transform.SetParent(t);
+            col.gameObject.GetComponent<BombManager>().ActivateBomb(Grandmas[id-1].GetComponent<Grandmother>());
             int enemyId = id == 1 ? 2 : 1;
             Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
             enemy.SetCurBombs(enemy.GetCurBombs() - 1);

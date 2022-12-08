@@ -51,4 +51,41 @@ public class BombManager : MonoBehaviour
     {
         shooterId = other;
     }
+
+    public void ActivateBomb(Grandmother grandmother)
+    {
+        Vector3 positin = grandmother.transform.position;
+        switch (shooterId)
+        {
+            case 1:
+                if (positin.x < -29.3f)
+                {
+                    grandmother.transform.position = new Vector3(-29.3f, positin.y, positin.z);
+                }else if (positin.x < -1.8f)
+                {
+                    grandmother.transform.position = new Vector3(-1.8f, positin.y, positin.z);
+
+                }else if (positin.x < 27.7f)
+                {
+                    grandmother.transform.position = new Vector3(27.7f, positin.y, positin.z);
+
+                }
+                break;
+            case 2:
+                if (positin.x > 27.7f)
+                {
+                    grandmother.transform.position = new Vector3(27.7f, positin.y, positin.z);
+                }else if (positin.x > -1.8f)
+                {
+                    grandmother.transform.position = new Vector3(-1.8f, positin.y, positin.z);
+
+                }else if (positin.x > -29.3f)
+                {
+                    grandmother.transform.position = new Vector3(-29.3f, positin.y, positin.z);
+
+                }
+                break;
+        }
+        t.gameObject.SetActive(false);
+    }
 }
