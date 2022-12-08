@@ -9,10 +9,11 @@ public class GameController : MonoBehaviour
     private const int MaxCars = 8;
 
     private readonly Car[] cars = new Car[MaxCars];
-    private readonly float[] carsPos = {-31.5f, -20.5f, -15.5f, -5, 5, 15.5f, 20.5f, 31.5f};
+    private readonly float[] carsPos = {-33f, -20.5f, -15.5f, -5, 5, 15.5f, 20.5f, 31.5f};
     private readonly int[] downToUpCars = { 0, 2, 5, 7 };
     private int fpsCounter;
     private float fpsTime;
+    private const int InitialCarPosY = 26;
 
     // Start is called before the first frame update
     void Start()
@@ -20,10 +21,10 @@ public class GameController : MonoBehaviour
         Screen.SetResolution(1920, 1080, true);
         for (int i = 0; i < MaxCars; i++)
         {
-            var curPos = downToUpCars.Contains(i) ? new Vector3(carsPos[i], -23, 0) : new Vector3(carsPos[i], 23, 0);
+            var curPos = downToUpCars.Contains(i) ? new Vector2(carsPos[i], -1 * InitialCarPosY) : new Vector2(carsPos[i], InitialCarPosY);
             
             GameObject temp = Instantiate(Resources.Load("Car"), curPos, Quaternion.identity, carsParent.transform) as GameObject;
-            print(temp.transform.position);
+            // print(temp.transform.position);
             if (temp == null)
             {
                 throw new NullReferenceException("Car Prefab Not Found!");

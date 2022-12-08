@@ -42,7 +42,7 @@ public class Grandmother : MonoBehaviour
         // powersText.text = InitialTextPowers + NumBombs;
         firstShoot = true;
         curBombs = 0;
-        fireCoolDown = 3;
+        fireCoolDown = 4;
         Grandmas[id - 1] = grandma;
         bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
@@ -59,6 +59,7 @@ public class Grandmother : MonoBehaviour
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
+            
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetShooterId(id);
             bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
@@ -80,7 +81,7 @@ public class Grandmother : MonoBehaviour
         StartCoroutine(Move());
         fireCoolDown -= Time.deltaTime;
         // print("Bombs: " + curBombs);
-        if (canFire && ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
+        if (((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
                         (id == 2 && Input.GetKeyDown(KeyCode.RightControl))) && curBombs < NumBombs && 
                         (fireCoolDown <= 0 || firstShoot))
         {
