@@ -46,6 +46,10 @@ public class Grandmother : MonoBehaviour
     private bool isBeaten;
     private Transform pointer;
     private float pointerSpeed = 150;
+    private float maxPointerSpeed = 800;
+    private float minPointerSpeed = 50;
+
+    
 
 
     private SpriteRenderer spriteRenderer;
@@ -57,6 +61,17 @@ public class Grandmother : MonoBehaviour
 
     private void PointerMove()
     {
+        if (moveDirection != Vector3.zero && pointerSpeed <= maxPointerSpeed)
+        {
+            pointerSpeed += 300 * Time.deltaTime;
+            pointerSpeed = pointerSpeed > maxPointerSpeed ? maxPointerSpeed : pointerSpeed;
+
+        }
+        else if (moveDirection == Vector3.zero && pointerSpeed >= minPointerSpeed)
+        {
+            pointerSpeed -= 10 * Time.deltaTime;
+            pointerSpeed = pointerSpeed < minPointerSpeed ? minPointerSpeed : pointerSpeed;
+        }
         pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
     }
 
@@ -91,7 +106,7 @@ public class Grandmother : MonoBehaviour
         curBombs = 0;
         fireCoolDown = 4;
         Grandmas[id - 1] = grandma;
-        bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
+        bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
         canFire = false;
         moveDirection = Vector3.zero;

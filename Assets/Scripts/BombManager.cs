@@ -59,8 +59,9 @@ public class BombManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 position = t.position;
-        /*if (shooterId == 2 && position != goalPos)  // grandma 2
+        t.position += direction * speed * Time.deltaTime;
+        /*Vector3 position = t.position;
+        if (shooterId == 2 && position != goalPos)  // grandma 2
         {
             t.position += (goalPos - position) * (3 * Time.deltaTime);
         } else if (shooterId == 1 && position != goalPos)  // grandma 1
