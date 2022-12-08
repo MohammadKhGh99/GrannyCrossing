@@ -30,7 +30,7 @@ public class BombManager : MonoBehaviour
         yield return new WaitForSeconds(bombLifeTime);
         t.gameObject.SetActive(false);
         isFired = false;
-        t.parent.GetComponent<Grandmother>().AddToCurBombs(1);
+        t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
     }
     
     
@@ -90,6 +90,6 @@ public class BombManager : MonoBehaviour
         grandmother.GoBack();
         t.gameObject.SetActive(false);
         isFired = false;
-        t.parent.GetComponent<Grandmother>().AddToCurBombs(1);
+        t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
     }
 }

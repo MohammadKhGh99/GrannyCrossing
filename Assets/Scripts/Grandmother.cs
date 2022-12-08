@@ -61,7 +61,7 @@ public class Grandmother : MonoBehaviour
 
     private void PointerMove()
     {
-        if (moveDirection != Vector3.zero && pointerSpeed <= maxPointerSpeed)
+        /*if (moveDirection != Vector3.zero && pointerSpeed <= maxPointerSpeed)
         {
             pointerSpeed += 300 * Time.deltaTime;
             pointerSpeed = pointerSpeed > maxPointerSpeed ? maxPointerSpeed : pointerSpeed;
@@ -71,7 +71,7 @@ public class Grandmother : MonoBehaviour
         {
             pointerSpeed -= 10 * Time.deltaTime;
             pointerSpeed = pointerSpeed < minPointerSpeed ? minPointerSpeed : pointerSpeed;
-        }
+        }*/
         pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
     }
 
