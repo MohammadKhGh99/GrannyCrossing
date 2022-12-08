@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
     {
         if (controlCarsPositions)
             carsPos = carsPositions;
-        carsParent = gameObject;
+        // carsParent = gameObject;
         Quaternion carDirection;
         Screen.SetResolution(1920, 1080, true);
         for (int i = 0; i < MaxCars; i++)
@@ -33,8 +33,8 @@ public class GameController : MonoBehaviour
             var curPos = downToUpCars.Contains(i) ? new Vector3(carsPos[i], -fieldLimit, 0) : new Vector3(carsPos[i], fieldLimit, 0);
             carDirection = downToUpCars.Contains(i) ? Quaternion.AngleAxis(180, Vector3.right) : Quaternion.identity;
             string carToLoad = carsToLoad[Random.Range(0, 4)];
-            GameObject temp = Instantiate(Resources.Load(carToLoad), curPos, carDirection, transform) as GameObject;
-            print(temp.transform.position);
+            GameObject temp = Instantiate(Resources.Load(carToLoad), curPos, carDirection, carsParent.transform) as GameObject;
+            // print(temp.transform.position);
             if (temp == null)
             {
                 throw new NullReferenceException("Car Prefab Not Found!");
@@ -56,15 +56,15 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        fpsCounter++;
-        fpsTime -= Time.deltaTime;
-        
-        // Showing fps value
-        if (fpsTime <= 0)
-        {
-            Debug.Log("FPS is: " + fpsCounter);
-            fpsCounter = 0;
-            fpsTime = 1;
-        }
+        // fpsCounter++;
+        // fpsTime -= Time.deltaTime;
+        //
+        // // Showing fps value
+        // if (fpsTime <= 0)
+        // {
+        //     Debug.Log("FPS is: " + fpsCounter);
+        //     fpsCounter = 0;
+        //     fpsTime = 1;
+        // }
     }
 }

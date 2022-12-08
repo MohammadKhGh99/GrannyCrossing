@@ -7,26 +7,20 @@ public class BombManager : MonoBehaviour
     // [SerializeField] private GameObject goalPlayer;
 
     private int shooterId;
-    private float goalPosX;
     private Transform t;
     private Vector3 goalPos;
-    
+    private Quaternion bombRotation;
+    private Vector3 initialScale;
+    private Vector3 flyingScale;
     
     // Start is called before the first frame update
     void Start()
     {
         t = GetComponent<Transform>();
-        // Vector3 curPos = bomb.transform.position;
-        float enemyX = 
-            shooterId == 1 ? Grandmother.Grandmas[1].transform.position.x : Grandmother.Grandmas[0].transform.position.x;
-        // print(t.position.x + " To " + enemyX);
-        enemyX -= shooterId == 1 ? 2 : -2;
-        float fromX = shooterId == 1 ? t.position.x + 2 : t.position.x - 2;
-        goalPosX = Random.Range(fromX, enemyX);
-        // t.SetParent(null);
         Vector3 enemyPosition = 
             shooterId == 1 ? Grandmother.Grandmas[1].transform.position : Grandmother.Grandmas[0].transform.position;
         goalPos = shooterId == 1 ? enemyPosition + (Vector3.left * 5) : enemyPosition + (Vector3.right * 5);
+        initialScale = t.localScale;
     }
 
     // Update is called once per frame
@@ -40,6 +34,12 @@ public class BombManager : MonoBehaviour
         {
             t.position += (goalPos - position) * (3 * Time.deltaTime);
         }
+
+        // todo scaling for throwing effect
+        // if (t.position.x - goalPos.x <= 0.5f * goalPos.x)
+        //     t.localScale += new Vector3(0.05f, 0.05f, 0);
+        // else if (t.position.x +)
+        //     t.localScale -= new Vector3(0.05f, 0.05f, 0);
     }
 
     public int GetShooterId()

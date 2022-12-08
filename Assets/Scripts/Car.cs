@@ -25,7 +25,7 @@ public class Car : MonoBehaviour
         
         speed = speed == 0 ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
         SetStartPosition(t.position);
-        fieldLimit = t.parent.GetComponent<GameController>().GetFieldLimit();
+        fieldLimit = t.parent.GetComponentInParent<GameController>().GetFieldLimit();
     }
 
     // Update is called once per frame
