@@ -25,6 +25,9 @@ public class Grandmother : MonoBehaviour
     private int lives;
     private const string InitialTextLives = "Lives:";
     private const string InitialTextPowers = "Powers Left:";
+    
+    private const int StartLife = 1;
+    private const float recoveryTime = 2;
 
     private BombManager[] bombs;
     private const int NumBombs = 6;
@@ -38,10 +41,14 @@ public class Grandmother : MonoBehaviour
     private float middleIslandX = -1.8f;
     private float leftIslandX = -29.3f;
     private float TOLERANCE = 0.5f;
+    private bool isBeaten;
+
+    private SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
         lastIsland = 0;
         lives = 1;
         // livesText.text = InitialTextLives + lives;
@@ -56,6 +63,9 @@ public class Grandmother : MonoBehaviour
         moveDirection = Vector3.zero;
         t = GetComponent<Transform>();
         startPosition = t.position;
+        isBeaten = false;
+        
+        
         for (int i = 0; i < NumBombs; i++)
         {
             Vector3 curPos = id == 1 ? Vector3.right + t.position : Vector3.left + t.position;
@@ -85,7 +95,15 @@ public class Grandmother : MonoBehaviour
         }
         // powersText.text = InitialTextPowers + (NumBombs - curBombs);
         SetMoveDirection();
-        StartCoroutine(Move());
+        if (!isBeaten)
+        {
+            StartCoroutine(Move());
+        }
+        else
+        {
+            StartCoroutine(Recovery());
+        }
+        
         if (Math.Abs(t.position.x - leftIslandX) < TOLERANCE)
         {
             lastIsland = 1;
@@ -98,7 +116,7 @@ public class Grandmother : MonoBehaviour
         }
         fireCoolDown -= Time.deltaTime;
         // print("Bombs: " + curBombs);
-        if (((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
+        if (!isBeaten && ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
                         (id == 2 && Input.GetKeyDown(KeyCode.RightControl))) && curBombs < NumBombs && 
                         (fireCoolDown <= 0 || firstShoot))
         {
@@ -234,7 +252,8 @@ public class Grandmother : MonoBehaviour
             canFire = true;
         }
 
-        if (col.gameObject.name.StartsWith("Bomb") && col.gameObject.GetComponent<BombManager>().GetShooterId() != id)
+        BombManager curBomb = col.gameObject.GetComponent<BombManager>();
+        if (col.gameObject.name.StartsWith("Bomb") && curBomb.GetShooterId() != id)
         {
             float curX = t.position.x;
             if (lastIsland == 0)
@@ -253,8 +272,8 @@ public class Grandmother : MonoBehaviour
             lives--;
             // livesText.text = InitialTextLives + lives;
             col.gameObject.SetActive(false);
-            // col.transform.position = t.position;
-            // col.transform.SetParent(t);
+            isBeaten = true;
+            curBomb.ActivateBomb(Grandmas[id-1].GetComponent<Grandmother>());
             int enemyId = id == 1 ? 2 : 1;
             Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
             enemy.SetCurBombs(enemy.GetCurBombs() - 1);
@@ -268,4 +287,32 @@ public class Grandmother : MonoBehaviour
             canFire = false;
         }
     }
+
+    public void Beaten()
+    {
+        //isBeaten = true;
+    }
+    private IEnumerator Recovery()
+    {
+        StartCoroutine(FadeInOut());
+        yield return new WaitForSeconds(recoveryTime);
+        isBeaten = false;
+    }
+
+    private IEnumerator FadeInOut()
+    {
+        Color c = spriteRenderer.color;
+        
+        for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
+        {
+            c = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+        for (float i = 0; i <= 0.25f; i += Time.deltaTime)
+        {
+            c = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+    }
+
 }
