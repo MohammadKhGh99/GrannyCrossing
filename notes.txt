@@ -1,11 +1,11 @@
 itch - page for each one
 power of the shoot
-arrow to direct the shoot
 cool down for shooting
 the types of the bombs
 energy
 name of game
-V - 21:30 08/12/2022alt <= ctrl
 loading for bombs
 
+V - arrow to direct the shoot
+V - alt <= ctrl
 V - bug in bombs - infinite
