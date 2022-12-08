@@ -25,7 +25,6 @@ public class GameController : MonoBehaviour
     {
         if (controlCarsPositions)
             carsPos = carsPositions;
-        // carsParent = gameObject;
         Quaternion carDirection;
         Screen.SetResolution(1920, 1080, true);
         for (int i = 0; i < MaxCars; i++)
@@ -56,15 +55,5 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // fpsCounter++;
-        // fpsTime -= Time.deltaTime;
-        //
-        // // Showing fps value
-        // if (fpsTime <= 0)
-        // {
-        //     Debug.Log("FPS is: " + fpsCounter);
-        //     fpsCounter = 0;
-        //     fpsTime = 1;
-        // }
     }
 }
