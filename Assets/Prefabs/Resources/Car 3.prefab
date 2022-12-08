@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 757898853199837752}
   - component: {fileID: 4404206057438012547}
-  - component: {fileID: 998201975340928977}
   - component: {fileID: 2309914439442570511}
   - component: {fileID: 4047955960754529218}
+  - component: {fileID: 5469755912538457779}
   m_Layer: 0
   m_Name: Car 3
   m_TagString: Untagged
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 394beb42f0390cc458bfc8db8845d97e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -87,32 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &998201975340928977
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4137286233112415765}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 9, y: 9}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
 --- !u!114 &2309914439442570511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,6 +100,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+  controlPosition: 0
+  x: 0
+  y: 0
 --- !u!50 &4047955960754529218
 Rigidbody2D:
   serializedVersion: 4
@@ -147,3 +124,40 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!60 &5469755912538457779
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4137286233112415765}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 9, y: 9}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 2.1000001, y: 3.6000001}
+      - {x: 1.6, y: 4.25}
+      - {x: -1.65, y: 4.25}
+      - {x: -2.25, y: 3.65}
+      - {x: -2.3500001, y: 2.1000001}
+      - {x: -2.3500001, y: -2}
+      - {x: -2.15, y: -3.65}
+      - {x: -1.25, y: -4.25}
+      - {x: 1.25, y: -4.25}
+      - {x: 2, y: -3.6000001}
+      - {x: 2.3500001, y: -1.85}
+      - {x: 2.3500001, y: 0.85}

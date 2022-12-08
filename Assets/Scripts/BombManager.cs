@@ -6,7 +6,7 @@ public class BombManager : MonoBehaviour
     [SerializeField] private GameObject bomb;
 
     // [SerializeField] private GameObject goalPlayer;
-    
+
     private int shooterId;
     //private float goalPosX;
     private Transform t;
@@ -59,11 +59,7 @@ public class BombManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isFired)
-        {
-            t.position += direction * speed * Time.deltaTime;
-        }
-        /*Vector3 position = t.position;
+        Vector3 position = t.position;
         if (shooterId == 2 && position != goalPos)  // grandma 2
         {
             t.position += (goalPos - position) * (3 * Time.deltaTime);

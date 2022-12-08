@@ -1,0 +1,11 @@
+itch - page for each one
+power of the shoot
+arrow to direct the shoot
+cool down for shooting
+the types of the bombs
+energy
+name of game
+alt <= ctrl
+loading for bombs
+
+bug in bombs - infinite

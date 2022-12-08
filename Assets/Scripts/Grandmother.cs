@@ -13,9 +13,9 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private GameObject grandma;
     [SerializeField] private GameObject parent;
     [SerializeField] private float fireCollDownTime = 0.8f;
-    [SerializeField] private Text livesText;
+    //[SerializeField] private Text livesText;
 
-    //[SerializeField] private float bombsSpeed = 10;
+    // [SerializeField] private Text livesText;
 
     // [SerializeField] private Text powersText;
     // [SerializeField] private GameObject redParent;
@@ -38,10 +38,17 @@ public class Grandmother : MonoBehaviour
     private Quaternion fireDirection;
     private float fireCoolDown;
     private bool firstShoot;
+    private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
+    private float rightIslandX = 27.7f;
+    private float middleIslandX = -1.8f;
+    private float leftIslandX = -29.3f;
+    // private float TOLERANCE = 0.5f;
     private bool isBeaten;
     private Transform pointer;
     private float pointerSpeed = 150;
 
+
+    private SpriteRenderer spriteRenderer;
 
     private void InitPointerPosition()
     {
@@ -61,6 +68,10 @@ public class Grandmother : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        // lastIsland = 0;
+        lives = 1;
+        // livesText.text = InitialTextLives + lives;
         
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -74,13 +85,13 @@ public class Grandmother : MonoBehaviour
         
         
         lives = StartLife;
-        livesText.text = InitialTextLives + lives;
+        //livesText.text = InitialTextLives + lives;
         // powersText.text = InitialTextPowers + NumBombs;
         firstShoot = true;
         curBombs = 0;
         fireCoolDown = 4;
         Grandmas[id - 1] = grandma;
-        bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
+        bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         carHit = false;
         canFire = false;
         moveDirection = Vector3.zero;
@@ -98,6 +109,7 @@ public class Grandmother : MonoBehaviour
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
+            
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetShooterId(id);
             //bombs[i].SetSpeed(bombsSpeed);
@@ -129,8 +141,8 @@ public class Grandmother : MonoBehaviour
         PointerMove();
         fireCoolDown -= Time.deltaTime;
         // print("Bombs: " + curBombs);
-        if (!isBeaten && ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
-                        (id == 2 && Input.GetKeyDown(KeyCode.RightControl))) && curBombs < NumBombs && 
+        if (!isBeaten && ((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
+                        (id == 2 && Input.GetKeyDown(KeyCode.RightAlt))) && curBombs < NumBombs && 
                         (fireCoolDown <= 0 || firstShoot))
         {
             // print("What Now: " + curBombs);
@@ -154,16 +166,16 @@ public class Grandmother : MonoBehaviour
         switch (id)
         {
             case 2:
-                if (position.x < -29.3f)
+                if (position.x < leftIslandX)
                 {
-                    t.position = new Vector3(-29.3f, position.y, position.z);
-                }else if (position.x < -1.8f)
+                    t.position = new Vector3(leftIslandX, position.y, position.z);
+                }else if (position.x < middleIslandX)
                 {
-                    t.position = new Vector3(-1.8f, position.y, position.z);
+                    t.position = new Vector3(middleIslandX, position.y, position.z);
 
-                }else if (position.x < 27.7f)
+                }else if (position.x < rightIslandX)
                 {
-                    t.position = new Vector3(27.7f, position.y, position.z);
+                    t.position = new Vector3(rightIslandX, position.y, position.z);
                 }
                 else
                 {
@@ -171,16 +183,16 @@ public class Grandmother : MonoBehaviour
                 }
                 break;
             case 1:
-                if (position.x > 27.7f)
+                if (position.x > rightIslandX)
                 {
-                    t.position = new Vector3(27.7f, position.y, position.z);
-                }else if (position.x > -1.8f)
+                    t.position = new Vector3(rightIslandX, position.y, position.z);
+                }else if (position.x > middleIslandX)
                 {
-                    t.position = new Vector3(-1.8f, position.y, position.z);
+                    t.position = new Vector3(middleIslandX, position.y, position.z);
 
-                }else if (position.x > -29.3f)
+                }else if (position.x > leftIslandX)
                 {
-                    t.position = new Vector3(-29.3f, position.y, position.z);
+                    t.position = new Vector3(leftIslandX, position.y, position.z);
 
                 }
                 else
@@ -189,7 +201,7 @@ public class Grandmother : MonoBehaviour
                 }
                 break;
         }
-        InitPointerPosition();
+
     }
 
     public int GetId()
@@ -295,12 +307,13 @@ public class Grandmother : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.name.StartsWith("Island"))
-        {
-            canFire = true;
-        }
+        // if (col.gameObject.name.StartsWith("Island"))
+        // {
+        //     canFire = true;
+        // }
 
-        if (col.gameObject.name.StartsWith("Bomb") && col.gameObject.GetComponent<BombManager>().GetShooterId() != id)
+        BombManager curBomb = col.gameObject.GetComponent<BombManager>();
+        if (col.gameObject.name.StartsWith("Bomb") && curBomb.GetShooterId() != id)
         {
             //lives -= 1;
             //livesText.text = InitialTextLives + lives;
@@ -315,13 +328,13 @@ public class Grandmother : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.name.StartsWith("Island"))
-        {
-            canFire = false;
-        }
-    }
+    // private void OnTriggerExit2D(Collider2D other)
+    // {
+    //     if (other.gameObject.name.StartsWith("Island"))
+    //     {
+    //         canFire = false;
+    //     }
+    // }
 
     
     private IEnumerator Recovery()
@@ -329,26 +342,26 @@ public class Grandmother : MonoBehaviour
         StartCoroutine(FadeInOut());
         yield return new WaitForSeconds(recoveryTime);
         isBeaten = false;
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        Color c = sprite.color;
-        sprite.color = new Color(c.r, c.g, c.b, 1);
+        Color c = spriteRenderer.color;
+        spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
 
     }
 
     private IEnumerator FadeInOut()
     {
-        SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-        Color c = sprite.color;
+        Color c = spriteRenderer.color;
+        
+        // for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
         while (isBeaten)
         {
             for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
             {
-                sprite.color = new Color(c.r, c.g, c.b, i * 4);
+                spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
                 yield return null;
             }
             for (float i = 0; i <= 0.25f; i += Time.deltaTime)
             {
-                sprite.color = new Color(c.r, c.g, c.b, i * 4);
+                spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
                 yield return null;
             }
         }
