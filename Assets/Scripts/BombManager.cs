@@ -9,6 +9,8 @@ public class BombManager : MonoBehaviour
     private int shooterId;
     private float goalPosX;
     private Transform t;
+    private Vector3 goalPos;
+    
     
     // Start is called before the first frame update
     void Start()
@@ -22,17 +24,21 @@ public class BombManager : MonoBehaviour
         float fromX = shooterId == 1 ? t.position.x + 2 : t.position.x - 2;
         goalPosX = Random.Range(fromX, enemyX);
         // t.SetParent(null);
+        Vector3 enemyPosition = 
+            shooterId == 1 ? Grandmother.Grandmas[1].transform.position : Grandmother.Grandmas[0].transform.position;
+        goalPos = shooterId == 1 ? enemyPosition + (Vector3.left * 5) : enemyPosition + (Vector3.right * 5);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (shooterId == 2 && t.position.x >= goalPosX)  // grandma 2
+        Vector3 position = t.position;
+        if (shooterId == 2 && position != goalPos)  // grandma 2
         {
-            t.position += Vector3.left * (20 * Time.deltaTime);
-        } else if (shooterId == 1 && t.position.x <= goalPosX)  // grandma 1
+            t.position += (goalPos - position) * (3 * Time.deltaTime);
+        } else if (shooterId == 1 && position != goalPos)  // grandma 1
         {
-            t.position += Vector3.right * (20 * Time.deltaTime);
+            t.position += (goalPos - position) * (3 * Time.deltaTime);
         }
     }
 
