@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -37,12 +38,19 @@ public class Grandmother : MonoBehaviour
     private float maxPointerSpeed = 800;
     private float minPointerSpeed = 50;
     private bool isTurnRight;
-    
+    private SpriteRenderer spriteRenderer;
+
     private Action[] randomDirections = new Action[4];
     private bool isUnderControl = true;
     private float loseControlTime = 3;
+    private bool pointerIsUnderControl = true;
+    private float pointerLoseControlTime = 3;
+    private float pointerSpeedLoseControl = 300;
     
-    
+
+
+
+
     public void LoseControl()
     {
         MixDirections();
@@ -148,16 +156,34 @@ public class Grandmother : MonoBehaviour
     
 
 
-    private SpriteRenderer spriteRenderer;
 
     private void InitPointerPosition()
     {
         pointer.RotateAround(transform.position, Vector3.forward, Random.value * 360);
     }
 
+    public void PointerLoseControl()
+    {
+        pointerIsUnderControl = false;
+        StartCoroutine(PointerRecontrol());
+    }
+
+    private IEnumerator PointerRecontrol()
+    {
+        yield return new WaitForSeconds(pointerLoseControlTime);
+        pointerIsUnderControl = true;
+    }
+    
     private void PointerMove()
     {
-        pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
+        if (pointerIsUnderControl)
+        {
+            pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
+        }
+        else
+        {
+            pointer.RotateAround(transform.position, Vector3.forward, pointerSpeedLoseControl * Time.deltaTime);
+        }
     }
 
     public Vector3 GetPointerPosition()
