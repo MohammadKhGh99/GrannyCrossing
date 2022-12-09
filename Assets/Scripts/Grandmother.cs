@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using RandomS = System.Random;
+
 
 public class Grandmother : MonoBehaviour
 {
@@ -35,6 +37,113 @@ public class Grandmother : MonoBehaviour
     private float maxPointerSpeed = 800;
     private float minPointerSpeed = 50;
     private bool isTurnRight;
+    
+    private Action[] randomDirections = new Action[4];
+    private bool isUnderControl = true;
+    private float loseControlTime = 3;
+    
+    
+    public void LoseControl()
+    {
+        MixDirections();
+        isUnderControl = false;
+        StartCoroutine(Recontrol());
+    }
+
+    private IEnumerator Recontrol()
+    {
+        yield return new WaitForSeconds(loseControlTime);
+        isUnderControl = true;
+    }
+    
+    
+    void MixDirections()
+    {
+        RandomS random = new RandomS();
+        int n = 4;
+        while (n > 1)
+        {
+            int k = random.Next(n--);
+            (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
+        }
+    }
+    
+    void MoveUp()
+    {
+        moveDirection = Vector3.up;
+    }
+
+    void MoveDown()
+    {
+        moveDirection = Vector3.down;
+    }
+
+    void MoveRight()
+    {
+        moveDirection = Vector3.right;
+        if (!isTurnRight)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = true;
+        }
+    }
+
+    void MoveLeft()
+    {
+        moveDirection = Vector3.left;
+        if (isTurnRight)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = false;
+        }
+    }
+
+    void MoveMixDirections()
+    {
+        switch (id)
+        {
+            case 1:
+                if (Input.GetKey(KeyCode.W))
+                {
+                    randomDirections[0]();
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    randomDirections[2]();
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    randomDirections[3]();
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    randomDirections[1]();
+                }
+                break;
+            case 2:
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    randomDirections[0]();
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    randomDirections[2]();                
+                }
+        
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    randomDirections[3]();                    
+                }
+
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    randomDirections[1]();
+                }
+                break;
+        }
+    }
+
 
     
 
@@ -59,6 +168,11 @@ public class Grandmother : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        randomDirections[0] = MoveUp;
+        randomDirections[1] = MoveRight;
+        randomDirections[2] = MoveDown;
+        randomDirections[3] = MoveLeft;
+        
         isTurnRight = id == 1;
         spriteRenderer = GetComponent<SpriteRenderer>();
         for (int i = 0; i < transform.childCount; i++)
@@ -93,9 +207,16 @@ public class Grandmother : MonoBehaviour
 
     void Update()
     {
-        SetMoveDirection();
         if (!isBeaten)
         {
+            if (isUnderControl)
+            {
+                SetMoveDirection();
+            }
+            else
+            {
+                MoveMixDirections();
+            }
             StartCoroutine(Move());
             PointerMove();
         }
@@ -206,64 +327,44 @@ public class Grandmother : MonoBehaviour
             case 1:
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    moveDirection = Vector3.up;
+                    MoveUp();
                 }
 
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    moveDirection = Vector3.down;
+                    MoveDown();
                 }
 
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    moveDirection = Vector3.left;
-                    if (isTurnRight)
-                    {
-                        t.Rotate(Vector3.up, 180);
-                        isTurnRight = false;
-                    }
+                    MoveLeft();
                 }
 
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    moveDirection = Vector3.right;
-                    if (!isTurnRight)
-                    {
-                        t.Rotate(Vector3.up, 180);
-                        isTurnRight = true;
-                    }
+                    MoveRight();
                 }
 
                 break;
             case 2:
                 if (Input.GetKeyDown(KeyCode.UpArrow))
                 {
-                    moveDirection = Vector3.up;
+                    MoveUp();
                 }
 
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
-                    moveDirection = Vector3.down;
+                    MoveDown();
                 }
 
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
-                    moveDirection = Vector3.left;
-                    if (isTurnRight)
-                    {
-                        t.Rotate(Vector3.up, 180);
-                        isTurnRight = false;
-                    }
+                    MoveLeft();
                 }
 
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    moveDirection = Vector3.right;
-                    if (!isTurnRight)
-                    {
-                        t.Rotate(Vector3.up, 180);
-                        isTurnRight = true;
-                    }
+                    MoveRight();
                 }
 
                 break;
