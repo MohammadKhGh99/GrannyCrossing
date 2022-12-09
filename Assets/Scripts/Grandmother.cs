@@ -34,6 +34,7 @@ public class Grandmother : MonoBehaviour
     private float pointerSpeed = 150;
     private float maxPointerSpeed = 800;
     private float minPointerSpeed = 50;
+    private bool isTurnRight;
 
     
 
@@ -58,6 +59,7 @@ public class Grandmother : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isTurnRight = id == 1;
         spriteRenderer = GetComponent<SpriteRenderer>();
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -149,6 +151,11 @@ public class Grandmother : MonoBehaviour
                 {
                     t.position = startPosition;
                 }
+                if (isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = false;
+                }
                 break;
             case 1:
                 if (position.x > rightIslandX)
@@ -165,6 +172,12 @@ public class Grandmother : MonoBehaviour
                 else
                 {
                     t.position = startPosition;
+                }
+
+                if (!isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = true;
                 }
                 break;
         }
@@ -204,11 +217,21 @@ public class Grandmother : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.A))
                 {
                     moveDirection = Vector3.left;
+                    if (isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = false;
+                    }
                 }
 
                 if (Input.GetKeyDown(KeyCode.D))
                 {
                     moveDirection = Vector3.right;
+                    if (!isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = true;
+                    }
                 }
 
                 break;
@@ -226,11 +249,21 @@ public class Grandmother : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
                     moveDirection = Vector3.left;
+                    if (isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = false;
+                    }
                 }
 
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
                     moveDirection = Vector3.right;
+                    if (!isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = true;
+                    }
                 }
 
                 break;
@@ -249,6 +282,23 @@ public class Grandmother : MonoBehaviour
         if (collision.collider.name.StartsWith("Car"))
         {
             t.position = startPosition;
+            switch (id)
+            {
+                case 1:
+                    if (!isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = true;
+                    }
+                    break;
+                case 2:
+                    if (isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = false;
+                    }
+                    break;
+            }
             InitPointerPosition();
             pointer.gameObject.SetActive(false);
             isBeaten = true;
