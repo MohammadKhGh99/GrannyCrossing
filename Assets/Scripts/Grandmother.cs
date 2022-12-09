@@ -1,61 +1,226 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
+using RandomS = System.Random;
+
 
 public class Grandmother : MonoBehaviour
 {
     [SerializeField] private int id;
     [SerializeField] private float movementTime;
     [SerializeField] private float movementDistance;
-    [SerializeField] private GameObject grandma;
-    [SerializeField] private GameObject parent;
-
-    [SerializeField] private Text livesText;
-
-    // [SerializeField] private Text powersText;
-    // [SerializeField] private GameObject redParent;
+    [SerializeField] private float fireCollDownTime = 0.8f;
+    [SerializeField] private float loadingBombsPercentage;
 
     private Vector3 moveDirection;
     private Transform t;
-    private bool carHit;
-    private bool canFire;
     private int curBombs;
-    private int lives;
-    private const string InitialTextLives = "Lives:";
-    private const string InitialTextPowers = "Powers Left:";
-    private const int StartLife = 1;
+    private const float recoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int NumBombs = 6;
-    public static readonly GameObject[] Grandmas = new GameObject[2];
+    private const int NumBombs = 15;
     private Vector3 startPosition;
-    private Quaternion fireDirection;
-    private float fireCoolDown;
-    private bool firstShoot;
+    private float fireCoolDown = 0.8f;
+    private float fireCoolDownMax = 0.8f;
 
+    private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
+    private float rightIslandX = 27.7f;
+    private float middleIslandX = -1.8f;
+    private float leftIslandX = -29.3f;
+    // private float TOLERANCE = 0.5f;
+    private bool isBeaten;
+    private Transform pointer;
+    private float pointerSpeed = 150;
+    private float maxPointerSpeed = 800;
+    private float minPointerSpeed = 50;
+    private bool isTurnRight;
+    private SpriteRenderer spriteRenderer;
+
+    private Action[] randomDirections = new Action[4];
+    private bool isUnderControl = true;
+    private float loseControlTime = 3;
+    private bool pointerIsUnderControl = true;
+    private float pointerLoseControlTime = 3;
+    private float pointerSpeedLoseControl = 300;
+    
+
+
+
+
+    public void LoseControl()
+    {
+        MixDirections();
+        isUnderControl = false;
+        StartCoroutine(Recontrol());
+    }
+
+    private IEnumerator Recontrol()
+    {
+        yield return new WaitForSeconds(loseControlTime);
+        isUnderControl = true;
+    }
+    
+    
+    void MixDirections()
+    {
+        RandomS random = new RandomS();
+        int n = 4;
+        while (n > 1)
+        {
+            int k = random.Next(n--);
+            (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
+        }
+    }
+    
+    void MoveUp()
+    {
+        moveDirection = Vector3.up;
+    }
+
+    void MoveDown()
+    {
+        moveDirection = Vector3.down;
+    }
+
+    void MoveRight()
+    {
+        moveDirection = Vector3.right;
+        if (!isTurnRight)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = true;
+        }
+    }
+
+    void MoveLeft()
+    {
+        moveDirection = Vector3.left;
+        if (isTurnRight)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = false;
+        }
+    }
+
+    void MoveMixDirections()
+    {
+        switch (id)
+        {
+            case 1:
+                if (Input.GetKey(KeyCode.W))
+                {
+                    randomDirections[0]();
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    randomDirections[2]();
+                }
+
+                if (Input.GetKey(KeyCode.A))
+                {
+                    randomDirections[3]();
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    randomDirections[1]();
+                }
+                break;
+            case 2:
+                if (Input.GetKey(KeyCode.UpArrow))
+                {
+                    randomDirections[0]();
+                }
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    randomDirections[2]();                
+                }
+        
+                if (Input.GetKey(KeyCode.LeftArrow))
+                {
+                    randomDirections[3]();                    
+                }
+
+                if (Input.GetKey(KeyCode.RightArrow))
+                {
+                    randomDirections[1]();
+                }
+                break;
+        }
+    }
+
+
+    
+
+
+
+    private void InitPointerPosition()
+    {
+        pointer.RotateAround(transform.position, Vector3.forward, Random.value * 360);
+    }
+
+    public void PointerLoseControl()
+    {
+        pointerIsUnderControl = false;
+        StartCoroutine(PointerRecontrol());
+    }
+
+    private IEnumerator PointerRecontrol()
+    {
+        yield return new WaitForSeconds(pointerLoseControlTime);
+        pointerIsUnderControl = true;
+    }
+    
+    private void PointerMove()
+    {
+        if (pointerIsUnderControl)
+        {
+            pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
+        }
+        else
+        {
+            pointer.RotateAround(transform.position, Vector3.forward, pointerSpeedLoseControl * Time.deltaTime);
+        }
+    }
+
+    public Vector3 GetPointerPosition()
+    {
+        return pointer.position;
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
-        lives = StartLife;
-        livesText.text = InitialTextLives + lives;
-        // powersText.text = InitialTextPowers + NumBombs;
-        firstShoot = true;
+        randomDirections[0] = MoveUp;
+        randomDirections[1] = MoveRight;
+        randomDirections[2] = MoveDown;
+        randomDirections[3] = MoveLeft;
+        
+        isTurnRight = id == 1;
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name == "Pointer")
+            {
+                pointer = transform.GetChild(i);
+            }
+        }
+        InitPointerPosition();
         curBombs = 0;
-        fireCoolDown = 4;
-        Grandmas[id - 1] = grandma;
-        bombs = new BombManager[6]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
-        carHit = false;
-        canFire = false;
+        loadingBombsPercentage = fireCoolDownMax - fireCoolDown / fireCoolDownMax;
+        bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         moveDirection = Vector3.zero;
         t = GetComponent<Transform>();
         startPosition = t.position;
+        isBeaten = false;
+        
+        
         for (int i = 0; i < NumBombs; i++)
         {
-            Vector3 curPos = id == 1 ? Vector3.right + t.position : Vector3.left + t.position;
-            // Quaternion curRotate = id == 1 ? new Quaternion(0, 0, -90, 1) : new Quaternion(0, 0, 90, 1);
-            GameObject temp = Instantiate(Resources.Load("Bomb"), curPos, Quaternion.identity, parent.transform) as GameObject;
+            GameObject temp = Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, transform) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
@@ -63,40 +228,107 @@ public class Grandmother : MonoBehaviour
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetShooterId(id);
             bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
-            // bombs[NumBombs].SetActive(false);
         }
-        // fireDirection = id == 1 ? new Quaternion(0, 90, 0, 1) : new Quaternion(90, 0, 0, 1);
     }
 
     void Update()
     {
-        if (lives <= 0)
+        if (!isBeaten)
         {
-            t.position = startPosition;
-            lives = StartLife;
-            livesText.text = InitialTextLives + lives;
-        }
-        // powersText.text = InitialTextPowers + (NumBombs - curBombs);
-        SetMoveDirection();
-        StartCoroutine(Move());
-        fireCoolDown -= Time.deltaTime;
-        // print("Bombs: " + curBombs);
-        if ( ((id == 1 && Input.GetKeyDown(KeyCode.LeftControl)) ||
-                        (id == 2 && Input.GetKeyDown(KeyCode.RightControl))) && curBombs < NumBombs && 
-                        (fireCoolDown <= 0 || firstShoot))
-        {
-            // print("What Now: " + curBombs);
-            firstShoot = false;
-            int i = Random.Range(0, NumBombs);
-            while (bombs[i].gameObject.activeInHierarchy)
+            if (isUnderControl)
             {
-                i = Random.Range(0, NumBombs);
+                SetMoveDirection();
             }
-            bombs[i].transform.position = t.position;
-            bombs[i].gameObject.SetActive(true);
-            curBombs++;
-            fireCoolDown = 3;
+            else
+            {
+                MoveMixDirections();
+            }
+            StartCoroutine(Move());
+            PointerMove();
         }
+        else
+        {
+            t.position = startPosition; //I don't know why but without it there is a weird bug...
+                                        //you can go one more step after going back when hit by a car or a bomb
+        }
+        fireCoolDown -= Time.deltaTime;
+        fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
+        loadingBombsPercentage = isBeaten ? 0 : (fireCoolDownMax - fireCoolDown) / fireCoolDownMax;
+
+        if (((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
+                        (id == 2 && Input.GetKeyDown(KeyCode.RightAlt))) && curBombs < NumBombs && 
+                        loadingBombsPercentage == 1)
+        {
+            Fire();
+        }
+    }
+
+    private void Fire()
+    {
+        int i = Random.Range(0, NumBombs);
+        while (bombs[i].gameObject.activeInHierarchy)
+        {
+            i = Random.Range(0, NumBombs);
+        }
+        bombs[i].transform.position = pointer.position;
+        bombs[i].gameObject.SetActive(true);
+        bombs[i].Fire();
+        curBombs++;
+        fireCoolDown = fireCollDownTime;
+    }
+
+    public void GoBack()
+    {
+        Vector3 position = t.position;
+        switch (id)
+        {
+            case 2:
+                if (position.x < leftIslandX)
+                {
+                    t.position = new Vector3(leftIslandX, position.y, position.z);
+                }else if (position.x < middleIslandX)
+                {
+                    t.position = new Vector3(middleIslandX, position.y, position.z);
+
+                }else if (position.x < rightIslandX)
+                {
+                    t.position = new Vector3(rightIslandX, position.y, position.z);
+                }
+                else
+                {
+                    t.position = startPosition;
+                }
+                if (isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = false;
+                }
+                break;
+            case 1:
+                if (position.x > rightIslandX)
+                {
+                    t.position = new Vector3(rightIslandX, position.y, position.z);
+                }else if (position.x > middleIslandX)
+                {
+                    t.position = new Vector3(middleIslandX, position.y, position.z);
+
+                }else if (position.x > leftIslandX)
+                {
+                    t.position = new Vector3(leftIslandX, position.y, position.z);
+                }
+                else
+                {
+                    t.position = startPosition;
+                }
+
+                if (!isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = true;
+                }
+                break;
+        }
+
     }
 
     public int GetId()
@@ -109,9 +341,9 @@ public class Grandmother : MonoBehaviour
         return curBombs;
     }
 
-    public void SetCurBombs(int other)
+    public void AddToCurBombs(int other)
     {
-        curBombs = other;
+        curBombs += other;
     }
 
     private void SetMoveDirection()
@@ -121,44 +353,44 @@ public class Grandmother : MonoBehaviour
             case 1:
                 if (Input.GetKeyDown(KeyCode.W))
                 {
-                    moveDirection = Vector3.up;
+                    MoveUp();
                 }
 
                 if (Input.GetKeyDown(KeyCode.S))
                 {
-                    moveDirection = Vector3.down;
+                    MoveDown();
                 }
 
                 if (Input.GetKeyDown(KeyCode.A))
                 {
-                    moveDirection = Vector3.left;
+                    MoveLeft();
                 }
 
                 if (Input.GetKeyDown(KeyCode.D))
                 {
-                    moveDirection = Vector3.right;
+                    MoveRight();
                 }
 
                 break;
             case 2:
                 if (Input.GetKeyDown(KeyCode.UpArrow))
                 {
-                    moveDirection = Vector3.up;
+                    MoveUp();
                 }
 
                 if (Input.GetKeyDown(KeyCode.DownArrow))
                 {
-                    moveDirection = Vector3.down;
+                    MoveDown();
                 }
 
                 if (Input.GetKeyDown(KeyCode.LeftArrow))
                 {
-                    moveDirection = Vector3.left;
+                    MoveLeft();
                 }
 
                 if (Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    moveDirection = Vector3.right;
+                    MoveRight();
                 }
 
                 break;
@@ -176,52 +408,72 @@ public class Grandmother : MonoBehaviour
     {
         if (collision.collider.name.StartsWith("Car"))
         {
-            lives -= 2;
-            livesText.text = InitialTextLives + lives;
-            carHit = true;
-        }
-
-        if (collision.collider.name.EndsWith("Wall") && carHit)
-        {
             t.position = startPosition;
+            switch (id)
+            {
+                case 1:
+                    if (!isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = true;
+                    }
+                    break;
+                case 2:
+                    if (isTurnRight)
+                    {
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = false;
+                    }
+                    break;
+            }
+            InitPointerPosition();
+            pointer.gameObject.SetActive(false);
+            isBeaten = true;
+            StartCoroutine(Recovery());
         }
-
-        
     }
-
-    private void OnCollisionExit2D(Collision2D other)
-    {
-        if (other.collider.name.StartsWith("Car"))
-        {
-            carHit = false;
-        }
-    }
+    
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.name.StartsWith("Island"))
-        {
-            canFire = true;
-        }
-
-        if (col.gameObject.name.StartsWith("Bomb") && col.gameObject.GetComponent<BombManager>().GetShooterId() != id)
-        {
-            lives -= 1;
-            livesText.text = InitialTextLives + lives;
-            col.gameObject.SetActive(false);
-            // col.transform.position = t.position;
-            // col.transform.SetParent(t);
-            int enemyId = id == 1 ? 2 : 1;
-            Grandmother enemy = Grandmas[enemyId - 1].GetComponent<Grandmother>(); 
-            enemy.SetCurBombs(enemy.GetCurBombs() - 1);
+        BombManager curBomb = col.gameObject.GetComponent<BombManager>();
+        if (col.gameObject.name.StartsWith("Bomb") && curBomb.GetShooterId() != id)
+        { 
+            isBeaten = true;
+            curBomb.ActivateBomb(gameObject);
+            pointer.gameObject.SetActive(false);
+            StartCoroutine(Recovery());
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public IEnumerator Recovery()
     {
-        if (other.gameObject.name.StartsWith("Island"))
+        StartCoroutine(FadeInOut());
+        yield return new WaitForSeconds(recoveryTime);
+        isBeaten = false;
+        pointer.gameObject.SetActive(true);
+        InitPointerPosition();
+        Color c = spriteRenderer.color;
+        spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
+
+    }
+
+    private IEnumerator FadeInOut()
+    {
+        Color c = spriteRenderer.color;
+        for (int n = 0; n <= recoveryTime * 2; n++)
         {
-            canFire = false;
+            for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
+            {
+                spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
+                yield return null;
+            }
+            for (float i = 0; i <= 0.25f; i += Time.deltaTime)
+            {
+                spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
+                yield return null;
+            }
         }
     }
+
 }
