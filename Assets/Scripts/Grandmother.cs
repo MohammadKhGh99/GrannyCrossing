@@ -18,11 +18,10 @@ public class Grandmother : MonoBehaviour
 
     // Types of the bombs
     private const int NumBombsTypes = 4;
-    private const int FreezeInPlace = 0;
-    private const int CrazyPointer = 1;
-    private const int GoBackToIsland = 2;
+    private const int FreezeInPlace = 0;  // Works Good
+    private const int CrazyPointer = 1;  // Works Good
+    private const int GoBackToIsland = 2;  // Works Good
     private const int CrazyDirections = 3;
-    Rigidbody2D rigidBody;
 
     private Vector3 moveDirection;
     private Transform t;
@@ -47,6 +46,7 @@ public class Grandmother : MonoBehaviour
     private bool isTurnRight;
     private SpriteRenderer spriteRenderer;
 
+    private bool freezeOrNot;
     private Action[] randomDirections;
     private bool isUnderControl = true;
     private const float LoseControlTime = 5;
@@ -58,11 +58,11 @@ public class Grandmother : MonoBehaviour
     void Start()
     {
         randomDirections = new Action[]{ MoveUp, MoveRight, MoveDown, MoveLeft };
-     
+        freezeOrNot = false;
+        
         // Taking Components from this GameObject
         t = GetComponent<Transform>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        rigidBody = t.GetComponent<Rigidbody2D>();
         
         // The Grandma is looking right or left (in the beginning)
         isTurnRight = id == 1;
@@ -90,7 +90,7 @@ public class Grandmother : MonoBehaviour
             bombs[i].SetId(Random.Range(0, NumBombsTypes));
             // Sets each bomb's shooter, blue grandma ot red one
             bombs[i].SetShooterId(id);
-            bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
+            // bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
         }
     }
 
@@ -98,17 +98,16 @@ public class Grandmother : MonoBehaviour
     {
         if (!isBeaten)
         {
-            // if (id == 1 && !pointerIsUnderControl)
-            // {
-            //     print("What's Happening");
-            // }
-            if (isUnderControl)
-                SetMoveDirection();
-               
-            else
-                MoveMixDirections();
-            StartCoroutine(Move());
-            PointerMove();
+            if (!freezeOrNot)
+            {
+                if (isUnderControl)
+                    SetMoveDirection();
+
+                else
+                    MoveMixDirections();
+                StartCoroutine(Move());
+                PointerMove();
+            }
         }
         else
         {
@@ -147,8 +146,6 @@ public class Grandmother : MonoBehaviour
         while (n > 1)
         {
             int k = random.Next(n--);
-            print(randomDirections[n].ToString());
-            print(randomDirections[k].ToString());
             (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
         }
     }
@@ -252,9 +249,7 @@ public class Grandmother : MonoBehaviour
 
     private IEnumerator PointerRecontrol()
     {
-        print("Before Pointer Losing");
         yield return new WaitForSeconds(PointerLoseControlTime);
-        print("After Pointer Losing");
         pointerIsUnderControl = true;
     }
     
@@ -401,19 +396,22 @@ public class Grandmother : MonoBehaviour
     private IEnumerator Move()
     {
         yield return new WaitForSeconds(movementTime);
-        // print(movementDistance);
-        t.position += moveDirection * movementDistance;
+        if (!isUnderControl)
+            t.position += moveDirection * 0.1f;
+        else
+            t.position += moveDirection * movementDistance;
         moveDirection = Vector3.zero;
     }
 
     private IEnumerator FreezeMovement()
     {
-        rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
+        // rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
+        freezeOrNot = true;
         StartCoroutine(FadeInOut());
         yield return new WaitForSeconds(5);
         RecoverFading();
-        rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
-        print("End Freezing");
+        freezeOrNot = false;
+        // rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     private void HitByBomb(int bombId)

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8257414819088387640}
   - component: {fileID: 4516093599738677116}
   - component: {fileID: 8580372617018491473}
-  - component: {fileID: 7658232148220128308}
+  - component: {fileID: 6758693595554631212}
   m_Layer: 0
   m_Name: Bomb
   m_TagString: Untagged
@@ -121,8 +121,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 7
---- !u!70 &7658232148220128308
-CapsuleCollider2D:
+--- !u!60 &6758693595554631212
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -131,9 +131,41 @@ CapsuleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.00000023841858, y: 0}
-  m_Size: {x: 1.0000001, y: 2.0000005}
-  m_Direction: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5, y: 5}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.43789148, y: -0.27232414}
+      - {x: -0.76387507, y: 0.9171937}
+      - {x: -0.8285173, y: 1.7260804}
+      - {x: -1.5454037, y: 1.7454017}
+      - {x: -1.5181613, y: 0.94819593}
+      - {x: -1.683027, y: 0.967052}
+      - {x: -1.7351913, y: 0.09512293}
+      - {x: -1.3212026, y: -0.2343331}
+      - {x: -1.3087071, y: -0.62403136}
+      - {x: -1.5999727, y: -0.6606181}
+      - {x: -1.8656598, y: -0.28380615}
+      - {x: -2.5121427, y: -0.26057455}
+      - {x: -2.5386484, y: -1.1076913}
+      - {x: -2.1027808, y: -1.5326349}
+      - {x: -0.9230587, y: -1.5178645}
+      - {x: -0.5769206, y: -1.0471767}
+      - {x: 0.28203696, y: -1.8118023}
+      - {x: 1.5495821, y: -1.7642636}
+      - {x: 1.5521581, y: -1.5908073}
+      - {x: 1.888912, y: -1.5917326}
+      - {x: 2.5, y: -1.1}
+      - {x: 2.5193248, y: 0.50675505}
+      - {x: 1.7, y: 0.52608037}
