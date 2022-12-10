@@ -1617,7 +1617,7 @@ Transform:
   - {fileID: 833620040}
   - {fileID: 338891058}
   m_Father: {fileID: 2007771451}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &745799144
 GameObject:
@@ -3153,6 +3153,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1309896126}
+  - component: {fileID: 1309896127}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3179,6 +3180,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1309896127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1309896125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d035b02c31dcc8f4bbcf264236645f99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  carsParent: {fileID: 1599215439}
+  fieldLimit: 30
+  controlCarsPositions: 0
+  carsPositions: []
 --- !u!1 &1364934719
 GameObject:
   m_ObjectHideFlags: 0
@@ -4049,7 +4066,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2007771451}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1602914695
 GameObject:
@@ -4357,37 +4374,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &1696070651
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1696070652}
-  m_Layer: 0
-  m_Name: Islands
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1696070652
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1696070651}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2007771451}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1717324226
 GameObject:
   m_ObjectHideFlags: 0
@@ -5352,7 +5338,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2007771451}
   - component: {fileID: 2007771450}
-  - component: {fileID: 2007771449}
   m_Layer: 0
   m_Name: Field
   m_TagString: Untagged
@@ -5360,22 +5345,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2007771449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2007771448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d035b02c31dcc8f4bbcf264236645f99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  carsParent: {fileID: 1599215439}
-  fieldLimit: 30
-  controlCarsPositions: 0
-  carsPositions: []
 --- !u!212 &2007771450
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5442,7 +5411,6 @@ Transform:
   m_Children:
   - {fileID: 1953815834}
   - {fileID: 1210794610}
-  - {fileID: 1696070652}
   - {fileID: 677730725}
   - {fileID: 1599215440}
   m_Father: {fileID: 1309896126}

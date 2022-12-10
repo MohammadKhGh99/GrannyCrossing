@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,44 +6,54 @@ public class BombManager : MonoBehaviour
 {
     [SerializeField] private GameObject bomb;
 
-
     private int shooterId;
     private Transform t;
     private Vector3 direction;
-    private float speed = 18;
-    private bool isFired;
-    private float bombLifeTime = 10;
+    private const float Speed = 18;
+    // private bool isFired;
+    // private float bombLifeTime = 10;
     private Grandmother parentGrandma;
-    
+    private int id;
 
-    public void Fire()
-    {
-        isFired = true;
-        StartCoroutine(KillBomb());
-    }
-
-    private IEnumerator KillBomb()
-    {
-        yield return new WaitForSeconds(bombLifeTime);
-        t.gameObject.SetActive(false);
-        isFired = false;
-        parentGrandma.AddToCurBombs(-1);
-    }
-    
-    
-    // Start is called before the first frame update
+    // Start is calledbefore the first frame update
     void Start()
     {
         t = GetComponent<Transform>();
-        direction = t.parent.GetComponent<Grandmother>().GetPointerPosition() - t.parent.position;
+        Transform parent = t.parent;
+        parentGrandma = parent.GetComponent<Grandmother>();
+        direction = parentGrandma.GetPointerPosition() - parent.position;
         direction = direction.normalized;
     }
 
     // Update is called once per frame
     void Update()
     {
-        t.position += direction * (speed * Time.deltaTime);
+        t.position += direction * (Speed * Time.deltaTime);
     }
+
+    public int GetId()
+    {
+        return id;
+    }
+
+    public void SetId(int other)
+    {
+        id = other;
+    }
+    
+    // public void Fire()
+    // {
+    //     isFired = true;
+    //     // StartCoroutine(KillBomb());
+    // }
+
+    // private IEnumerator KillBomb()
+    // {
+    //     yield return new WaitForSeconds(bombLifeTime);
+    //     t.gameObject.SetActive(false);
+    //     isFired = false;
+    //     parentGrandma.AddToCurBombs(-1);
+    // }
 
     public int GetShooterId()
     {
@@ -56,9 +67,19 @@ public class BombManager : MonoBehaviour
 
     public void ActivateBomb(GameObject grandmother)
     {
-        t.gameObject.SetActive(false);
-        isFired = false;
-        t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
+        // isFired = false;
+        // t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
         grandmother.GetComponent<Grandmother>().GoBack();
+        t.gameObject.SetActive(false);
+    }
+
+    private void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.gameObject.name.EndsWith("Wall"))
+        {
+            // isFired = false;
+            parentGrandma.AddToCurBombs(-1);
+            t.gameObject.SetActive(false);
+        }
     }
 }
