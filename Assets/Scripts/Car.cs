@@ -8,6 +8,7 @@ public class Car : MonoBehaviour
     [SerializeField] private bool controlPosition;
     [SerializeField] private float x;
     [SerializeField] private float y;
+   
     private Transform t;
     private int id;
     
@@ -23,7 +24,11 @@ public class Car : MonoBehaviour
             t.position = new Vector3(x, y, 0);
         
         speed = speed == 0 ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
-        SetStartPosition(t.position);
+        startPosition = t.position;
+        
+        // todo - This line removed because there is no call for this function except for this only call here
+        // SetStartPosition(t.position);
+        
         fieldLimit = t.parent.GetComponentInParent<GameController>().GetFieldLimit();
     }
 
@@ -32,7 +37,9 @@ public class Car : MonoBehaviour
     {
         t.position += direction * (speed * Time.deltaTime);
         if (t.position.y > fieldLimit || t.position.y < -fieldLimit)
-            Reused();
+            t.position = startPosition;
+        // todo - This line removed because there is no call for this function except for this only call here
+        // Reused();
     }
 
     public void SetDirection(Vector3 direct)
@@ -45,14 +52,14 @@ public class Car : MonoBehaviour
         id = newId;
     }
 
-    public void SetStartPosition(Vector3 position)
-    {
-        startPosition = position;
-    }
-
-    public void Reused()
-    {
-        t.position = startPosition;
-    }
+    // private void SetStartPosition(Vector3 position)
+    // {
+    //     startPosition = position;
+    // }
+    //
+    // private void Reused()
+    // {
+    //     t.position = startPosition;
+    // }
     
 }

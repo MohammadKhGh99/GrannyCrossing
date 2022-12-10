@@ -16,216 +16,79 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private float fireCollDownTime = 0.8f;
     [SerializeField] private float loadingBombsPercentage;
 
+    // Types of the bombs
+    private const int NumBombsTypes = 4;
+    private const int FreezeInPlace = 0;
+    private const int CrazyPointer = 1;
+    private const int GoBackToIsland = 2;
+    private const int CrazyDirections = 3;
+    Rigidbody2D rigidBody;
+
     private Vector3 moveDirection;
     private Transform t;
     private int curBombs;
-    private const float recoveryTime = 2;
+    private const float RecoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int NumBombs = 15;
+    private const int MaxBombs = 15;
     private Vector3 startPosition;
     private float fireCoolDown = 0.8f;
-    private float fireCoolDownMax = 0.8f;
+    private const float FireCoolDownMax = 0.8f;
 
-    private int lastIsland; //0 for initial island, 1 for left island, 2 for middle island, 3 right island
-    private float rightIslandX = 27.7f;
-    private float middleIslandX = -1.8f;
-    private float leftIslandX = -29.3f;
+    private const float RightIslandX = 27.7f;
+    private const float MiddleIslandX = -1.8f;
+    private const float LeftIslandX = -29.3f;
     // private float TOLERANCE = 0.5f;
     private bool isBeaten;
     private Transform pointer;
-    private float pointerSpeed = 150;
+    private const float PointerSpeed = 150;
     private float maxPointerSpeed = 800;
     private float minPointerSpeed = 50;
     private bool isTurnRight;
     private SpriteRenderer spriteRenderer;
 
-    private Action[] randomDirections = new Action[4];
+    private Action[] randomDirections;
     private bool isUnderControl = true;
-    private float loseControlTime = 3;
+    private const float LoseControlTime = 3;
     private bool pointerIsUnderControl = true;
-    private float pointerLoseControlTime = 3;
-    private float pointerSpeedLoseControl = 300;
-    
-
-
-
-
-    public void LoseControl()
-    {
-        MixDirections();
-        isUnderControl = false;
-        StartCoroutine(Recontrol());
-    }
-
-    private IEnumerator Recontrol()
-    {
-        yield return new WaitForSeconds(loseControlTime);
-        isUnderControl = true;
-    }
-    
-    
-    void MixDirections()
-    {
-        RandomS random = new RandomS();
-        int n = 4;
-        while (n > 1)
-        {
-            int k = random.Next(n--);
-            (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
-        }
-    }
-    
-    void MoveUp()
-    {
-        moveDirection = Vector3.up;
-    }
-
-    void MoveDown()
-    {
-        moveDirection = Vector3.down;
-    }
-
-    void MoveRight()
-    {
-        moveDirection = Vector3.right;
-        if (!isTurnRight)
-        {
-            t.Rotate(Vector3.up, 180);
-            isTurnRight = true;
-        }
-    }
-
-    void MoveLeft()
-    {
-        moveDirection = Vector3.left;
-        if (isTurnRight)
-        {
-            t.Rotate(Vector3.up, 180);
-            isTurnRight = false;
-        }
-    }
-
-    void MoveMixDirections()
-    {
-        switch (id)
-        {
-            case 1:
-                if (Input.GetKey(KeyCode.W))
-                {
-                    randomDirections[0]();
-                }
-                if (Input.GetKey(KeyCode.S))
-                {
-                    randomDirections[2]();
-                }
-
-                if (Input.GetKey(KeyCode.A))
-                {
-                    randomDirections[3]();
-                }
-                if (Input.GetKey(KeyCode.D))
-                {
-                    randomDirections[1]();
-                }
-                break;
-            case 2:
-                if (Input.GetKey(KeyCode.UpArrow))
-                {
-                    randomDirections[0]();
-                }
-                if (Input.GetKey(KeyCode.DownArrow))
-                {
-                    randomDirections[2]();                
-                }
-        
-                if (Input.GetKey(KeyCode.LeftArrow))
-                {
-                    randomDirections[3]();                    
-                }
-
-                if (Input.GetKey(KeyCode.RightArrow))
-                {
-                    randomDirections[1]();
-                }
-                break;
-        }
-    }
-
-
-    
-
-
-
-    private void InitPointerPosition()
-    {
-        pointer.RotateAround(transform.position, Vector3.forward, Random.value * 360);
-    }
-
-    public void PointerLoseControl()
-    {
-        pointerIsUnderControl = false;
-        StartCoroutine(PointerRecontrol());
-    }
-
-    private IEnumerator PointerRecontrol()
-    {
-        yield return new WaitForSeconds(pointerLoseControlTime);
-        pointerIsUnderControl = true;
-    }
-    
-    private void PointerMove()
-    {
-        if (pointerIsUnderControl)
-        {
-            pointer.RotateAround(transform.position, Vector3.forward, pointerSpeed * Time.deltaTime);
-        }
-        else
-        {
-            pointer.RotateAround(transform.position, Vector3.forward, pointerSpeedLoseControl * Time.deltaTime);
-        }
-    }
-
-    public Vector3 GetPointerPosition()
-    {
-        return pointer.position;
-    }
+    private const float PointerLoseControlTime = 3;
+    private const float PointerSpeedLoseControl = 300;
     
     // Start is called before the first frame update
     void Start()
     {
-        randomDirections[0] = MoveUp;
-        randomDirections[1] = MoveRight;
-        randomDirections[2] = MoveDown;
-        randomDirections[3] = MoveLeft;
-        
-        isTurnRight = id == 1;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            if (transform.GetChild(i).name == "Pointer")
-            {
-                pointer = transform.GetChild(i);
-            }
-        }
-        InitPointerPosition();
-        curBombs = 0;
-        loadingBombsPercentage = fireCoolDownMax - fireCoolDown / fireCoolDownMax;
-        bombs = new BombManager[NumBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
-        moveDirection = Vector3.zero;
+        randomDirections = new Action[]{ MoveUp, MoveRight, MoveDown, MoveLeft };
+     
+        // Taking Components from this GameObject
         t = GetComponent<Transform>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rigidBody = t.GetComponent<Rigidbody2D>();
+        
+        // The Grandma is looking right or left (in the beginning)
+        isTurnRight = id == 1;
+        
+        // Initializing the Pointer of the shooting direction
+        pointer = t.GetChild(0);
+        InitPointerPosition();
+        
+        moveDirection = Vector3.zero;
         startPosition = t.position;
         isBeaten = false;
-        
-        
-        for (int i = 0; i < NumBombs; i++)
+
+        // Initializing the Bombs for each Grandma
+        curBombs = 0;
+        loadingBombsPercentage = (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
+        bombs = new BombManager[MaxBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
+        for (int i = 0; i < MaxBombs; i++)
         {
-            GameObject temp = Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, transform) as GameObject;
+            GameObject temp = Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, t) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
             bombs[i] = temp.GetComponent<BombManager>();
+            bombs[i].SetId(Random.Range(0, NumBombsTypes));
+            // Sets each bomb's shooter, blue grandma ot red one
             bombs[i].SetShooterId(id);
             bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
         }
@@ -236,13 +99,9 @@ public class Grandmother : MonoBehaviour
         if (!isBeaten)
         {
             if (isUnderControl)
-            {
                 SetMoveDirection();
-            }
             else
-            {
                 MoveMixDirections();
-            }
             StartCoroutine(Move());
             PointerMove();
         }
@@ -253,26 +112,165 @@ public class Grandmother : MonoBehaviour
         }
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
-        loadingBombsPercentage = isBeaten ? 0 : (fireCoolDownMax - fireCoolDown) / fireCoolDownMax;
+        loadingBombsPercentage = isBeaten ? 0 : (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
 
-        if (((id == 1 && Input.GetKeyDown(KeyCode.LeftAlt)) ||
-                        (id == 2 && Input.GetKeyDown(KeyCode.RightAlt))) && curBombs < NumBombs && 
-                        loadingBombsPercentage == 1)
-        {
+        bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.LeftAlt);
+        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt); 
+        if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage == 1.0f)
             Fire();
+    }
+
+    public void LoseControl()
+    {
+        MixDirections();
+        isUnderControl = false;
+        StartCoroutine(Recontrol());
+    }
+
+    private IEnumerator Recontrol()
+    {
+        yield return new WaitForSeconds(LoseControlTime);
+        isUnderControl = true;
+    }
+
+
+    private void MixDirections()
+    {
+        RandomS random = new RandomS();
+        int n = 4;
+        while (n > 1)
+        {
+            int k = random.Next(n--);
+            (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
         }
+    }
+
+    private void MoveUp()
+    {
+        moveDirection = Vector3.up;
+    }
+
+    private void MoveDown()
+    {
+        moveDirection = Vector3.down;
+    }
+
+    private void MoveRight()
+    {
+        moveDirection = Vector3.right;
+        if (!isTurnRight)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = true;
+        }
+    }
+
+    private void MoveLeft()
+    {
+        moveDirection = Vector3.left;
+        if (isTurnRight)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = false;
+        }
+    }
+
+    private void MoveMixDirections()
+    {
+        if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
+            randomDirections[0]();
+        if ((id == 1 && Input.GetKey(KeyCode.S)) || (id == 2 && Input.GetKey(KeyCode.DownArrow)))
+            randomDirections[2]();
+        if ((id == 1 && Input.GetKey(KeyCode.D)) || (id == 2 && Input.GetKey(KeyCode.RightArrow)))
+            randomDirections[1]();
+        if ((id == 1 && Input.GetKey(KeyCode.A)) || (id == 2 && Input.GetKey(KeyCode.LeftArrow)))
+            randomDirections[3]();
+        
+        // switch (id)
+        // {
+        //     case 1:
+        //         if (Input.GetKey(KeyCode.W))
+        //         {
+        //             randomDirections[0]();
+        //         }
+        //         if (Input.GetKey(KeyCode.S))
+        //         {
+        //             randomDirections[2]();
+        //         }
+        //
+        //         if (Input.GetKey(KeyCode.A))
+        //         {
+        //             randomDirections[3]();
+        //         }
+        //         if (Input.GetKey(KeyCode.D))
+        //         {
+        //             randomDirections[1]();
+        //         }
+        //         break;
+        //     case 2:
+        //         if (Input.GetKey(KeyCode.UpArrow))
+        //         {
+        //             randomDirections[0]();
+        //         }
+        //         if (Input.GetKey(KeyCode.DownArrow))
+        //         {
+        //             randomDirections[2]();                
+        //         }
+        //
+        //         if (Input.GetKey(KeyCode.LeftArrow))
+        //         {
+        //             randomDirections[3]();                    
+        //         }
+        //
+        //         if (Input.GetKey(KeyCode.RightArrow))
+        //         {
+        //             randomDirections[1]();
+        //         }
+        //         break;
+        // }
+    }
+    
+    private void InitPointerPosition()
+    {
+        pointer.RotateAround(t.position, Vector3.forward, Random.value * 360);
+    }
+
+    public void PointerLoseControl()
+    {
+        pointerIsUnderControl = false;
+        StartCoroutine(PointerRecontrol());
+    }
+
+    private IEnumerator PointerRecontrol()
+    {
+        yield return new WaitForSeconds(PointerLoseControlTime);
+        pointerIsUnderControl = true;
+    }
+    
+    private void PointerMove()
+    {
+        if (pointerIsUnderControl)
+            pointer.RotateAround(t.position, Vector3.forward, PointerSpeed * Time.deltaTime);
+        else
+            pointer.RotateAround(t.position, Vector3.forward, PointerSpeedLoseControl * Time.deltaTime);
+    }
+
+    public Vector3 GetPointerPosition()
+    {
+        return pointer.position;
     }
 
     private void Fire()
     {
-        int i = Random.Range(0, NumBombs);
+        int i = Random.Range(0, MaxBombs);
         while (bombs[i].gameObject.activeInHierarchy)
-        {
-            i = Random.Range(0, NumBombs);
-        }
+            i = Random.Range(0, MaxBombs);
+        
         bombs[i].transform.position = pointer.position;
+        Quaternion curRotate = pointer.rotation;
+        bombs[i].transform.rotation = new Quaternion(curRotate.x, curRotate.y, curRotate.z + 90, curRotate.w);
         bombs[i].gameObject.SetActive(true);
-        bombs[i].Fire();
+        // bombs[i].Fire();
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
@@ -283,21 +281,13 @@ public class Grandmother : MonoBehaviour
         switch (id)
         {
             case 2:
-                if (position.x < leftIslandX)
+                t.position = position.x switch
                 {
-                    t.position = new Vector3(leftIslandX, position.y, position.z);
-                }else if (position.x < middleIslandX)
-                {
-                    t.position = new Vector3(middleIslandX, position.y, position.z);
-
-                }else if (position.x < rightIslandX)
-                {
-                    t.position = new Vector3(rightIslandX, position.y, position.z);
-                }
-                else
-                {
-                    t.position = startPosition;
-                }
+                    < LeftIslandX => new Vector3(LeftIslandX, position.y, position.z),
+                    < MiddleIslandX => new Vector3(MiddleIslandX, position.y, position.z),
+                    < RightIslandX => new Vector3(RightIslandX, position.y, position.z),
+                    _ => startPosition
+                };
                 if (isTurnRight)
                 {
                     t.Rotate(Vector3.up, 180);
@@ -305,21 +295,13 @@ public class Grandmother : MonoBehaviour
                 }
                 break;
             case 1:
-                if (position.x > rightIslandX)
+                t.position = position.x switch
                 {
-                    t.position = new Vector3(rightIslandX, position.y, position.z);
-                }else if (position.x > middleIslandX)
-                {
-                    t.position = new Vector3(middleIslandX, position.y, position.z);
-
-                }else if (position.x > leftIslandX)
-                {
-                    t.position = new Vector3(leftIslandX, position.y, position.z);
-                }
-                else
-                {
-                    t.position = startPosition;
-                }
+                    > RightIslandX => new Vector3(RightIslandX, position.y, position.z),
+                    > MiddleIslandX => new Vector3(MiddleIslandX, position.y, position.z),
+                    > LeftIslandX => new Vector3(LeftIslandX, position.y, position.z),
+                    _ => startPosition
+                };
 
                 if (!isTurnRight)
                 {
@@ -328,18 +310,17 @@ public class Grandmother : MonoBehaviour
                 }
                 break;
         }
-
     }
 
-    public int GetId()
-    {
-        return id;
-    }
-
-    public int GetCurBombs()
-    {
-        return curBombs;
-    }
+    // public int GetId()
+    // {
+    //     return id;
+    // }
+    //
+    // public int GetCurBombs()
+    // {
+    //     return curBombs;
+    // }
 
     public void AddToCurBombs(int other)
     {
@@ -348,53 +329,62 @@ public class Grandmother : MonoBehaviour
 
     private void SetMoveDirection()
     {
-        switch (id)
-        {
-            case 1:
-                if (Input.GetKeyDown(KeyCode.W))
-                {
-                    MoveUp();
-                }
-
-                if (Input.GetKeyDown(KeyCode.S))
-                {
-                    MoveDown();
-                }
-
-                if (Input.GetKeyDown(KeyCode.A))
-                {
-                    MoveLeft();
-                }
-
-                if (Input.GetKeyDown(KeyCode.D))
-                {
-                    MoveRight();
-                }
-
-                break;
-            case 2:
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    MoveUp();
-                }
-
-                if (Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    MoveDown();
-                }
-
-                if (Input.GetKeyDown(KeyCode.LeftArrow))
-                {
-                    MoveLeft();
-                }
-
-                if (Input.GetKeyDown(KeyCode.RightArrow))
-                {
-                    MoveRight();
-                }
-
-                break;
-        }
+        if ((id == 1 && Input.GetKeyDown(KeyCode.W)) || (id == 2 && Input.GetKeyDown(KeyCode.UpArrow)))
+            MoveUp();
+        if ((id == 1 && Input.GetKeyDown(KeyCode.S)) || (id == 2 && Input.GetKeyDown(KeyCode.DownArrow)))
+            MoveDown();
+        if ((id == 1 && Input.GetKeyDown(KeyCode.D)) || (id == 2 && Input.GetKeyDown(KeyCode.RightArrow)))
+            MoveRight();
+        if ((id == 1 && Input.GetKeyDown(KeyCode.A)) || (id == 2 && Input.GetKeyDown(KeyCode.LeftArrow)))
+            MoveLeft();
+        
+        // switch (id)
+        // {
+        //     case 1:
+        //         if (Input.GetKeyDown(KeyCode.W))
+        //         {
+        //             MoveUp();
+        //         }
+        //
+        //         if (Input.GetKeyDown(KeyCode.S))
+        //         {
+        //             MoveDown();
+        //         }
+        //
+        //         if (Input.GetKeyDown(KeyCode.A))
+        //         {
+        //             MoveLeft();
+        //         }
+        //
+        //         if (Input.GetKeyDown(KeyCode.D))
+        //         {
+        //             MoveRight();
+        //         }
+        //
+        //         break;
+        //     case 2:
+        //         if (Input.GetKeyDown(KeyCode.UpArrow))
+        //         {
+        //             MoveUp();
+        //         }
+        //
+        //         if (Input.GetKeyDown(KeyCode.DownArrow))
+        //         {
+        //             MoveDown();
+        //         }
+        //
+        //         if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //         {
+        //             MoveLeft();
+        //         }
+        //
+        //         if (Input.GetKeyDown(KeyCode.RightArrow))
+        //         {
+        //             MoveRight();
+        //         }
+        //
+        //         break;
+        // }
     }
 
     private IEnumerator Move()
@@ -404,6 +394,38 @@ public class Grandmother : MonoBehaviour
         moveDirection = Vector3.zero;
     }
 
+    private IEnumerator FreezeMovement()
+    {
+        rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
+        StartCoroutine(FadeInOut());
+        yield return new WaitForSeconds(3);
+        RecoverFading();
+        rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    private void HitByBomb(int bombId)
+    {
+        isBeaten = true;
+        if (bombId == FreezeInPlace)
+        {
+            StartCoroutine(FreezeMovement());
+        }else if (bombId == GoBackToIsland)
+        {
+            GoBack();
+            StartCoroutine(Recovery());
+        }else if (bombId == CrazyPointer)
+        {
+            PointerLoseControl();
+        }else if (bombId == CrazyDirections)
+        {
+            LoseControl();
+        }
+        // t.gameObject.SetActive(false);
+        // curBomb.ActivateBomb(gameObject);
+        // pointer.gameObject.SetActive(false);
+        
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.name.StartsWith("Car"))
@@ -411,21 +433,34 @@ public class Grandmother : MonoBehaviour
             t.position = startPosition;
             switch (id)
             {
-                case 1:
-                    if (!isTurnRight)
-                    {
-                        t.Rotate(Vector3.up, 180);
-                        isTurnRight = true;
-                    }
+                case 1 when !isTurnRight:
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = true;
                     break;
-                case 2:
-                    if (isTurnRight)
-                    {
-                        t.Rotate(Vector3.up, 180);
-                        isTurnRight = false;
-                    }
+                case 2 when isTurnRight:
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = false;
                     break;
             }
+
+            // switch (id)
+            // {
+            //     case 1:
+            //         if (!isTurnRight)
+            //         {
+            //             t.Rotate(Vector3.up, 180);
+            //             isTurnRight = true;
+            //         }
+            //         break;
+            //     case 2:
+            //         if (isTurnRight)
+            //         {
+            //             t.Rotate(Vector3.up, 180);
+            //             isTurnRight = false;
+            //         }
+            //         break;
+            // }
+            
             InitPointerPosition();
             pointer.gameObject.SetActive(false);
             isBeaten = true;
@@ -433,35 +468,36 @@ public class Grandmother : MonoBehaviour
         }
     }
     
-
     private void OnTriggerEnter2D(Collider2D col)
     {
         BombManager curBomb = col.gameObject.GetComponent<BombManager>();
         if (col.gameObject.name.StartsWith("Bomb") && curBomb.GetShooterId() != id)
-        { 
-            isBeaten = true;
-            curBomb.ActivateBomb(gameObject);
-            pointer.gameObject.SetActive(false);
-            StartCoroutine(Recovery());
+        {
+            print("Bomb ID: " + curBomb.GetId());
+            HitByBomb(curBomb.GetId());
         }
     }
 
+    private void RecoverFading()
+    {
+        Color c = spriteRenderer.color;
+        spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
+    }
+    
     public IEnumerator Recovery()
     {
         StartCoroutine(FadeInOut());
-        yield return new WaitForSeconds(recoveryTime);
+        yield return new WaitForSeconds(RecoveryTime);
         isBeaten = false;
         pointer.gameObject.SetActive(true);
         InitPointerPosition();
-        Color c = spriteRenderer.color;
-        spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
-
+        RecoverFading();
     }
 
     private IEnumerator FadeInOut()
     {
         Color c = spriteRenderer.color;
-        for (int n = 0; n <= recoveryTime * 2; n++)
+        for (int n = 0; n <= RecoveryTime * 2; n++)
         {
             for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
             {
