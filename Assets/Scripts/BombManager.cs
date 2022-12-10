@@ -29,6 +29,7 @@ public class BombManager : MonoBehaviour
     void Update()
     {
         t.position += direction * (Speed * Time.deltaTime);
+        t.Rotate(Vector3.forward, 1.0f);
     }
 
     public int GetId()
@@ -65,19 +66,18 @@ public class BombManager : MonoBehaviour
         shooterId = other;
     }
 
-    public void ActivateBomb(GameObject grandmother)
-    {
-        // isFired = false;
-        // t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
-        grandmother.GetComponent<Grandmother>().GoBack();
-        t.gameObject.SetActive(false);
-    }
+    // public void ActivateBomb(GameObject grandmother)
+    // {
+    //     // isFired = false;
+    //     // t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
+    //     grandmother.GetComponent<Grandmother>().GoBack();
+    //     t.gameObject.SetActive(false);
+    // }
 
     private void OnTriggerExit2D(Collider2D col)
     {
-        if (col.gameObject.name.EndsWith("Wall"))
+        if (col.gameObject.name.Equals("Grass"))
         {
-            // isFired = false;
             parentGrandma.AddToCurBombs(-1);
             t.gameObject.SetActive(false);
         }

@@ -1,10 +1,10 @@
 itch - page for each one
 power of the shoot
-cool down for shooting
-the types of the bombs
+V - cool down for shooting
+4 - the types of the bombs
 energy
 name of game
-loading for bombs
+loading for bombs, choose randomly then Alt to choose
 
 V - arrow to direct the shoot
 V - alt <= ctrl

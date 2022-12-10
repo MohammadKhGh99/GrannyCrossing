@@ -18,9 +18,9 @@ public class Grandmother : MonoBehaviour
 
     // Types of the bombs
     private const int NumBombsTypes = 4;
-    private const int FreezeInPlace = 0;  // Works Good
-    private const int CrazyPointer = 1;  // Works Good
-    private const int GoBackToIsland = 2;  // Works Good
+    private const int FreezeInPlace = 0; // Works Good
+    private const int CrazyPointer = 1; // Works Good
+    private const int GoBackToIsland = 2; // Works Good
     private const int CrazyDirections = 3;
 
     private Vector3 moveDirection;
@@ -36,7 +36,9 @@ public class Grandmother : MonoBehaviour
 
     private const float RightIslandX = 27.7f;
     private const float MiddleIslandX = -1.8f;
+
     private const float LeftIslandX = -29.3f;
+
     // private float TOLERANCE = 0.5f;
     private bool isBeaten;
     private Transform pointer;
@@ -53,24 +55,25 @@ public class Grandmother : MonoBehaviour
     private bool pointerIsUnderControl = true;
     private const float PointerLoseControlTime = 5;
     private const float PointerSpeedLoseControl = 500;
-    
+    private float moveCoolDown = 0.5f;
+
     // Start is called before the first frame update
     void Start()
     {
-        randomDirections = new Action[]{ MoveUp, MoveRight, MoveDown, MoveLeft };
+        randomDirections = new Action[] { MoveUp, MoveRight, MoveDown, MoveLeft };
         freezeOrNot = false;
-        
+
         // Taking Components from this GameObject
         t = GetComponent<Transform>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
+
         // The Grandma is looking right or left (in the beginning)
         isTurnRight = id == 1;
-        
+
         // Initializing the Pointer of the shooting direction
         pointer = t.GetChild(0);
         InitPointerPosition();
-        
+
         moveDirection = Vector3.zero;
         startPosition = t.position;
         isBeaten = false;
@@ -81,50 +84,65 @@ public class Grandmother : MonoBehaviour
         bombs = new BombManager[MaxBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         for (int i = 0; i < MaxBombs; i++)
         {
-            GameObject temp = Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, t) as GameObject;
+            GameObject temp =
+                Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, t) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
+
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetId(Random.Range(0, NumBombsTypes));
             // Sets each bomb's shooter, blue grandma ot red one
             bombs[i].SetShooterId(id);
             // bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
         }
+
+        moveCoolDown = 0;
     }
 
     void Update()
     {
+        if (freezeOrNot)
+            return;
+        
         if (!isBeaten)
         {
-            if (!freezeOrNot)
-            {
-                if (isUnderControl)
-                    SetMoveDirection();
-
-                else
-                    MoveMixDirections();
-                StartCoroutine(Move());
-                PointerMove();
-            }
+            if (isUnderControl)
+                SetMoveDirection();
+            else
+                MoveMixDirections();
+            StartCoroutine(Move());
+            PointerMove();
         }
         else
         {
             t.position = startPosition; //I don't know why but without it there is a weird bug...
-                                        //you can go one more step after going back when hit by a car or a bomb
+            //you can go one more step after going back when hit by a car or a bomb
         }
+
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
         float temp = (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
         loadingBombsPercentage = isBeaten ? 0 : temp >= 1 ? 1 : temp;
 
         bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.LeftAlt);
-        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt); 
+        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt);
         if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage >= 1.0f)
             Fire();
     }
 
+    // private void MyMove()
+    // {
+    //     moveCoolDown -= Time.deltaTime;
+    //     if (moveCoolDown <= 0)
+    //     {
+    //         moveCoolDown = 0.5f;
+    //         t.position += moveDirection * movementDistance;
+    //         moveDirection = Vector3.zero;
+    //     }
+    // }
+    
     private void LoseControl()
     {
         MixDirections();
@@ -137,7 +155,6 @@ public class Grandmother : MonoBehaviour
         yield return new WaitForSeconds(LoseControlTime);
         isUnderControl = true;
     }
-
 
     private void MixDirections()
     {
@@ -182,7 +199,6 @@ public class Grandmother : MonoBehaviour
 
     private void MoveMixDirections()
     {
-        
         if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
             randomDirections[0]();
         if ((id == 1 && Input.GetKey(KeyCode.S)) || (id == 2 && Input.GetKey(KeyCode.DownArrow)))
@@ -191,7 +207,7 @@ public class Grandmother : MonoBehaviour
             randomDirections[1]();
         if ((id == 1 && Input.GetKey(KeyCode.A)) || (id == 2 && Input.GetKey(KeyCode.LeftArrow)))
             randomDirections[3]();
-        
+
         // switch (id)
         // {
         //     case 1:
@@ -235,7 +251,7 @@ public class Grandmother : MonoBehaviour
         //         break;
         // }
     }
-    
+
     private void InitPointerPosition()
     {
         pointer.RotateAround(t.position, Vector3.forward, Random.value * 360);
@@ -252,7 +268,7 @@ public class Grandmother : MonoBehaviour
         yield return new WaitForSeconds(PointerLoseControlTime);
         pointerIsUnderControl = true;
     }
-    
+
     private void PointerMove()
     {
         if (pointerIsUnderControl)
@@ -271,10 +287,11 @@ public class Grandmother : MonoBehaviour
         int i = Random.Range(0, MaxBombs);
         while (bombs[i].gameObject.activeInHierarchy)
             i = Random.Range(0, MaxBombs);
-        
+
         bombs[i].transform.position = pointer.position;
-        Quaternion curRotate = pointer.rotation;
-        bombs[i].transform.rotation = new Quaternion(curRotate.x, curRotate.y, curRotate.z + 90, curRotate.w);
+        // bombs[i].transform.Rotate(Vector3.forward * 90);
+        // Quaternion curRotate = pointer.rotation;
+        // bombs[i].transform.rotation = new Quaternion(curRotate.x, curRotate.y, curRotate.z + 90, curRotate.w);
         bombs[i].gameObject.SetActive(true);
         // bombs[i].Fire();
         curBombs++;
@@ -299,6 +316,7 @@ public class Grandmother : MonoBehaviour
                     t.Rotate(Vector3.up, 180);
                     isTurnRight = false;
                 }
+
                 break;
             case 1:
                 t.position = position.x switch
@@ -314,6 +332,7 @@ public class Grandmother : MonoBehaviour
                     t.Rotate(Vector3.up, 180);
                     isTurnRight = true;
                 }
+
                 break;
         }
     }
@@ -343,7 +362,7 @@ public class Grandmother : MonoBehaviour
             MoveRight();
         if ((id == 1 && Input.GetKeyDown(KeyCode.A)) || (id == 2 && Input.GetKeyDown(KeyCode.LeftArrow)))
             MoveLeft();
-        
+
         // switch (id)
         // {
         //     case 1:
@@ -396,46 +415,38 @@ public class Grandmother : MonoBehaviour
     private IEnumerator Move()
     {
         yield return new WaitForSeconds(movementTime);
-        if (!isUnderControl)
-            t.position += moveDirection * 0.1f;
-        else
-            t.position += moveDirection * movementDistance;
+        t.position += moveDirection * movementDistance;
         moveDirection = Vector3.zero;
     }
 
     private IEnumerator FreezeMovement()
     {
-        // rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
         freezeOrNot = true;
         StartCoroutine(FadeInOut());
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(4);
         RecoverFading();
         freezeOrNot = false;
-        // rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
     private void HitByBomb(int bombId)
     {
-        // isBeaten = true;
-        if (bombId == FreezeInPlace)
+        switch (bombId)
         {
-            StartCoroutine(FreezeMovement());
-        }else if (bombId == GoBackToIsland)
-        {
-            GoBack();
-            StartCoroutine(Recovery());
-        }else if (bombId == CrazyPointer)
-        {
-            PointerLoseControl();
-        }else if (bombId == CrazyDirections)
-        {
-            print("Mix Direction Movement");
-            LoseControl();
+            case FreezeInPlace:
+                StartCoroutine(FreezeMovement());
+                break;
+            case GoBackToIsland:
+                GoBack();
+                StartCoroutine(Recovery());
+                break;
+            case CrazyPointer:
+                PointerLoseControl();
+                break;
+            case CrazyDirections:
+                print("Losing Control");
+                LoseControl();
+                break;
         }
-        // t.gameObject.SetActive(false);
-        // curBomb.ActivateBomb(gameObject);
-        // pointer.gameObject.SetActive(false);
-        
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -472,14 +483,14 @@ public class Grandmother : MonoBehaviour
             //         }
             //         break;
             // }
-            
+
             InitPointerPosition();
             pointer.gameObject.SetActive(false);
             isBeaten = true;
             StartCoroutine(Recovery());
         }
     }
-    
+
     private void OnTriggerEnter2D(Collider2D col)
     {
         BombManager curBomb = col.gameObject.GetComponent<BombManager>();
@@ -516,6 +527,7 @@ public class Grandmother : MonoBehaviour
                 spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
                 yield return null;
             }
+
             for (float i = 0; i <= 0.25f; i += Time.deltaTime)
             {
                 spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
@@ -523,5 +535,4 @@ public class Grandmother : MonoBehaviour
             }
         }
     }
-
 }
