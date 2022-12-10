@@ -49,10 +49,10 @@ public class Grandmother : MonoBehaviour
 
     private Action[] randomDirections;
     private bool isUnderControl = true;
-    private const float LoseControlTime = 3;
+    private const float LoseControlTime = 5;
     private bool pointerIsUnderControl = true;
-    private const float PointerLoseControlTime = 3;
-    private const float PointerSpeedLoseControl = 300;
+    private const float PointerLoseControlTime = 5;
+    private const float PointerSpeedLoseControl = 500;
     
     // Start is called before the first frame update
     void Start()
@@ -98,8 +98,13 @@ public class Grandmother : MonoBehaviour
     {
         if (!isBeaten)
         {
+            // if (id == 1 && !pointerIsUnderControl)
+            // {
+            //     print("What's Happening");
+            // }
             if (isUnderControl)
                 SetMoveDirection();
+               
             else
                 MoveMixDirections();
             StartCoroutine(Move());
@@ -112,15 +117,16 @@ public class Grandmother : MonoBehaviour
         }
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
-        loadingBombsPercentage = isBeaten ? 0 : (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
+        float temp = (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
+        loadingBombsPercentage = isBeaten ? 0 : temp >= 1 ? 1 : temp;
 
         bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.LeftAlt);
         bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt); 
-        if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage == 1.0f)
+        if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage >= 1.0f)
             Fire();
     }
 
-    public void LoseControl()
+    private void LoseControl()
     {
         MixDirections();
         isUnderControl = false;
@@ -141,6 +147,8 @@ public class Grandmother : MonoBehaviour
         while (n > 1)
         {
             int k = random.Next(n--);
+            print(randomDirections[n].ToString());
+            print(randomDirections[k].ToString());
             (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
         }
     }
@@ -177,6 +185,7 @@ public class Grandmother : MonoBehaviour
 
     private void MoveMixDirections()
     {
+        
         if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
             randomDirections[0]();
         if ((id == 1 && Input.GetKey(KeyCode.S)) || (id == 2 && Input.GetKey(KeyCode.DownArrow)))
@@ -235,7 +244,7 @@ public class Grandmother : MonoBehaviour
         pointer.RotateAround(t.position, Vector3.forward, Random.value * 360);
     }
 
-    public void PointerLoseControl()
+    private void PointerLoseControl()
     {
         pointerIsUnderControl = false;
         StartCoroutine(PointerRecontrol());
@@ -243,7 +252,9 @@ public class Grandmother : MonoBehaviour
 
     private IEnumerator PointerRecontrol()
     {
+        print("Before Pointer Losing");
         yield return new WaitForSeconds(PointerLoseControlTime);
+        print("After Pointer Losing");
         pointerIsUnderControl = true;
     }
     
@@ -390,6 +401,7 @@ public class Grandmother : MonoBehaviour
     private IEnumerator Move()
     {
         yield return new WaitForSeconds(movementTime);
+        // print(movementDistance);
         t.position += moveDirection * movementDistance;
         moveDirection = Vector3.zero;
     }
@@ -398,14 +410,15 @@ public class Grandmother : MonoBehaviour
     {
         rigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
         StartCoroutine(FadeInOut());
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(5);
         RecoverFading();
         rigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+        print("End Freezing");
     }
 
     private void HitByBomb(int bombId)
     {
-        isBeaten = true;
+        // isBeaten = true;
         if (bombId == FreezeInPlace)
         {
             StartCoroutine(FreezeMovement());
@@ -418,6 +431,7 @@ public class Grandmother : MonoBehaviour
             PointerLoseControl();
         }else if (bombId == CrazyDirections)
         {
+            print("Mix Direction Movement");
             LoseControl();
         }
         // t.gameObject.SetActive(false);
@@ -483,8 +497,8 @@ public class Grandmother : MonoBehaviour
         Color c = spriteRenderer.color;
         spriteRenderer.color = new Color(c.r, c.g, c.b, 1);
     }
-    
-    public IEnumerator Recovery()
+
+    private IEnumerator Recovery()
     {
         StartCoroutine(FadeInOut());
         yield return new WaitForSeconds(RecoveryTime);

@@ -14,7 +14,7 @@ public class GameController : MonoBehaviour
     // public static float FieldLimit = fieldLimit == 0 ? 30 : FieldLimit;
 
     private readonly Car[] cars = new Car[MaxCars];
-    private float[] carsPos = {-35.5f, -25f, -19.8f, -14.2f, -8.7f, 6.1f, 11.6f, 16.9f, 22.1f, 35.5f};
+    private float[] carsPos = {-37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f};
     private readonly int[] downToUpCars = { 0, 2, 4, 6, 8};
     private readonly string[] carsToLoad = { "Car", "Car 1", "Car 2", "Car 3" };
     private int fpsCounter;
