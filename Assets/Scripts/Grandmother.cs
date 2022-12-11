@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Security.Cryptography;
+using Unity.Collections;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -50,6 +51,8 @@ public class Grandmother : MonoBehaviour
     private Action[] randomDirections;
     private bool isUnderControl = true;
     private const float LoseControlTime = 5;
+    private bool won;
+    private string winner;
     
     private bool pointerIsUnderControl = true;
     private const float PointerLoseControlTime = 5;
@@ -80,6 +83,8 @@ public class Grandmother : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        won = false;
+        winner = "No one";
         if (!_hasLoaded)
             LoadSprites();
         
@@ -275,7 +280,10 @@ public class Grandmother : MonoBehaviour
 
         bombs[i].transform.position = GetPointerPosition();
         bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
-        StartCoroutine(DelayForAnimator(i));
+        // StartCoroutine(DelayForAnimator(i));
+        animator.SetBool("isShooting", true);
+        bombs[i].gameObject.SetActive(true);
+        animator.SetBool("isShooting", false);
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
@@ -457,6 +465,19 @@ public class Grandmother : MonoBehaviour
         {
             print("Bomb ID: " + curBomb.GetId());
             HitByBomb(curBomb.GetId());
+        }
+
+        string objectName = col.gameObject.name;
+        if (objectName.EndsWith("flag HD"))
+        {
+            won = true;
+            if (objectName.StartsWith("purple") && id == 1)
+            {
+                winner = "LeftGrandma";
+            }else if (objectName.StartsWith("yellow") && id == 2)
+            {
+                winner = "RightGrandma";
+            }
         }
     }
 }
