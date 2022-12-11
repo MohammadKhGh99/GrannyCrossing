@@ -4617,6 +4617,7 @@ MonoBehaviour:
   fireCollDownTime: 1
   loadingBombsPercentage: 0
   bombParent: {fileID: 185178836}
+  animator: {fileID: 1201792786}
 --- !u!212 &1201792783
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4863,6 +4864,7 @@ MonoBehaviour:
   fireCollDownTime: 1
   loadingBombsPercentage: 0
   bombParent: {fileID: 1472048945}
+  animator: {fileID: 1250938528}
 --- !u!212 &1250938525
 SpriteRenderer:
   m_ObjectHideFlags: 0
