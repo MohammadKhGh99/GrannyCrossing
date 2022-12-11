@@ -264,8 +264,10 @@ public class Grandmother : MonoBehaviour
         bombs[i].transform.position = GetPointerPosition();
         bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
         animator.SetBool("isShooting", true);
+        print("Before Shooting: " + animator.GetBool("isShooting"));
         bombs[i].gameObject.SetActive(true);
         animator.SetBool("isShooting", false);
+        print("After Shooting: " + animator.GetBool("isShooting"));
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
