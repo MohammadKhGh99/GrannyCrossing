@@ -28,6 +28,8 @@ public class GameController : MonoBehaviour
     private const string CarsFolder = "Sprites/cars";
 
     private GameObject startGameCanvas;
+    private GameObject player1WonCanvas;
+    private GameObject player2WonCanvas;
     private Grandmother[] grandmothers;
 
     static void LoadCarsSprites()
@@ -40,6 +42,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        player1WonCanvas.SetActive(false);
+        player2WonCanvas.SetActive(false);
         if (!_hasLoaded)
             LoadCarsSprites();
 
@@ -83,6 +87,15 @@ public class GameController : MonoBehaviour
             {
                 startGameCanvas = transform.GetChild(i).gameObject;
             }
+            
+            if (transform.GetChild(i).name.Equals("Player1Won"))
+            {
+                player1WonCanvas = transform.GetChild(i).gameObject;
+            }
+            if (transform.GetChild(i).name.Equals("Player2Won"))
+            {
+                player2WonCanvas = transform.GetChild(i).gameObject;
+            }
 
             if (transform.GetChild(i).name.Equals("Players"))
             {
@@ -124,5 +137,15 @@ public class GameController : MonoBehaviour
                 grandmothers[i].StartGame();
             }
         }
+
+        if (grandmothers[0].WhoWon() == 1)
+        {
+            player1WonCanvas.SetActive(true);
+        }
+        if (grandmothers[0].WhoWon() == 2)
+        {
+            player2WonCanvas.SetActive(true);
+        }
+        
     }
 }
