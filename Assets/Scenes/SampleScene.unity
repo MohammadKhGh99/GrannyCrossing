@@ -4740,7 +4740,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 1
-  movementTime: 2
+  movementTime: 0.5
   movementDistance: 0.8
   fireCollDownTime: 1
   loadingBombsPercentage: 0
@@ -4987,7 +4987,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 2
-  movementTime: 2
+  movementTime: 0.5
   movementDistance: 0.8
   fireCollDownTime: 1
   loadingBombsPercentage: 0
@@ -5204,27 +5204,27 @@ MonoBehaviour:
   carsParent: {fileID: 1599215439}
   fieldLimit: 30
   controlCarsPositions: 1
-  longPress: 1
+  longPress: 0
   carsPositions:
-  - -37.2
-  - -26
-  - -20.6
-  - -15.5
-  - -10.5
-  - 9.8
-  - 15
-  - 20
-  - 25.2
-  - 36.7
+  - -36.8
+  - -25.5
+  - -20.4
+  - -15.2
+  - -10.1
+  - 10.1
+  - 15.4
+  - 20.3
+  - 25.6
+  - 37
   carsDirections:
   - up
   - down
-  - up
   - down
   - up
-  - down
   - up
   - down
+  - down
+  - up
   - up
   - down
 --- !u!1 &1364934719
