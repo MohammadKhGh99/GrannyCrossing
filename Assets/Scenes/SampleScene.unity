@@ -3295,8 +3295,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carsParent: {fileID: 1599215439}
   fieldLimit: 30
-  controlCarsPositions: 0
-  carsPositions: []
+  controlCarsPositions: 1
+  carsPositions:
+  - -37.2
+  - -26
+  - -20.6
+  - -15.5
+  - -10.5
+  - 9.8
+  - 15
+  - 20
+  - 25.2
+  - 36.7
   maxCarsTypes: 4
 --- !u!1 &1364934719
 GameObject:

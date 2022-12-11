@@ -8,8 +8,8 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject carsParent;
     [SerializeField] private float fieldLimit = 30;
     [SerializeField] private bool controlCarsPositions;
-    [SerializeField] private float[] carsPositions;
-    [SerializeField] private int maxCarsTypes = 4;
+    [SerializeField] private float[] carsPositions = new[]{-37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f};
+    // [SerializeField] private int maxCarsTypes = 4;
 
     private const int MaxCars = 10;
     // public static float FieldLimit = fieldLimit == 0 ? 30 : FieldLimit;
@@ -21,12 +21,14 @@ public class GameController : MonoBehaviour
     private int fpsCounter;
     private float fpsTime;
 
-    private static Sprite[] _carsTypes;
+    public static Sprite[] CarsTypes;
     private static bool _hasLoaded = false;
+    public static int NumCarsTypes;
 
     static void LoadCarsSprites()
     {
-        _carsTypes = Resources.LoadAll<Sprite>("Sprites/cars");
+        CarsTypes = Resources.LoadAll<Sprite>("Sprites/cars");
+        NumCarsTypes = CarsTypes.Length;
         _hasLoaded = true;
     }
     
@@ -55,7 +57,7 @@ public class GameController : MonoBehaviour
                 throw new NullReferenceException("Car Prefab Not Found!");
             }
 
-            temp.GetComponent<SpriteRenderer>().sprite = _carsTypes[Random.Range(0, maxCarsTypes)];
+            temp.GetComponent<SpriteRenderer>().sprite = CarsTypes[Random.Range(0, maxCarsTypes)];
             
             cars[i] = temp.GetComponent<Car>();
             cars[i].SetDirection(i % 2 == 0 ? Vector3.up : Vector3.down);

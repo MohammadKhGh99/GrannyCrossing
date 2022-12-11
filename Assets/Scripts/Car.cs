@@ -15,11 +15,14 @@ public class Car : MonoBehaviour
     private Vector3 direction;
     private Vector3 startPosition;
     private float fieldLimit;
+    private SpriteRenderer spriteRenderer;
+    private int UpOrDown = 1;
 
     // Start is called before the first frame update
     void Start()
     {
         t = GetComponent<Transform>();
+        spriteRenderer = t.GetComponent<SpriteRenderer>();
         if (controlPosition)
             t.position = new Vector3(x, y, 0);
         
@@ -37,11 +40,25 @@ public class Car : MonoBehaviour
     {
         t.position += direction * (speed * Time.deltaTime);
         if (t.position.y > fieldLimit || t.position.y < -fieldLimit)
+        {
             t.position = startPosition;
+            spriteRenderer.sprite = GameController.CarsTypes[Random.Range(0, GameController.NumCarsTypes)];
+        }
+            
         // todo - This line removed because there is no call for this function except for this only call here
         // Reused();
     }
 
+    public int GetDirection()
+    {
+        return UpOrDown;
+    }
+
+    public void SetDirection(int other)
+    {
+        UpOrDown = other;
+    }
+    
     public void SetDirection(Vector3 direct)
     {
         direction = direct;
