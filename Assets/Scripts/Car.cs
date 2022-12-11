@@ -41,6 +41,7 @@ public class Car : MonoBehaviour
         if (t.position.y > fieldLimit || t.position.y < -fieldLimit)
         {
             t.position = startPosition;
+            speed = !controlSpeed ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
             spriteRenderer.sprite = GameController.CarsTypes[Random.Range(0, GameController.NumCarsTypes)];
         }
     }
