@@ -96,7 +96,6 @@ public class Grandmother : MonoBehaviour
         // Taking Components from this GameObject
         t = GetComponent<Transform>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        // animator = t.GetComponent<Animator>();
 
         // The Grandma is looking right or left (in the beginning)
         isTurnRight = id == 1;
@@ -156,7 +155,7 @@ public class Grandmother : MonoBehaviour
 
             }
 
-            //StartCoroutine(Move());
+            StartCoroutine(Move());
             PointerMove();
         }
         else
@@ -388,9 +387,9 @@ public class Grandmother : MonoBehaviour
     {
         yield return new WaitForSeconds(movementTime);
         t.position += moveDirection * movementDistance;
-        Debug.Log("move");
+        // Debug.Log("move");
         moveDirection = Vector3.zero;
-        StartCoroutine(Move());
+        // StartCoroutine(Move());
     }
 
     private IEnumerator FreezeMovement()

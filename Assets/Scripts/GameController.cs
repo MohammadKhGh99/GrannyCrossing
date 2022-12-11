@@ -8,18 +8,16 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject carsParent;
     [SerializeField] private float fieldLimit = 30;
     [SerializeField] private bool controlCarsPositions;
-    [SerializeField] private bool longPress = false;
+    [SerializeField] private bool longPress;
 
-    [SerializeField] private float[] carsPositions = new[]
-        { -37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f };
+    [SerializeField] private float[] carsPositions = { -36.8f, -25.5f, -20.4f, -15.2f, -10.1f, 10.1f, 15.2f, 20.3f, 25.6f, 37f };
 
-    [SerializeField] private string[] carsDirections = new[]
-        { "up", "down", "up", "down", "up", "down", "up", "down", "up", "down" };
+    [SerializeField] private string[] carsDirections = { "up", "down", "up", "down", "up", "down", "up", "down", "up", "down" };
 
     private const int MaxCars = 10;
 
     private readonly Car[] cars = new Car[MaxCars];
-    private float[] carsPos = { -37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f };
+    private float[] carsPos = { -36.8f, -25.5f, -20.4f, -15.2f, -10.1f, 10.1f, 15.2f, 20.3f, 25.6f, 37f };
     
     private int fpsCounter;
     private float fpsTime;
@@ -40,9 +38,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         if (!_hasLoaded)
-        {
             LoadCarsSprites();
-        }
 
         if (controlCarsPositions)
             carsPos = carsPositions;
