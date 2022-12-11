@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private float fieldLimit = 30;
     [SerializeField] private bool controlCarsPositions;
     [SerializeField] private float[] carsPositions = new[]{-37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f};
-    // [SerializeField] private int maxCarsTypes = 4;
+    [SerializeField] private int maxCarsTypes = 4;
 
     private const int MaxCars = 10;
     // public static float FieldLimit = fieldLimit == 0 ? 30 : FieldLimit;

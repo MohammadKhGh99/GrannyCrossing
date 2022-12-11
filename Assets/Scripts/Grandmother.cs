@@ -33,7 +33,7 @@ public class Grandmother : MonoBehaviour
     private const float RecoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int MaxBombs = 15;
+    private const int MaxBombs = 5;
     private Vector3 startPosition;
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
@@ -232,49 +232,6 @@ public class Grandmother : MonoBehaviour
             randomDirections[1]();
         if ((id == 1 && Input.GetKey(KeyCode.A)) || (id == 2 && Input.GetKey(KeyCode.LeftArrow)))
             randomDirections[3]();
-
-        // switch (id)
-        // {
-        //     case 1:
-        //         if (Input.GetKey(KeyCode.W))
-        //         {
-        //             randomDirections[0]();
-        //         }
-        //         if (Input.GetKey(KeyCode.S))
-        //         {
-        //             randomDirections[2]();
-        //         }
-        //
-        //         if (Input.GetKey(KeyCode.A))
-        //         {
-        //             randomDirections[3]();
-        //         }
-        //         if (Input.GetKey(KeyCode.D))
-        //         {
-        //             randomDirections[1]();
-        //         }
-        //         break;
-        //     case 2:
-        //         if (Input.GetKey(KeyCode.UpArrow))
-        //         {
-        //             randomDirections[0]();
-        //         }
-        //         if (Input.GetKey(KeyCode.DownArrow))
-        //         {
-        //             randomDirections[2]();                
-        //         }
-        //
-        //         if (Input.GetKey(KeyCode.LeftArrow))
-        //         {
-        //             randomDirections[3]();                    
-        //         }
-        //
-        //         if (Input.GetKey(KeyCode.RightArrow))
-        //         {
-        //             randomDirections[1]();
-        //         }
-        //         break;
-        // }
     }
 
     private void InitPointerPosition()
@@ -313,12 +270,9 @@ public class Grandmother : MonoBehaviour
         while (bombs[i].gameObject.activeInHierarchy)
             i = Random.Range(0, MaxBombs);
 
-        bombs[i].transform.position = pointer.position;
-        // bombs[i].transform.Rotate(Vector3.forward * 90);
-        // Quaternion curRotate = pointer.rotation;
-        // bombs[i].transform.rotation = new Quaternion(curRotate.x, curRotate.y, curRotate.z + 90, curRotate.w);
+        //bombs[i].transform.position = pointer.position;
         bombs[i].gameObject.SetActive(true);
-        // bombs[i].Fire();
+        bombs[i].Fire();
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
@@ -387,54 +341,6 @@ public class Grandmother : MonoBehaviour
             MoveRight();
         if ((id == 1 && Input.GetKeyDown(KeyCode.A)) || (id == 2 && Input.GetKeyDown(KeyCode.LeftArrow)))
             MoveLeft();
-
-        // switch (id)
-        // {
-        //     case 1:
-        //         if (Input.GetKeyDown(KeyCode.W))
-        //         {
-        //             MoveUp();
-        //         }
-        //
-        //         if (Input.GetKeyDown(KeyCode.S))
-        //         {
-        //             MoveDown();
-        //         }
-        //
-        //         if (Input.GetKeyDown(KeyCode.A))
-        //         {
-        //             MoveLeft();
-        //         }
-        //
-        //         if (Input.GetKeyDown(KeyCode.D))
-        //         {
-        //             MoveRight();
-        //         }
-        //
-        //         break;
-        //     case 2:
-        //         if (Input.GetKeyDown(KeyCode.UpArrow))
-        //         {
-        //             MoveUp();
-        //         }
-        //
-        //         if (Input.GetKeyDown(KeyCode.DownArrow))
-        //         {
-        //             MoveDown();
-        //         }
-        //
-        //         if (Input.GetKeyDown(KeyCode.LeftArrow))
-        //         {
-        //             MoveLeft();
-        //         }
-        //
-        //         if (Input.GetKeyDown(KeyCode.RightArrow))
-        //         {
-        //             MoveRight();
-        //         }
-        //
-        //         break;
-        // }
     }
 
     private IEnumerator Move()

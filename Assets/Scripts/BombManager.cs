@@ -11,7 +11,7 @@ public class BombManager : MonoBehaviour
     private Vector3 direction;
     private const float Speed = 18;
     // private bool isFired;
-    // private float bombLifeTime = 10;
+    private float bombLifeTime = 4;
     private Grandmother parentGrandma;
     private int id;
 
@@ -23,6 +23,7 @@ public class BombManager : MonoBehaviour
         parentGrandma = parent.GetComponent<Grandmother>();
         direction = parentGrandma.GetPointerPosition() - parent.position;
         direction = direction.normalized;
+        t.parent = t.parent.parent;
     }
 
     // Update is called once per frame
@@ -42,19 +43,21 @@ public class BombManager : MonoBehaviour
         id = other;
     }
     
-    // public void Fire()
-    // {
-    //     isFired = true;
-    //     // StartCoroutine(KillBomb());
-    // }
+    public void Fire()
+    {
+        t.gameObject.SetActive(true);
+        t.position = parentGrandma.GetPointerPosition();
+        direction = parentGrandma.GetPointerPosition() - parentGrandma.transform.position;
+        direction = direction.normalized;
+        StartCoroutine(KillBomb());
+    }
 
-    // private IEnumerator KillBomb()
-    // {
-    //     yield return new WaitForSeconds(bombLifeTime);
-    //     t.gameObject.SetActive(false);
-    //     isFired = false;
-    //     parentGrandma.AddToCurBombs(-1);
-    // }
+    private IEnumerator KillBomb()
+    {
+         yield return new WaitForSeconds(bombLifeTime);
+         t.gameObject.SetActive(false);
+         parentGrandma.AddToCurBombs(-1);
+     }
 
     public int GetShooterId()
     {
