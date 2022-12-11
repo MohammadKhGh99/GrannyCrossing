@@ -60,7 +60,7 @@ public class Grandmother : MonoBehaviour
     private static bool _hasLoaded;
     private const string BombsFolder = "Bombs";
 
-    private Animator animator;
+    public Animator animator;
     // private static readonly int Dead = Animator.StringToHash("Dead");
     // private static readonly int Freeze = Animator.StringToHash("Freeze");
     // private static readonly int FastArrow = Animator.StringToHash("FastArrow");
@@ -89,7 +89,7 @@ public class Grandmother : MonoBehaviour
         // Taking Components from this GameObject
         t = GetComponent<Transform>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        animator = t.GetComponent<Animator>();
+        // animator = t.GetComponent<Animator>();
 
         // The Grandma is looking right or left (in the beginning)
         isTurnRight = id == 1;
@@ -255,6 +255,18 @@ public class Grandmother : MonoBehaviour
         return pointer.position;
     }
 
+    private IEnumerator DelayForAnimator(int i)
+    {
+        animator.SetBool("isShooting", true);
+        print("Before Shooting: " + animator.GetBool("isShooting"));
+        bombs[i].gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(3);
+        
+        animator.SetBool("isShooting", false);
+        print("After Shooting: " + animator.GetBool("isShooting"));
+    }
+    
     private void Fire()
     {
         int i = Random.Range(0, MaxBombs);
@@ -263,11 +275,7 @@ public class Grandmother : MonoBehaviour
 
         bombs[i].transform.position = GetPointerPosition();
         bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
-        animator.SetBool("isShooting", true);
-        print("Before Shooting: " + animator.GetBool("isShooting"));
-        bombs[i].gameObject.SetActive(true);
-        animator.SetBool("isShooting", false);
-        print("After Shooting: " + animator.GetBool("isShooting"));
+        StartCoroutine(DelayForAnimator(i));
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
