@@ -266,7 +266,7 @@ public class Grandmother : MonoBehaviour
         print("Before Shooting: " + animator.GetBool("isShooting"));
         bombs[i].gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(0.5f);
         
         animator.SetBool("isShooting", false);
         print("After Shooting: " + animator.GetBool("isShooting"));
@@ -280,10 +280,10 @@ public class Grandmother : MonoBehaviour
 
         bombs[i].transform.position = GetPointerPosition();
         bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
-        // StartCoroutine(DelayForAnimator(i));
-        animator.SetBool("isShooting", true);
-        bombs[i].gameObject.SetActive(true);
-        animator.SetBool("isShooting", false);
+        StartCoroutine(DelayForAnimator(i));
+        // animator.SetBool("isShooting", true);
+        // bombs[i].gameObject.SetActive(true);
+        // animator.SetBool("isShooting", false);
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
