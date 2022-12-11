@@ -17,6 +17,7 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private float fireCollDownTime = 0.8f;
     [SerializeField] private float loadingBombsPercentage;
     [SerializeField] private int maxBombsTypes = 6;
+    [SerializeField] private GameObject bombParent;
 
     // [SerializeField] private int maxCarsTypes = 4;
     // [SerializeField] private string[] 
