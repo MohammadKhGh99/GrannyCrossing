@@ -71,6 +71,8 @@ public class Grandmother : MonoBehaviour
     // private static readonly int IsShoot = Animator.StringToHash("isShooting");
     // private static readonly int Confused = Animator.StringToHash("Confused");
 
+    private bool isLongPress;
+
     static void LoadSprites()
     {
         _bombsTypes = Resources.LoadAll<GameObject>(BombsFolder);
@@ -106,6 +108,7 @@ public class Grandmother : MonoBehaviour
         moveDirection = Vector3.zero;
         startPosition = t.position;
         isBeaten = false;
+        isLongPress = t.parent.parent.GetComponentInParent<GameController>().IsLongPress();
 
         // Initializing the Bombs for each Grandma
         curBombs = 0;
@@ -120,10 +123,6 @@ public class Grandmother : MonoBehaviour
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
 
-            // temp.GetComponent<SpriteRenderer>().sprite = bombsTypes[Random.Range(0, maxBombsTypes)]; 
-            // Destroy(temp.GetComponent<PolygonCollider2D>());
-            // temp.AddComponent<PolygonCollider2D>();
-            // temp.GetComponent<PolygonCollider2D>().isTrigger = true;
 
             bombs[i] = temp.GetComponent<BombManager>();
             bombs[i].SetId(Random.Range(0, NumBombsEffects));
@@ -131,6 +130,7 @@ public class Grandmother : MonoBehaviour
             // Sets each bomb's shooter, blue grandma ot red one
             bombs[i].SetShooterId(id);
         }
+        StartCoroutine(Move());
     }
 
     void Update()
@@ -141,10 +141,22 @@ public class Grandmother : MonoBehaviour
         if (!isBeaten)
         {
             if (isUnderControl)
-                SetMoveDirection();
+            {
+                if (!isLongPress)
+                    SetMoveDirection();
+                else
+                    SetMoveDirectionLongPress();
+            }
             else
-                MoveMixDirections();
-            StartCoroutine(Move());
+            {
+                if (!isLongPress)
+                    MoveMixDirections();
+                else
+                    MoveMixDirectionsLongPress();
+
+            }
+
+            //StartCoroutine(Move());
             PointerMove();
         }
         else
@@ -219,6 +231,17 @@ public class Grandmother : MonoBehaviour
     }
 
     private void MoveMixDirections()
+    {
+        if ((id == 1 && Input.GetKeyDown(KeyCode.W)) || (id == 2 && Input.GetKeyDown(KeyCode.UpArrow)))
+            randomDirections[0]();
+        if ((id == 1 && Input.GetKeyDown(KeyCode.S)) || (id == 2 && Input.GetKeyDown(KeyCode.DownArrow)))
+            randomDirections[2]();
+        if ((id == 1 && Input.GetKeyDown(KeyCode.D)) || (id == 2 && Input.GetKeyDown(KeyCode.RightArrow)))
+            randomDirections[1]();
+        if ((id == 1 && Input.GetKeyDown(KeyCode.A)) || (id == 2 && Input.GetKeyDown(KeyCode.LeftArrow)))
+            randomDirections[3]();
+    }
+    private void MoveMixDirectionsLongPress()
     {
         if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
             randomDirections[0]();
@@ -348,12 +371,26 @@ public class Grandmother : MonoBehaviour
         if ((id == 1 && Input.GetKeyDown(KeyCode.A)) || (id == 2 && Input.GetKeyDown(KeyCode.LeftArrow)))
             MoveLeft();
     }
+    
+    private void SetMoveDirectionLongPress()
+    {
+        if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
+            MoveUp();
+        if ((id == 1 && Input.GetKey(KeyCode.S)) || (id == 2 && Input.GetKey(KeyCode.DownArrow)))
+            MoveDown();
+        if ((id == 1 && Input.GetKey(KeyCode.D)) || (id == 2 && Input.GetKey(KeyCode.RightArrow)))
+            MoveRight();
+        if ((id == 1 && Input.GetKey(KeyCode.A)) || (id == 2 && Input.GetKey(KeyCode.LeftArrow)))
+            MoveLeft();
+    }
 
     private IEnumerator Move()
     {
         yield return new WaitForSeconds(movementTime);
         t.position += moveDirection * movementDistance;
+        Debug.Log("move");
         moveDirection = Vector3.zero;
+        StartCoroutine(Move());
     }
 
     private IEnumerator FreezeMovement()

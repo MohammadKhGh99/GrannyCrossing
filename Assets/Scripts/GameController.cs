@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject carsParent;
     [SerializeField] private float fieldLimit = 30;
     [SerializeField] private bool controlCarsPositions;
+    [SerializeField] private bool longPress = false;
 
     [SerializeField] private float[] carsPositions = new[]
         { -37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f };
@@ -80,5 +81,10 @@ public class GameController : MonoBehaviour
     public float GetFieldLimit()
     {
         return fieldLimit;
+    }
+
+    public bool IsLongPress()
+    {
+        return longPress;
     }
 }
