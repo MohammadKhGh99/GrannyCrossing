@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -113,6 +114,8 @@ public class Grandmother : MonoBehaviour
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
 
+            Destroy(temp.GetComponent<PolygonCollider2D>());
+            temp.AddComponent<PolygonCollider2D>();
             temp.GetComponent<SpriteRenderer>().sprite = bombsTypes[Random.Range(0, maxBombsTypes)]; 
 
             bombs[i] = temp.GetComponent<BombManager>();

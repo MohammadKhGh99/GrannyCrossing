@@ -9,6 +9,9 @@ public class GameController : MonoBehaviour
     [SerializeField] private float fieldLimit = 30;
     [SerializeField] private bool controlCarsPositions;
     [SerializeField] private float[] carsPositions = new[]{-37.2f, -26f, -20.6f, -15.5f, -10.5f, 9.8f, 15f, 20f, 25.2f, 36.7f};
+
+    [SerializeField] private string[] carsDirections = new[]
+        { "up", "down", "up", "down", "up", "down", "up", "down", "up", "down" };
     // [SerializeField] private int maxCarsTypes = 4;
 
     private const int MaxCars = 10;
@@ -47,8 +50,8 @@ public class GameController : MonoBehaviour
         
         for (int i = 0; i < MaxCars; i++)
         {
-            var curPos = i % 2 == 0 ? new Vector2(carsPos[i], -fieldLimit) : new Vector2(carsPos[i], fieldLimit);
-            Quaternion carDirection = i % 2 == 0 ? Quaternion.AngleAxis(180, Vector3.right) : Quaternion.identity;
+            var curPos = carsDirections[i].Equals("up") ? new Vector2(carsPos[i], -fieldLimit) : new Vector2(carsPos[i], fieldLimit);
+            Quaternion carDirection = carsDirections[i].Equals("up") ? Quaternion.AngleAxis(180, Vector3.right) : Quaternion.identity;
             // string carToLoad = carsToLoad[Random.Range(0, 4)];
             GameObject temp = Instantiate(Resources.Load("Car"), curPos, carDirection, carsParent.transform) as GameObject;
             
@@ -57,10 +60,11 @@ public class GameController : MonoBehaviour
                 throw new NullReferenceException("Car Prefab Not Found!");
             }
 
-            temp.GetComponent<SpriteRenderer>().sprite = CarsTypes[Random.Range(0, maxCarsTypes)];
+            temp.GetComponent<SpriteRenderer>().sprite = CarsTypes[Random.Range(0, NumCarsTypes)];
             
             cars[i] = temp.GetComponent<Car>();
-            cars[i].SetDirection(i % 2 == 0 ? Vector3.up : Vector3.down);
+            cars[i].SetDirection(carsDirections[i]);
+            cars[i].SetDirection(carsDirections[i].Equals("up") ? Vector3.up : Vector3.down);
             cars[i].SetId(i);
         }
         fpsCounter = 0;

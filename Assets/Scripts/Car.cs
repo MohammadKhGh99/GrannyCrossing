@@ -8,6 +8,7 @@ public class Car : MonoBehaviour
     [SerializeField] private bool controlPosition;
     [SerializeField] private float x;
     [SerializeField] private float y;
+    [SerializeField] private string upOrDown;
    
     private Transform t;
     private int id;
@@ -16,7 +17,7 @@ public class Car : MonoBehaviour
     private Vector3 startPosition;
     private float fieldLimit;
     private SpriteRenderer spriteRenderer;
-    private int UpOrDown = 1;
+    // private int UpOrDown = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -49,14 +50,14 @@ public class Car : MonoBehaviour
         // Reused();
     }
 
-    public int GetDirection()
+    public string GetDirection()
     {
-        return UpOrDown;
+        return upOrDown;
     }
 
-    public void SetDirection(int other)
+    public void SetDirection(string other)
     {
-        UpOrDown = other;
+        upOrDown = other;
     }
     
     public void SetDirection(Vector3 direct)
