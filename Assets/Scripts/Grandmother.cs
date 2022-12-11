@@ -516,4 +516,25 @@ public class Grandmother : MonoBehaviour
             }
         }
     }
+
+    public void StartGame()
+    {
+        t.position = startPosition;
+        if (isTurnRight && id == 2 || !isTurnRight && id == 1)
+        {
+            t.Rotate(Vector3.up, 180);
+            isTurnRight = !isTurnRight;
+        }
+        for (int i = 0; i < MaxBombs; i++)
+        {
+            bombs[i].gameObject.SetActive(false);
+        }
+        fireCoolDown = 0.8f;
+        isBeaten = false;
+        isUnderControl = true;
+        pointerIsUnderControl = true;
+        won = false;
+        winner = "No one";
+        freezeOrNot = false;
+    }
 }
