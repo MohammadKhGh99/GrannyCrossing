@@ -34,7 +34,7 @@ public class Grandmother : MonoBehaviour
     private const float RecoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int MaxBombs = 5;
+    private const int MaxBombs = 15;
     private Vector3 startPosition;
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
