@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b5b5226f-4692-4cec-875d-93a1529d6504" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.grandmothers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.grandmothers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Resources/Bomb.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Resources/Bomb.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/BombManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/BombManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Grandmother.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Grandmother.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/notes.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +97,7 @@
       <workItem from="1670246777262" duration="2437000" />
       <workItem from="1670353212484" duration="21211000" />
       <workItem from="1670522212596" duration="6990000" />
-      <workItem from="1670624625211" duration="23468000" />
+      <workItem from="1670624625211" duration="24084000" />
     </task>
     <servers />
   </component>
@@ -132,13 +128,13 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Assets/Scripts/Grandmother.cs</url>
-          <line>417</line>
+          <line>420</line>
           <properties documentPath="C:\Users\m7mdg\Documents\Studies\Year 5\Semester a\67629 Game Development Jam\grandmothers\Assets\Scripts\Grandmother.cs" initialLine="398" containingFunctionPresentation="method 'Move'">
             <startOffsets>
-              <option value="12740" />
+              <option value="12964" />
             </startOffsets>
             <endOffsets>
-              <option value="12787" />
+              <option value="13011" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="5" />

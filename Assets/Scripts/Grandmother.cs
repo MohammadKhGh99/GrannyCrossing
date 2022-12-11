@@ -56,6 +56,8 @@ public class Grandmother : MonoBehaviour
     private const float PointerLoseControlTime = 5;
     private const float PointerSpeedLoseControl = 500;
     private float moveCoolDown = 0.5f;
+    private const int maxBombsTypes = 6;
+    private readonly string[] bombsTypes = { "Bomb", "Bomb 1", "Bomb 2", "Bomb 3", "Bomb 4", "Bomb 5" };
 
     // Start is called before the first frame update
     void Start()
@@ -84,8 +86,9 @@ public class Grandmother : MonoBehaviour
         bombs = new BombManager[MaxBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         for (int i = 0; i < MaxBombs; i++)
         {
+            string bombToAdd = bombsTypes[Random.Range(0, maxBombsTypes)];
             GameObject temp =
-                Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, t) as GameObject;
+                Instantiate(Resources.Load(bombToAdd), pointer.position, Quaternion.identity, t) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
