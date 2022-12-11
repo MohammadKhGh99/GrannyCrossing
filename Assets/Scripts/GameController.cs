@@ -44,8 +44,6 @@ public class GameController : MonoBehaviour
     void Start()
     {
         isGameRunning = false;
-        player1WonCanvas.SetActive(false);
-        player2WonCanvas.SetActive(false);
         if (!_hasLoaded)
             LoadCarsSprites();
 
@@ -92,6 +90,7 @@ public class GameController : MonoBehaviour
             
             if (transform.GetChild(i).name.Equals("Player1Won"))
             {
+                
                 player1WonCanvas = transform.GetChild(i).gameObject;
             }
             if (transform.GetChild(i).name.Equals("Player2Won"))
@@ -112,7 +111,7 @@ public class GameController : MonoBehaviour
             {
                 if (tempGameObject.transform.GetChild(i).name.EndsWith("Grandma"))
                 {
-                    grandmothers[n] = tempGameObject.GetComponent<Grandmother>();
+                    grandmothers[n] = tempGameObject.transform.GetChild(i).GetComponent<Grandmother>();
                     n++;
                 }
             }
@@ -143,13 +142,14 @@ public class GameController : MonoBehaviour
         }
 
         if (grandmothers[0].WhoWon() == 1)
-        {
+        { 
             player1WonCanvas.SetActive(true);
         }
         if (grandmothers[0].WhoWon() == 2)
-        {
+        { 
             player2WonCanvas.SetActive(true);
         }
+        
 
         if (Input.GetKey(KeyCode.Escape))
         {
