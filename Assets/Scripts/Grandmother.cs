@@ -15,6 +15,10 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private float movementDistance;
     [SerializeField] private float fireCollDownTime = 0.8f;
     [SerializeField] private float loadingBombsPercentage;
+    [SerializeField] private int maxBombsTypes = 6;
+
+    // [SerializeField] private int maxCarsTypes = 4;
+    // [SerializeField] private string[] 
 
     // Types of the bombs
     private const int NumBombsTypes = 4;
@@ -39,7 +43,6 @@ public class Grandmother : MonoBehaviour
 
     private const float LeftIslandX = -29.3f;
 
-    // private float TOLERANCE = 0.5f;
     private bool isBeaten;
     private Transform pointer;
     private const float PointerSpeed = 150;
@@ -56,12 +59,29 @@ public class Grandmother : MonoBehaviour
     private const float PointerLoseControlTime = 5;
     private const float PointerSpeedLoseControl = 500;
     private float moveCoolDown = 0.5f;
-    private const int maxBombsTypes = 6;
-    private readonly string[] bombsTypes = { "Bomb", "Bomb 1", "Bomb 2", "Bomb 3", "Bomb 4", "Bomb 5" };
+    
+    // private readonly string[] bombsTypes = { "Bomb", "Bomb 1", "Bomb 2", "Bomb 3", "Bomb 4", "Bomb 5" };
+
+    private static Sprite[] bombsTypes;
+    // private static Sprite[] carsTypes;
+    private static bool hasLoaded = false;
+    
+    static void LoadSprites()
+    {
+        bombsTypes = Resources.LoadAll<Sprite>("Sprites/bombs");
+        // carsTypes = Resources.LoadAll<Sprite>("Sprites/cars");
+
+        hasLoaded = true;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        if (!hasLoaded)
+        {
+            LoadSprites();
+        }
+        
         randomDirections = new Action[] { MoveUp, MoveRight, MoveDown, MoveLeft };
         freezeOrNot = false;
 
@@ -86,15 +106,17 @@ public class Grandmother : MonoBehaviour
         bombs = new BombManager[MaxBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         for (int i = 0; i < MaxBombs; i++)
         {
-            string bombToAdd = bombsTypes[Random.Range(0, maxBombsTypes)];
             GameObject temp =
-                Instantiate(Resources.Load(bombToAdd), pointer.position, Quaternion.identity, t) as GameObject;
+                Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, t) as GameObject;
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
 
+            temp.GetComponent<SpriteRenderer>().sprite = bombsTypes[Random.Range(0, maxBombsTypes)]; 
+
             bombs[i] = temp.GetComponent<BombManager>();
+            
             bombs[i].SetId(Random.Range(0, NumBombsTypes));
             // Sets each bomb's shooter, blue grandma ot red one
             bombs[i].SetShooterId(id);
