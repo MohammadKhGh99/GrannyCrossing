@@ -8,6 +8,7 @@ public class Car : MonoBehaviour
     [SerializeField] private bool controlPosition;
     [SerializeField] private float x;
     [SerializeField] private float y;
+    [SerializeField] private bool withoutCars;
    
     private Transform t;
     private int id;
@@ -25,8 +26,11 @@ public class Car : MonoBehaviour
         spriteRenderer = t.GetComponent<SpriteRenderer>();
         if (controlPosition)
             t.position = new Vector3(x, y, 0);
-        
-        speed = speed == 0 ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
+        if (!withoutCars)
+        {
+            speed = speed == 0 ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
+        }
+
         startPosition = t.position;
         
         // todo - This line removed because there is no call for this function except for this only call here
