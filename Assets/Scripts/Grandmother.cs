@@ -173,6 +173,7 @@ public class Grandmother : MonoBehaviour
         bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt);
         if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage >= 1.0f)
             Fire();
+        
     }
 
     private void LoseControl()
@@ -537,4 +538,11 @@ public class Grandmother : MonoBehaviour
         winner = "No one";
         freezeOrNot = false;
     }
+    
+    // return the id winner, 0 if game not over yet
+    public int WhoWon()
+    {
+        return won ? winner.Equals("LeftGrandma") ? 1 : 2 : 0;
+    }
+    
 }
