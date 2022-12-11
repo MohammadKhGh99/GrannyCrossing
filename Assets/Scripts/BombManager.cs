@@ -4,18 +4,14 @@ using UnityEngine;
 
 public class BombManager : MonoBehaviour
 {
-    [SerializeField] private GameObject bomb;
-
     private int shooterId;
     private Transform t;
     private Vector3 direction;
-    private const float Speed = 18;
-    // private bool isFired;
-    //private float bombLifeTime = 4;
+    private const float Speed = 20;
     private Grandmother parentGrandma;
     private int id;
-
-    // Start is calledbefore the first frame update
+    
+    // Start is called before the first frame update
     void Start()
     {
         t = GetComponent<Transform>();
@@ -23,7 +19,7 @@ public class BombManager : MonoBehaviour
         parentGrandma = parent.GetComponent<Grandmother>();
         direction = parentGrandma.GetPointerPosition() - parent.position;
         direction = direction.normalized;
-        t.parent = t.parent.parent;
+        t.SetParent(parentGrandma.GetBombParent().transform);
     }
 
     // Update is called once per frame
@@ -31,11 +27,11 @@ public class BombManager : MonoBehaviour
     {
         t.position += direction * (Speed * Time.deltaTime);
         t.Rotate(Vector3.forward, 1.0f);
-        /*if (true)
-        {
-            gameObject.SetActive(false);
-            parentGrandma.AddToCurBombs(-1);
-        }*/
+    }
+
+    public void SetDirection(Vector3 other)
+    {
+        direction = other;
     }
 
     public int GetId()
@@ -47,21 +43,6 @@ public class BombManager : MonoBehaviour
     {
         id = other;
     }
-    
-    public void Fire()
-    {
-        //StartCoroutine(KillBomb());
-        direction = parentGrandma.GetPointerPosition() - parentGrandma.transform.position;
-        direction = direction.normalized;
-    }
-
-    /*
-    private IEnumerator KillBomb()
-    {
-        yield return new WaitForSeconds(bombLifeTime);
-         
-     }
-     */
 
     public int GetShooterId()
     {
@@ -73,28 +54,12 @@ public class BombManager : MonoBehaviour
         shooterId = other;
     }
 
-    // public void ActivateBomb(GameObject grandmother)
-    // {
-    //     // isFired = false;
-    //     // t.parent.GetComponent<Grandmother>().AddToCurBombs(-1);
-    //     grandmother.GetComponent<Grandmother>().GoBack();
-    //     t.gameObject.SetActive(false);
-    // }
-
     private void OnTriggerExit2D(Collider2D col)
     {
-        Debug.Log(col.name);
         if (col.gameObject.name.Equals("Grass"))
         {
             parentGrandma.AddToCurBombs(-1);
             t.gameObject.SetActive(false);
         }
-        if (col.gameObject.name.EndsWith("Wall"))
-        {
-            parentGrandma.AddToCurBombs(-1);
-            t.gameObject.SetActive(false);
-        }
     }
-    
-    
 }

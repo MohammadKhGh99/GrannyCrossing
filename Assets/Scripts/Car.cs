@@ -4,6 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Car : MonoBehaviour
 {
+    [SerializeField] private bool controlSpeed;
     [SerializeField] private int speed;
     [SerializeField] private bool controlPosition;
     [SerializeField] private float x;
@@ -18,7 +19,6 @@ public class Car : MonoBehaviour
     private Vector3 startPosition;
     private float fieldLimit;
     private SpriteRenderer spriteRenderer;
-    // private int UpOrDown = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -28,15 +28,9 @@ public class Car : MonoBehaviour
         if (controlPosition)
             t.position = new Vector3(x, y, 0);
         if (!withoutCars)
-        {
-            speed = speed == 0 ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
-        }
+            speed = !controlSpeed ? id is 0 or 9 ? Random.Range(7, 15) : Random.Range(12, 20) : speed;
 
         startPosition = t.position;
-        
-        // todo - This line removed because there is no call for this function except for this only call here
-        // SetStartPosition(t.position);
-        
         fieldLimit = t.parent.GetComponentInParent<GameController>().GetFieldLimit();
     }
 
@@ -49,14 +43,6 @@ public class Car : MonoBehaviour
             t.position = startPosition;
             spriteRenderer.sprite = GameController.CarsTypes[Random.Range(0, GameController.NumCarsTypes)];
         }
-            
-        // todo - This line removed because there is no call for this function except for this only call here
-        // Reused();
-    }
-
-    public string GetDirection()
-    {
-        return upOrDown;
     }
 
     public void SetDirection(string other)
@@ -73,15 +59,4 @@ public class Car : MonoBehaviour
     {
         id = newId;
     }
-
-    // private void SetStartPosition(Vector3 position)
-    // {
-    //     startPosition = position;
-    // }
-    //
-    // private void Reused()
-    // {
-    //     t.position = startPosition;
-    // }
-    
 }

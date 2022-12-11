@@ -16,18 +16,14 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private float movementDistance;
     [SerializeField] private float fireCollDownTime = 0.8f;
     [SerializeField] private float loadingBombsPercentage;
-    [SerializeField] private int maxBombsTypes = 6;
     [SerializeField] private GameObject bombParent;
-
-    // [SerializeField] private int maxCarsTypes = 4;
-    // [SerializeField] private string[] 
-
+    
     // Types of the bombs
-    private const int NumBombsTypes = 4;
+    private const int NumBombsEffects = 3;
     private const int FreezeInPlace = 0; // Works Good
     private const int CrazyPointer = 1; // Works Good
     private const int GoBackToIsland = 2; // Works Good
-    private const int CrazyDirections = 3;
+    private const int CrazyDirections = 3; // Doesn't Work
 
     private Vector3 moveDirection;
     private Transform t;
@@ -40,16 +36,13 @@ public class Grandmother : MonoBehaviour
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
 
-    private const float RightIslandX = 27.7f;
-    private const float MiddleIslandX = -1.8f;
-
-    private const float LeftIslandX = -29.3f;
+    private const float RightIslandX = 27.7f, MiddleIslandX = -1.8f, LeftIslandX = -29.3f;
+    // private const float MiddleIslandX = -1.8f;
+    // private const float LeftIslandX = -29.3f;
 
     private bool isBeaten;
     private Transform pointer;
-    private const float PointerSpeed = 150;
-    private float maxPointerSpeed = 800;
-    private float minPointerSpeed = 50;
+    private const float PointerSpeed = 150, PointerSpeedLoseControl = 500;
     private bool isTurnRight;
     private SpriteRenderer spriteRenderer;
 
@@ -57,32 +50,38 @@ public class Grandmother : MonoBehaviour
     private Action[] randomDirections;
     private bool isUnderControl = true;
     private const float LoseControlTime = 5;
+    
     private bool pointerIsUnderControl = true;
     private const float PointerLoseControlTime = 5;
-    private const float PointerSpeedLoseControl = 500;
-    private float moveCoolDown = 0.5f;
+    // private const float PointerSpeedLoseControl = 500;
     
-    // private readonly string[] bombsTypes = { "Bomb", "Bomb 1", "Bomb 2", "Bomb 3", "Bomb 4", "Bomb 5" };
+    private static GameObject[] _bombsTypes;
+    // private static string[] _bombsTypesNames;
+    private static bool _hasLoaded;
+    private const string BombsFolder = "Bombs";
 
-    private static Sprite[] bombsTypes;
-    // private static Sprite[] carsTypes;
-    private static bool hasLoaded = false;
-    
+    private Animator animator;
+    // private static readonly int Dead = Animator.StringToHash("Dead");
+    // private static readonly int Freeze = Animator.StringToHash("Freeze");
+    // private static readonly int FastArrow = Animator.StringToHash("FastArrow");
+    // private static readonly int LastIsland = Animator.StringToHash("LastIsland");
+    // private static readonly int IsShoot = Animator.StringToHash("isShooting");
+    // private static readonly int Confused = Animator.StringToHash("Confused");
+
     static void LoadSprites()
     {
-        bombsTypes = Resources.LoadAll<Sprite>("Sprites/bombs");
-        // carsTypes = Resources.LoadAll<Sprite>("Sprites/cars");
-
-        hasLoaded = true;
+        _bombsTypes = Resources.LoadAll<GameObject>(BombsFolder);
+        // _bombsTypesNames = new string[_bombsTypes.Length];
+        // for (int i = 0; i < _bombsTypes.Length; i++)
+            // _bombsTypesNames[i] = _bombsTypes[i].name;
+        _hasLoaded = true;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (!hasLoaded)
-        {
+        if (!_hasLoaded)
             LoadSprites();
-        }
         
         randomDirections = new Action[] { MoveUp, MoveRight, MoveDown, MoveLeft };
         freezeOrNot = false;
@@ -90,6 +89,7 @@ public class Grandmother : MonoBehaviour
         // Taking Components from this GameObject
         t = GetComponent<Transform>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = t.GetComponent<Animator>();
 
         // The Grandma is looking right or left (in the beginning)
         isTurnRight = id == 1;
@@ -108,33 +108,31 @@ public class Grandmother : MonoBehaviour
         bombs = new BombManager[MaxBombs]; // Jewelry, shoe, teeth, medicine, phone, radio, todo etc
         for (int i = 0; i < MaxBombs; i++)
         {
-            GameObject temp =
-                Instantiate(Resources.Load("Bomb"), pointer.position, Quaternion.identity, t) as GameObject;
+            GameObject bombToLoad = _bombsTypes[Random.Range(0, _bombsTypes.Length)];
+            GameObject temp = Instantiate(bombToLoad, pointer.position, Quaternion.identity, t);
             if (temp == null)
             {
                 throw new NullReferenceException("Bomb Prefab Not Found!");
             }
 
-            Destroy(temp.GetComponent<PolygonCollider2D>());
-            temp.AddComponent<PolygonCollider2D>();
-            temp.GetComponent<SpriteRenderer>().sprite = bombsTypes[Random.Range(0, maxBombsTypes)]; 
+            // temp.GetComponent<SpriteRenderer>().sprite = bombsTypes[Random.Range(0, maxBombsTypes)]; 
+            // Destroy(temp.GetComponent<PolygonCollider2D>());
+            // temp.AddComponent<PolygonCollider2D>();
+            // temp.GetComponent<PolygonCollider2D>().isTrigger = true;
 
             bombs[i] = temp.GetComponent<BombManager>();
+            bombs[i].SetId(Random.Range(0, NumBombsEffects));
             
-            bombs[i].SetId(Random.Range(0, NumBombsTypes));
             // Sets each bomb's shooter, blue grandma ot red one
             bombs[i].SetShooterId(id);
-            // bombs[i].GetComponent<SpriteRenderer>().color = id == 1 ? Color.blue : Color.red;
         }
-
-        moveCoolDown = 0;
     }
 
     void Update()
     {
         if (freezeOrNot)
             return;
-        
+
         if (!isBeaten)
         {
             if (isUnderControl)
@@ -146,8 +144,8 @@ public class Grandmother : MonoBehaviour
         }
         else
         {
-            t.position = startPosition; //I don't know why but without it there is a weird bug...
-            //you can go one more step after going back when hit by a car or a bomb
+            t.position = startPosition; // I don't know why but without it there is a weird bug...
+            // you can go one more step after going back when hit by a car or a bomb
         }
 
         fireCoolDown -= Time.deltaTime;
@@ -161,17 +159,6 @@ public class Grandmother : MonoBehaviour
             Fire();
     }
 
-    // private void MyMove()
-    // {
-    //     moveCoolDown -= Time.deltaTime;
-    //     if (moveCoolDown <= 0)
-    //     {
-    //         moveCoolDown = 0.5f;
-    //         t.position += moveDirection * movementDistance;
-    //         moveDirection = Vector3.zero;
-    //     }
-    // }
-    
     private void LoseControl()
     {
         MixDirections();
@@ -274,14 +261,21 @@ public class Grandmother : MonoBehaviour
         while (bombs[i].gameObject.activeInHierarchy)
             i = Random.Range(0, MaxBombs);
 
-        bombs[i].transform.position = pointer.position;
+        bombs[i].transform.position = GetPointerPosition();
+        bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
+        animator.SetBool("isShooting", true);
         bombs[i].gameObject.SetActive(true);
-        bombs[i].Fire();
+        animator.SetBool("isShooting", false);
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
 
-    public void GoBack()
+    public GameObject GetBombParent()
+    {
+        return bombParent;
+    }
+
+    private void GoBack()
     {
         Vector3 position = t.position;
         switch (id)
@@ -319,16 +313,6 @@ public class Grandmother : MonoBehaviour
                 break;
         }
     }
-
-    // public int GetId()
-    // {
-    //     return id;
-    // }
-    //
-    // public int GetCurBombs()
-    // {
-    //     return curBombs;
-    // }
 
     public void AddToCurBombs(int other)
     {
@@ -368,71 +352,28 @@ public class Grandmother : MonoBehaviour
         switch (bombId)
         {
             case FreezeInPlace:
+                animator.SetBool("Freeze", true);
                 StartCoroutine(FreezeMovement());
-                break;
-            case GoBackToIsland:
-                GoBack();
-                StartCoroutine(Recovery());
+                animator.SetBool("Freeze", false);
                 break;
             case CrazyPointer:
+                animator.SetBool("FastArrow", true);
                 PointerLoseControl();
+                animator.SetBool("FastArrow", false);
+                break;
+            case GoBackToIsland:
+                animator.SetBool("LastIsland", true);
+                GoBack();
+                StartCoroutine(Recovery());
+                animator.SetBool("LastIsland", false);
                 break;
             case CrazyDirections:
+                // todo - add animator functions
+                animator.SetBool("Confused", true);
                 print("Losing Control");
                 LoseControl();
+                animator.SetBool("Confused", false);
                 break;
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.name.StartsWith("Car"))
-        {
-            t.position = startPosition;
-            switch (id)
-            {
-                case 1 when !isTurnRight:
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = true;
-                    break;
-                case 2 when isTurnRight:
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = false;
-                    break;
-            }
-
-            // switch (id)
-            // {
-            //     case 1:
-            //         if (!isTurnRight)
-            //         {
-            //             t.Rotate(Vector3.up, 180);
-            //             isTurnRight = true;
-            //         }
-            //         break;
-            //     case 2:
-            //         if (isTurnRight)
-            //         {
-            //             t.Rotate(Vector3.up, 180);
-            //             isTurnRight = false;
-            //         }
-            //         break;
-            // }
-
-            InitPointerPosition();
-            pointer.gameObject.SetActive(false);
-            isBeaten = true;
-            StartCoroutine(Recovery());
-        }
-    }
-
-    private void OnTriggerEnter2D(Collider2D col)
-    {
-        BombManager curBomb = col.gameObject.GetComponent<BombManager>();
-        if (col.gameObject.name.StartsWith("Bomb") && curBomb.GetShooterId() != id)
-        {
-            print("Bomb ID: " + curBomb.GetId());
-            HitByBomb(curBomb.GetId());
         }
     }
 
@@ -468,6 +409,44 @@ public class Grandmother : MonoBehaviour
                 spriteRenderer.color = new Color(c.r, c.g, c.b, i * 4);
                 yield return null;
             }
+        }
+    }
+    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.name.StartsWith("Car"))
+        {
+            animator.SetBool("Dead", true);
+
+            t.position = startPosition;
+            switch (id)
+            {
+                case 1 when !isTurnRight:
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = true;
+                    break;
+                case 2 when isTurnRight:
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = false;
+                    break;
+            }
+
+            InitPointerPosition();
+            pointer.gameObject.SetActive(false);
+            isBeaten = true;
+            StartCoroutine(Recovery());
+            animator.SetBool("Dead", false);
+
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        BombManager curBomb = col.gameObject.GetComponent<BombManager>();
+        if (col.gameObject.CompareTag("Bomb") && curBomb.GetShooterId() != id)
+        {
+            print("Bomb ID: " + curBomb.GetId());
+            HitByBomb(curBomb.GetId());
         }
     }
 }

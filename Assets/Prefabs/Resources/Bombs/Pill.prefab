@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 6371204909460537165}
   - component: {fileID: 8257414819088387640}
   - component: {fileID: 7217822774771796004}
-  - component: {fileID: 2272191769526030693}
-  - component: {fileID: 139256573035187451}
+  - component: {fileID: 2364892574511608606}
+  - component: {fileID: -7968427893969839212}
   m_Layer: 0
-  m_Name: Bomb
+  m_Name: Pill
   m_TagString: Bomb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,14 +27,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5398266463035265180}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -0.4117, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &8257414819088387640
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -76,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 21300000, guid: 43ad477c44b69ed4daa7e611d701d6b4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 93727fc33694eba45980c6c3b7a832f6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: badb8a1d1ed6a9d43824f41cbff8eff1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!60 &2272191769526030693
+--- !u!60 &2364892574511608606
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,17 +124,16 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -1, y: 1.8121711}
-      - {x: -1.2651032, y: 1.8639303}
-      - {x: -2.131379, y: 0.9494133}
-      - {x: -2.131379, y: -1.0337248}
-      - {x: -1.014517, y: -2.0482419}
-      - {x: 1.0337242, y: -2.0313811}
-      - {x: 2.1756573, y: -0.93651474}
-      - {x: 2.114517, y: 0.939142}
-      - {x: 1.0184797, y: 2.062313}
-      - {x: -0.8909013, y: 2.0313792}
---- !u!50 &139256573035187451
+    - - {x: -1.2430716, y: 1.1053443}
+      - {x: -1.9173901, y: 0.75216955}
+      - {x: -2.133991, y: 0.46679875}
+      - {x: -2.1007888, y: -0.50197226}
+      - {x: -1.268771, y: -1.1339912}
+      - {x: 1.2865555, y: -1.1505917}
+      - {x: 2.11739, y: -0.5667988}
+      - {x: 2.1671925, y: 0.5019723}
+      - {x: 1.4347801, y: 1.10079}
+--- !u!50 &-7968427893969839212
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
