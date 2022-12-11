@@ -27,6 +27,9 @@ public class GameController : MonoBehaviour
     public static int NumCarsTypes;
     private const string CarsFolder = "Sprites/cars";
 
+    private GameObject startGameCanvas;
+    private Grandmother[] grandmothers;
+
     static void LoadCarsSprites()
     {
         CarsTypes = Resources.LoadAll<Sprite>(CarsFolder);
@@ -72,6 +75,33 @@ public class GameController : MonoBehaviour
 
         fpsCounter = 0;
         fpsTime = 1;
+        GameObject tempGameObject = null;
+        grandmothers = new Grandmother[2];
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name.Equals("StartGame"))
+            {
+                startGameCanvas = transform.GetChild(i).gameObject;
+            }
+
+            if (transform.GetChild(i).name.Equals("Players"))
+            {
+                tempGameObject = transform.GetChild(i).gameObject;
+            }
+        }
+
+        int n = 0;
+        if (tempGameObject != null)
+        {
+            for (int i = 0; i < tempGameObject.transform.childCount; i++)
+            {
+                if (tempGameObject.transform.GetChild(i).name.EndsWith("Grandma"))
+                {
+                    grandmothers[n] = tempGameObject.GetComponent<Grandmother>();
+                    n++;
+                }
+            }
+        }
     }
 
     public float GetFieldLimit()
@@ -82,5 +112,17 @@ public class GameController : MonoBehaviour
     public bool IsLongPress()
     {
         return longPress;
+    }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            startGameCanvas.SetActive(false);
+            for (int i = 0; i < grandmothers.Length; i++)
+            {
+                grandmothers[i].StartGame();
+            }
+        }
     }
 }
