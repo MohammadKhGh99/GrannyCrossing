@@ -273,7 +273,7 @@ public class Grandmother : MonoBehaviour
         while (bombs[i].gameObject.activeInHierarchy)
             i = Random.Range(0, MaxBombs);
 
-        //bombs[i].transform.position = pointer.position;
+        bombs[i].transform.position = pointer.position;
         bombs[i].gameObject.SetActive(true);
         bombs[i].Fire();
         curBombs++;
