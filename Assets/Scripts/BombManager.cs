@@ -11,7 +11,7 @@ public class BombManager : MonoBehaviour
     private Vector3 direction;
     private const float Speed = 18;
     // private bool isFired;
-    private float bombLifeTime = 4;
+    //private float bombLifeTime = 4;
     private Grandmother parentGrandma;
     private int id;
 
@@ -31,6 +31,11 @@ public class BombManager : MonoBehaviour
     {
         t.position += direction * (Speed * Time.deltaTime);
         t.Rotate(Vector3.forward, 1.0f);
+        /*if (true)
+        {
+            gameObject.SetActive(false);
+            parentGrandma.AddToCurBombs(-1);
+        }*/
     }
 
     public int GetId()
@@ -45,19 +50,18 @@ public class BombManager : MonoBehaviour
     
     public void Fire()
     {
-        t.gameObject.SetActive(true);
-        t.position = parentGrandma.GetPointerPosition();
+        //StartCoroutine(KillBomb());
         direction = parentGrandma.GetPointerPosition() - parentGrandma.transform.position;
         direction = direction.normalized;
-        StartCoroutine(KillBomb());
     }
 
+    /*
     private IEnumerator KillBomb()
     {
-         yield return new WaitForSeconds(bombLifeTime);
-         t.gameObject.SetActive(false);
-         parentGrandma.AddToCurBombs(-1);
+        yield return new WaitForSeconds(bombLifeTime);
+         
      }
+     */
 
     public int GetShooterId()
     {
@@ -79,10 +83,18 @@ public class BombManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D col)
     {
+        Debug.Log(col.name);
         if (col.gameObject.name.Equals("Grass"))
         {
             parentGrandma.AddToCurBombs(-1);
             t.gameObject.SetActive(false);
         }
+        if (col.gameObject.name.EndsWith("Wall"))
+        {
+            parentGrandma.AddToCurBombs(-1);
+            t.gameObject.SetActive(false);
+        }
     }
+    
+    
 }

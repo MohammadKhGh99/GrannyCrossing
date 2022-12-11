@@ -35,7 +35,7 @@ public class Grandmother : MonoBehaviour
     private const float RecoveryTime = 2;
 
     private BombManager[] bombs;
-    private const int MaxBombs = 5;
+    private const int MaxBombs = 15;
     private Vector3 startPosition;
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
@@ -274,7 +274,7 @@ public class Grandmother : MonoBehaviour
         while (bombs[i].gameObject.activeInHierarchy)
             i = Random.Range(0, MaxBombs);
 
-        //bombs[i].transform.position = pointer.position;
+        bombs[i].transform.position = pointer.position;
         bombs[i].gameObject.SetActive(true);
         bombs[i].Fire();
         curBombs++;
