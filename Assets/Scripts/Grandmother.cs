@@ -542,7 +542,11 @@ public class Grandmother : MonoBehaviour
     // return the id winner, 0 if game not over yet
     public int WhoWon()
     {
-        return won ? winner.Equals("LeftGrandma") ? 1 : 2 : 0;
+        if (!won)
+        {
+            return 0;
+        }
+        return winner.Equals("LeftGrandma") ? 1 : 2;
     }
     
 }
