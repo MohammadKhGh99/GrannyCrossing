@@ -946,7 +946,7 @@ RectTransform:
   m_Children:
   - {fileID: 1938973360}
   m_Father: {fileID: 1309896126}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1340,7 +1340,7 @@ RectTransform:
   m_Children:
   - {fileID: 999804142}
   m_Father: {fileID: 1309896126}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4834,7 +4834,7 @@ RectTransform:
   m_Children:
   - {fileID: 167176196}
   m_Father: {fileID: 1309896126}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5539,7 +5539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 2
   movementTime: 0.3
-  movementDistance: 1.2
+  movementDistance: 2.5
   fireCollDownTime: 1
   loadingBombsPercentage: 0
   bombParent: {fileID: 1472048945}
@@ -5734,9 +5734,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 202546066}
   - {fileID: 1115159715}
   - {fileID: 332911486}
-  - {fileID: 202546066}
   - {fileID: 2007771451}
   - {fileID: 469189848}
   - {fileID: 382500128}

@@ -287,9 +287,6 @@ public class Grandmother : MonoBehaviour
         bombs[i].transform.position = GetPointerPosition();
         bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
         StartCoroutine(DelayForAnimator(i));
-        // animator.SetBool("isShooting", true);
-        // bombs[i].gameObject.SetActive(true);
-        // animator.SetBool("isShooting", false);
         curBombs++;
         fireCoolDown = fireCollDownTime;
     }
@@ -490,14 +487,16 @@ public class Grandmother : MonoBehaviour
         string objectName = col.gameObject.name;
         if (objectName.EndsWith("flag HD"))
         {
+            print("flag");
             if (objectName.StartsWith("purple") && id == 1)
             {
                 won = true;
-                winner = 1;
+                winner = id;
             }else if (objectName.StartsWith("yellow") && id == 2)
             {
+                print("yellow");
                 won = true;
-                winner = 2;
+                winner = id;
             }
         }
     }

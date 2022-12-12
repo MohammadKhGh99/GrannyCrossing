@@ -105,7 +105,7 @@ MonoBehaviour:
   x: 0
   y: 0
   upOrDown: 
-  withoutCars: 0
+  withoutCars: 1
 --- !u!50 &4047955960754529218
 Rigidbody2D:
   serializedVersion: 4

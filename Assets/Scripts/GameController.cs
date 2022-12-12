@@ -89,8 +89,13 @@ public class GameController : MonoBehaviour
         fpsTime = 1;
         
         startGameCanvas = transform.GetChild(0).gameObject;
+        imageStartGame = startGameCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
+        
         player1WonCanvas = transform.GetChild(1).gameObject;
+        imagePlayer1Won = player1WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
+        
         player2WonCanvas = transform.GetChild(2).gameObject;
+        imagePlayer2Won = player2WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
         GameObject players = transform.GetChild(4).gameObject;
         grandmothers = new []{players.transform.GetChild(0).GetComponent<Grandmother>(), players.transform.GetChild(1).GetComponent<Grandmother>()};
     }
@@ -116,7 +121,9 @@ public class GameController : MonoBehaviour
             //player2WonCanvas.SetActive(false);
             foreach (var granny in grandmothers)
                 granny.StartGame();
+
             StartCoroutine(FadeIn(imageStartGame));
+
             isGameRunning = false;
             isGameOver = false;
             return;
@@ -125,20 +132,21 @@ public class GameController : MonoBehaviour
         {
             //startGameCanvas.SetActive(false);
             StartCoroutine(FadeOut(imageStartGame));
-            for (int i = 0; i < grandmothers.Length; i++)
-            {
-                grandmothers[i].StartGame();
-            }
+            foreach (var granny in grandmothers)
+                granny.StartGame();
 
             isGameRunning = true;
         }
+        print(grandmothers[1]);
         if (grandmothers[0].WhoWon() == 1)
         {
+            print("Win");
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer1Won));
         }
         if (grandmothers[1].WhoWon() == 2)
         {
+            print("Win");
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer2Won));
         }
