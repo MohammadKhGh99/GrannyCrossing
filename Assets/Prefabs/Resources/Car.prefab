@@ -99,13 +99,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7daf310b34e993c488971177d471854d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlSpeed: 1
-  speed: 0
+  controlSpeed: 0
+  speed: 10
   controlPosition: 0
   x: 0
   y: 0
   upOrDown: 
-  withoutCars: 1
+  withoutCars: 0
 --- !u!50 &4047955960754529218
 Rigidbody2D:
   serializedVersion: 4
