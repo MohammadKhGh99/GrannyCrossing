@@ -5291,8 +5291,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 1
-  movementTime: 0.5
-  movementDistance: 0.8
+  movementTime: 0.3
+  movementDistance: 1.2
   fireCollDownTime: 1
   loadingBombsPercentage: 0
   bombParent: {fileID: 185178836}
@@ -5538,8 +5538,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 2
-  movementTime: 0.5
-  movementDistance: 0.8
+  movementTime: 0.3
+  movementDistance: 1.2
   fireCollDownTime: 1
   loadingBombsPercentage: 0
   bombParent: {fileID: 1472048945}

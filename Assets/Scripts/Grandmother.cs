@@ -155,7 +155,7 @@ public class Grandmother : MonoBehaviour
 
             }
 
-            StartCoroutine(Move());
+            //StartCoroutine(Move());
             PointerMove();
         }
         else
@@ -390,7 +390,7 @@ public class Grandmother : MonoBehaviour
         t.position += moveDirection * movementDistance;
         // Debug.Log("move");
         moveDirection = Vector3.zero;
-        // StartCoroutine(Move());
+        StartCoroutine(Move());
     }
 
     private IEnumerator FreezeMovement()
