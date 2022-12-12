@@ -520,6 +520,7 @@ public class Grandmother : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log(won);
         t.position = startPosition;
         if (isTurnRight && id == 2 || !isTurnRight && id == 1)
         {
@@ -542,6 +543,8 @@ public class Grandmother : MonoBehaviour
     // return the id winner, 0 if game not over yet
     public int WhoWon()
     {
+        Debug.Log(won);
+        Debug.Log(winner);
         if (!won)
         {
             return 0;

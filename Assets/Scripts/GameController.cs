@@ -130,6 +130,18 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            player1WonCanvas.SetActive(false);
+            player2WonCanvas.SetActive(false);
+            for (int i = 0; i < grandmothers.Length; i++)
+            {
+                grandmothers[i].StartGame();
+            }
+            startGameCanvas.SetActive(true);
+            isGameRunning = false;
+            return;
+        }
         if (Input.anyKeyDown && !isGameRunning)
         {
             startGameCanvas.SetActive(false);
@@ -140,7 +152,6 @@ public class GameController : MonoBehaviour
 
             isGameRunning = true;
         }
-
         if (grandmothers[0].WhoWon() == 1)
         { 
             player1WonCanvas.SetActive(true);
@@ -148,15 +159,6 @@ public class GameController : MonoBehaviour
         if (grandmothers[0].WhoWon() == 2)
         { 
             player2WonCanvas.SetActive(true);
-        }
-        
-
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            player1WonCanvas.SetActive(false);
-            player2WonCanvas.SetActive(false);
-            startGameCanvas.SetActive(true);
-            isGameRunning = false;
         }
     }
 }
