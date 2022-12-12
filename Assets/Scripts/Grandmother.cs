@@ -133,7 +133,7 @@ public class Grandmother : MonoBehaviour
                 else
                     SetMoveDirectionLongPress();
             else
-            if (!isLongPress)
+                if (!isLongPress)
                     MoveMixDirections();
                 else
                     MoveMixDirectionsLongPress();
