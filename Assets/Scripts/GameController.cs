@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour
     private GameObject player2WonCanvas;
     private Grandmother[] grandmothers;
     private bool isGameRunning;
+    private bool isGameOver;
 
     static void LoadCarsSprites()
     {
@@ -43,6 +44,7 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        isGameOver = false;
         isGameRunning = false;
         if (!_hasLoaded)
             LoadCarsSprites();
@@ -130,7 +132,7 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) && isGameOver)
         {
             player1WonCanvas.SetActive(false);
             player2WonCanvas.SetActive(false);
@@ -140,6 +142,7 @@ public class GameController : MonoBehaviour
             }
             startGameCanvas.SetActive(true);
             isGameRunning = false;
+            isGameOver = false;
             return;
         }
         if (Input.anyKeyDown && !isGameRunning)
@@ -153,11 +156,13 @@ public class GameController : MonoBehaviour
             isGameRunning = true;
         }
         if (grandmothers[0].WhoWon() == 1)
-        { 
+        {
+            isGameOver = true;
             player1WonCanvas.SetActive(true);
         }
         if (grandmothers[0].WhoWon() == 2)
-        { 
+        {
+            isGameOver = true;
             player2WonCanvas.SetActive(true);
         }
     }
