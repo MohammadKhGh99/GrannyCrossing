@@ -100,13 +100,13 @@ public class GameController : MonoBehaviour
             if (transform.GetChild(i).name.Equals("Player1Won"))
             {
                 player1WonCanvas = transform.GetChild(i).gameObject;
-                imagePlayer1Won = startGameCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
+                imagePlayer1Won = player1WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
 
             }
             if (transform.GetChild(i).name.Equals("Player2Won"))
             {
                 player2WonCanvas = transform.GetChild(i).gameObject;
-                imagePlayer2Won = startGameCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
+                imagePlayer2Won = player2WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
 
             }
 
