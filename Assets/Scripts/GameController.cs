@@ -132,7 +132,7 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space) && isGameOver)
+        if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
         {
             player1WonCanvas.SetActive(false);
             player2WonCanvas.SetActive(false);
