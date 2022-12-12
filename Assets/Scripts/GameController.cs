@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private AudioSource winningSound;
     [SerializeField] private GameObject carsParent;
     [SerializeField] private float fieldLimit = 30;
     [SerializeField] private bool controlCarsPositions;
@@ -140,11 +141,12 @@ public class GameController : MonoBehaviour
         
         if (grandmothers[0].WhoWon() == 1)
         {
+            winningSound.Play();
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer1Won));
-        }
-        if (grandmothers[1].WhoWon() == 2)
-        {
+        } else if (grandmothers[1].WhoWon() == 2)
+        {            
+            winningSound.Play();
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer2Won));
         }

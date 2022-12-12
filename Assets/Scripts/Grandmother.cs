@@ -18,6 +18,10 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private float fireCollDownTime = 0.8f;
     [SerializeField] private float loadingBombsPercentage;
     [SerializeField] private GameObject bombParent;
+    [SerializeField] private AudioSource throwSound;
+    [SerializeField] private AudioSource dizzySound;
+    [SerializeField] private AudioSource hitByCarSound;
+    [SerializeField] private AudioSource confusedSound;
     
     // Types of the bombs
     private const int NumBombsEffects = 4;
@@ -266,7 +270,7 @@ public class Grandmother : MonoBehaviour
         return pointer.position;
     }
 
-    private IEnumerator DelayForAnimator(int i)
+    private IEnumerator DelayForShootingAnimator(int i)
     {
         animator.SetBool("isShooting", true);
         //print("Before Shooting: " + animator.GetBool("isShooting"));
@@ -280,15 +284,17 @@ public class Grandmother : MonoBehaviour
     
     private void Fire()
     {
+        throwSound.Play();
         int i = Random.Range(0, MaxBombs);
         while (bombs[i].gameObject.activeInHierarchy)
             i = Random.Range(0, MaxBombs);
 
         bombs[i].transform.position = GetPointerPosition();
         bombs[i].SetDirection((GetPointerPosition() - t.position).normalized);
-        StartCoroutine(DelayForAnimator(i));
+        StartCoroutine(DelayForShootingAnimator(i));
         curBombs++;
         fireCoolDown = fireCollDownTime;
+        // throwSound.Stop();
     }
 
     public GameObject GetBombParent()
@@ -387,9 +393,11 @@ public class Grandmother : MonoBehaviour
         switch (bombId)
         {
             case FreezeInPlace:
+                dizzySound.Play();
                 animator.SetBool("Freeze", true);
                 StartCoroutine(FreezeMovement());
                 animator.SetBool("Freeze", false);
+                // dizzySound.Stop();
                 break;
             case CrazyPointer:
                 animator.SetBool("FastArrow", true);
@@ -404,6 +412,7 @@ public class Grandmother : MonoBehaviour
                 break;
             case CrazyDirections:
                 // todo - add animator functions
+                confusedSound.Play();
                 animator.SetBool("Confused", true);
                 LoseControl();
                 animator.SetBool("Confused", false);
@@ -448,8 +457,10 @@ public class Grandmother : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        print(collision.gameObject.name);
         if (collision.collider.name.StartsWith("Car"))
         {
+            hitByCarSound.Play();
             animator.SetBool("Dead", true);
 
             t.position = startPosition;
