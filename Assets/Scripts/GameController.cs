@@ -115,7 +115,7 @@ public class GameController : MonoBehaviour
         if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
         {
             StartCoroutine(FadeOut(imagePlayer1Won));
-            StartCoroutine(FadeIn(imagePlayer2Won));
+            StartCoroutine(FadeOut(imagePlayer2Won));
     
             //player1WonCanvas.SetActive(false);
             //player2WonCanvas.SetActive(false);
@@ -137,7 +137,7 @@ public class GameController : MonoBehaviour
 
             isGameRunning = true;
         }
-        print(grandmothers[1]);
+        
         if (grandmothers[0].WhoWon() == 1)
         {
             print("Win");
