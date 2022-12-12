@@ -120,8 +120,13 @@ public class GameController : MonoBehaviour
     
             //player1WonCanvas.SetActive(false);
             //player2WonCanvas.SetActive(false);
+            foreach (var car in cars)
+            {
+                car.EndGame();
+            }
             foreach (var granny in grandmothers)
                 granny.StartGame();
+
 
             StartCoroutine(FadeIn(imageStartGame));
 
@@ -135,21 +140,40 @@ public class GameController : MonoBehaviour
             StartCoroutine(FadeOut(imageStartGame));
             foreach (var granny in grandmothers)
                 granny.StartGame();
+            foreach (var car in cars)
+            {
+                car.gameObject.SetActive(true);
+                car.StartGame();
+            }
 
             isGameRunning = true;
         }
         
-        if (grandmothers[0].WhoWon() == 1)
+        if (grandmothers[0].WhoWon() == 1 && !isGameOver)
         {
             // winningSound.Play();
             isGameOver = true;
+            foreach (var car in cars)
+                car.EndGame();
+
             StartCoroutine(FadeIn(imagePlayer1Won));
-        } else if (grandmothers[1].WhoWon() == 2)
-        {            
-            // winningSound.Play();
+            // StartCoroutine(DelayForWinningSound());
+        } else if (grandmothers[1].WhoWon() == 2 && !isGameOver)
+        {
             isGameOver = true;
+            foreach (var car in cars)
+                car.EndGame();
+
             StartCoroutine(FadeIn(imagePlayer2Won));
+            // StartCoroutine(DelayForWinningSound());
+            winningSound.Play();
         }
+    }
+
+    private IEnumerator DelayForWinningSound()
+    {
+        winningSound.Play();
+        yield return new WaitForSeconds(5);
     }
     
     private IEnumerator FadeOut(Image image)

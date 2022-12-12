@@ -46,6 +46,17 @@ public class Car : MonoBehaviour
         }
     }
 
+    public void EndGame()
+    {
+        t.position = startPosition;
+        gameObject.SetActive(false);
+    }
+
+    public void StartGame()
+    {
+        t.position = startPosition;
+    }
+
     public void SetDirection(string other)
     {
         upOrDown = other;

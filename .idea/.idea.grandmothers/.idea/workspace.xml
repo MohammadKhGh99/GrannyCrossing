@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="b5b5226f-4692-4cec-875d-93a1529d6504" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.grandmothers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.grandmothers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Car.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Car.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Grandmother.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Grandmother.cs" afterDir="false" />
     </list>
@@ -102,7 +102,7 @@
       <workItem from="1670522212596" duration="6990000" />
       <workItem from="1670624625211" duration="50072000" />
       <workItem from="1670790237275" duration="11247000" />
-      <workItem from="1670869675701" duration="2900000" />
+      <workItem from="1670869675701" duration="7616000" />
     </task>
     <servers />
   </component>
