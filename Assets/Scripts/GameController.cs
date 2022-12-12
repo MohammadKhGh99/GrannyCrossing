@@ -160,7 +160,7 @@ public class GameController : MonoBehaviour
             isGameOver = true;
             player1WonCanvas.SetActive(true);
         }
-        if (grandmothers[0].WhoWon() == 2)
+        if (grandmothers[1].WhoWon() == 2)
         {
             isGameOver = true;
             player2WonCanvas.SetActive(true);

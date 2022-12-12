@@ -52,7 +52,7 @@ public class Grandmother : MonoBehaviour
     private bool isUnderControl = true;
     private const float LoseControlTime = 5;
     private bool won;
-    private string winner;
+    private int winner;
     
     private bool pointerIsUnderControl = true;
     private const float PointerLoseControlTime = 5;
@@ -86,7 +86,7 @@ public class Grandmother : MonoBehaviour
     void Start()
     {
         won = false;
-        winner = "No one";
+        winner = 0;
         if (!_hasLoaded)
             LoadSprites();
         
@@ -510,11 +510,11 @@ public class Grandmother : MonoBehaviour
             if (objectName.StartsWith("purple") && id == 1)
             {
                 won = true;
-                winner = "LeftGrandma";
+                winner = 1;
             }else if (objectName.StartsWith("yellow") && id == 2)
             {
                 won = true;
-                winner = "RightGrandma";
+                winner = 2;
             }
         }
     }
@@ -536,18 +536,14 @@ public class Grandmother : MonoBehaviour
         isUnderControl = true;
         pointerIsUnderControl = true;
         won = false;
-        winner = "No one";
+        winner = 0;
         freezeOrNot = false;
     }
     
     // return the id winner, 0 if game not over yet
     public int WhoWon()
     {
-        if (!won)
-        {
-            return 0;
-        }
-        return winner.Equals("LeftGrandma") ? 1 : 2;
+        return winner;
     }
     
 }
