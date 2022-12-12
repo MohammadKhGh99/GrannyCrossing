@@ -141,12 +141,12 @@ public class GameController : MonoBehaviour
         
         if (grandmothers[0].WhoWon() == 1)
         {
-            winningSound.Play();
+            // winningSound.Play();
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer1Won));
         } else if (grandmothers[1].WhoWon() == 2)
         {            
-            winningSound.Play();
+            // winningSound.Play();
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer2Won));
         }
