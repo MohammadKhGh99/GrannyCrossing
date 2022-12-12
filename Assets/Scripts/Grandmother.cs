@@ -269,13 +269,13 @@ public class Grandmother : MonoBehaviour
     private IEnumerator DelayForAnimator(int i)
     {
         animator.SetBool("isShooting", true);
-        print("Before Shooting: " + animator.GetBool("isShooting"));
+        //print("Before Shooting: " + animator.GetBool("isShooting"));
         bombs[i].gameObject.SetActive(true);
 
         yield return new WaitForSeconds(0.5f);
         
         animator.SetBool("isShooting", false);
-        print("After Shooting: " + animator.GetBool("isShooting"));
+        //print("After Shooting: " + animator.GetBool("isShooting"));
     }
     
     private void Fire()
@@ -405,7 +405,6 @@ public class Grandmother : MonoBehaviour
             case CrazyDirections:
                 // todo - add animator functions
                 animator.SetBool("Confused", true);
-                print("Losing Control");
                 LoseControl();
                 animator.SetBool("Confused", false);
                 break;
@@ -480,7 +479,6 @@ public class Grandmother : MonoBehaviour
         BombManager curBomb = col.gameObject.GetComponent<BombManager>();
         if (col.gameObject.CompareTag("Bomb") && curBomb.GetShooterId() != id)
         {
-            print("Bomb ID: " + curBomb.GetId());
             HitByBomb(curBomb.GetId());
         }
 

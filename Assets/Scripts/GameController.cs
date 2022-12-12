@@ -140,13 +140,11 @@ public class GameController : MonoBehaviour
         
         if (grandmothers[0].WhoWon() == 1)
         {
-            print("Win");
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer1Won));
         }
         if (grandmothers[1].WhoWon() == 2)
         {
-            print("Win");
             isGameOver = true;
             StartCoroutine(FadeIn(imagePlayer2Won));
         }
