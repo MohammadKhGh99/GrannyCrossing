@@ -5292,7 +5292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   movementTime: 0.3
-  movementDistance: 1.2
+  movementDistance: 2.5
   fireCollDownTime: 1
   loadingBombsPercentage: 0
   bombParent: {fileID: 185178836}
