@@ -507,12 +507,13 @@ public class Grandmother : MonoBehaviour
         string objectName = col.gameObject.name;
         if (objectName.EndsWith("flag HD"))
         {
-            won = true;
             if (objectName.StartsWith("purple") && id == 1)
             {
+                won = true;
                 winner = "LeftGrandma";
             }else if (objectName.StartsWith("yellow") && id == 2)
             {
+                won = true;
                 winner = "RightGrandma";
             }
         }
@@ -520,7 +521,6 @@ public class Grandmother : MonoBehaviour
 
     public void StartGame()
     {
-        Debug.Log(won);
         t.position = startPosition;
         if (isTurnRight && id == 2 || !isTurnRight && id == 1)
         {
@@ -543,8 +543,6 @@ public class Grandmother : MonoBehaviour
     // return the id winner, 0 if game not over yet
     public int WhoWon()
     {
-        Debug.Log(won);
-        Debug.Log(winner);
         if (!won)
         {
             return 0;
