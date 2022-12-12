@@ -81,43 +81,12 @@ public class GameController : MonoBehaviour
 
         fpsCounter = 0;
         fpsTime = 1;
-        GameObject tempGameObject = null;
-        grandmothers = new Grandmother[2];
-        for (int i = 0; i < transform.childCount; i++)
-        {
-            if (transform.GetChild(i).name.Equals("StartGame"))
-            {
-                startGameCanvas = transform.GetChild(i).gameObject;
-            }
-            
-            if (transform.GetChild(i).name.Equals("Player1Won"))
-            {
-                
-                player1WonCanvas = transform.GetChild(i).gameObject;
-            }
-            if (transform.GetChild(i).name.Equals("Player2Won"))
-            {
-                player2WonCanvas = transform.GetChild(i).gameObject;
-            }
-
-            if (transform.GetChild(i).name.Equals("Players"))
-            {
-                tempGameObject = transform.GetChild(i).gameObject;
-            }
-        }
-
-        int n = 0;
-        if (tempGameObject != null)
-        {
-            for (int i = 0; i < tempGameObject.transform.childCount; i++)
-            {
-                if (tempGameObject.transform.GetChild(i).name.EndsWith("Grandma"))
-                {
-                    grandmothers[n] = tempGameObject.transform.GetChild(i).GetComponent<Grandmother>();
-                    n++;
-                }
-            }
-        }
+        
+        startGameCanvas = transform.GetChild(0).gameObject;
+        player1WonCanvas = transform.GetChild(1).gameObject;
+        player2WonCanvas = transform.GetChild(2).gameObject;
+        GameObject players = transform.GetChild(4).gameObject;
+        grandmothers = new []{players.transform.GetChild(0).GetComponent<Grandmother>(), players.transform.GetChild(1).GetComponent<Grandmother>()};
     }
 
     public float GetFieldLimit()
@@ -136,10 +105,9 @@ public class GameController : MonoBehaviour
         {
             player1WonCanvas.SetActive(false);
             player2WonCanvas.SetActive(false);
-            for (int i = 0; i < grandmothers.Length; i++)
-            {
-                grandmothers[i].StartGame();
-            }
+            foreach (var granny in grandmothers)
+                granny.StartGame();
+            
             startGameCanvas.SetActive(true);
             isGameRunning = false;
             isGameOver = false;

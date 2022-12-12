@@ -56,29 +56,17 @@ public class Grandmother : MonoBehaviour
     
     private bool pointerIsUnderControl = true;
     private const float PointerLoseControlTime = 5;
-    // private const float PointerSpeedLoseControl = 500;
     
     private static GameObject[] _bombsTypes;
-    // private static string[] _bombsTypesNames;
     private static bool _hasLoaded;
     private const string BombsFolder = "Bombs";
 
     public Animator animator;
-    // private static readonly int Dead = Animator.StringToHash("Dead");
-    // private static readonly int Freeze = Animator.StringToHash("Freeze");
-    // private static readonly int FastArrow = Animator.StringToHash("FastArrow");
-    // private static readonly int LastIsland = Animator.StringToHash("LastIsland");
-    // private static readonly int IsShoot = Animator.StringToHash("isShooting");
-    // private static readonly int Confused = Animator.StringToHash("Confused");
-
     private bool isLongPress;
 
     static void LoadSprites()
     {
         _bombsTypes = Resources.LoadAll<GameObject>(BombsFolder);
-        // _bombsTypesNames = new string[_bombsTypes.Length];
-        // for (int i = 0; i < _bombsTypes.Length; i++)
-            // _bombsTypesNames[i] = _bombsTypes[i].name;
         _hasLoaded = true;
     }
 
@@ -140,20 +128,15 @@ public class Grandmother : MonoBehaviour
         if (!isBeaten)
         {
             if (isUnderControl)
-            {
                 if (!isLongPress)
                     SetMoveDirection();
                 else
                     SetMoveDirectionLongPress();
-            }
             else
-            {
-                if (!isLongPress)
+            if (!isLongPress)
                     MoveMixDirections();
                 else
                     MoveMixDirectionsLongPress();
-
-            }
 
             //StartCoroutine(Move());
             PointerMove();
