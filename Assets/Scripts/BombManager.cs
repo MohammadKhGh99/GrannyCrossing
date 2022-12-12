@@ -61,5 +61,11 @@ public class BombManager : MonoBehaviour
             parentGrandma.AddToCurBombs(-1);
             t.gameObject.SetActive(false);
         }
+        if ((shooterId == 1 && col.gameObject.name.Equals("RightGrandma")) ||
+            (shooterId == 2 && col.gameObject.name.Equals("LeftGrandma")))
+        {
+            parentGrandma.AddToCurBombs(-1);
+            t.gameObject.SetActive(false);
+        }
     }
 }
