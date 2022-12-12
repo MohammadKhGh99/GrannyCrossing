@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class GameController : MonoBehaviour
@@ -31,8 +33,12 @@ public class GameController : MonoBehaviour
     private GameObject player1WonCanvas;
     private GameObject player2WonCanvas;
     private Grandmother[] grandmothers;
+    private Image imageStartGame;
+    private Image imagePlayer1Won;
+    private Image imagePlayer2Won;
     private bool isGameRunning;
     private bool isGameOver;
+    
 
     static void LoadCarsSprites()
     {
@@ -103,19 +109,22 @@ public class GameController : MonoBehaviour
     {
         if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
         {
-            player1WonCanvas.SetActive(false);
-            player2WonCanvas.SetActive(false);
+            StartCoroutine(FadeOut(imagePlayer1Won));
+            StartCoroutine(FadeIn(imagePlayer2Won));
+    
+            //player1WonCanvas.SetActive(false);
+            //player2WonCanvas.SetActive(false);
             foreach (var granny in grandmothers)
                 granny.StartGame();
-            
-            startGameCanvas.SetActive(true);
+            StartCoroutine(FadeIn(imageStartGame));
             isGameRunning = false;
             isGameOver = false;
             return;
         }
         if (Input.anyKeyDown && !isGameRunning)
         {
-            startGameCanvas.SetActive(false);
+            //startGameCanvas.SetActive(false);
+            StartCoroutine(FadeOut(imageStartGame));
             for (int i = 0; i < grandmothers.Length; i++)
             {
                 grandmothers[i].StartGame();
@@ -126,12 +135,36 @@ public class GameController : MonoBehaviour
         if (grandmothers[0].WhoWon() == 1)
         {
             isGameOver = true;
-            player1WonCanvas.SetActive(true);
+            StartCoroutine(FadeIn(imagePlayer1Won));
         }
         if (grandmothers[1].WhoWon() == 2)
         {
             isGameOver = true;
-            player2WonCanvas.SetActive(true);
+            StartCoroutine(FadeIn(imagePlayer2Won));
         }
+    }
+    
+    private IEnumerator FadeOut(Image image)
+    {
+        Color c = image.color;
+        
+        for (float i = 0.25f; i >= 0; i -= Time.deltaTime) 
+        {
+            image.color = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+        image.gameObject.SetActive(false);
+    }
+    
+    private IEnumerator FadeIn(Image image)
+    {
+        image.gameObject.SetActive(true);
+        Color c = image.color;
+        for (float i = 0; i <= 0.25f; i += Time.deltaTime) 
+        {
+            image.color = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+        image.color = new Color(c.r, c.g, c.b, 1);
     }
 }
