@@ -20,7 +20,7 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private GameObject bombParent;
     
     // Types of the bombs
-    private const int NumBombsEffects = 3;
+    private const int NumBombsEffects = 4;
     private const int FreezeInPlace = 0; // Works Good
     private const int CrazyPointer = 1; // Works Good
     private const int GoBackToIsland = 2; // Works Good
