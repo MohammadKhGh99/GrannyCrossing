@@ -485,16 +485,14 @@ public class Grandmother : MonoBehaviour
         }
 
         string objectName = col.gameObject.name;
-        if (objectName.EndsWith("flag HD"))
+        if (!won && objectName.EndsWith("flag HD"))
         {
-            print("flag");
             if (objectName.StartsWith("purple") && id == 1)
             {
                 won = true;
                 winner = id;
             }else if (objectName.StartsWith("yellow") && id == 2)
             {
-                print("yellow");
                 won = true;
                 winner = id;
             }
