@@ -212,7 +212,7 @@ public class GameController : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(3);
         
         for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
         {
