@@ -446,7 +446,8 @@ public class Grandmother : MonoBehaviour
                 animator.SetBool("FastArrow", false);
                 break;
             case GoBackToStart:
-                dizzySound.Play();
+                //dizzySound.Play();
+                hitByBombSound.Play();
                 animator.SetBool("Dead", true);
                 t.position = startPosition;
                 switch (id)
