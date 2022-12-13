@@ -24,11 +24,11 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private AudioSource confusedSound;
     
     // Types of the bombs
-    private const int NumBombsEffects = 4;
-    private const int FreezeInPlace = 0; // Works Good
-    private const int CrazyPointer = 1; // Works Good
-    private const int GoBackToIsland = 2; // Works Good
-    private const int CrazyDirections = 3; // Doesn't Work
+    private const int NumBombsEffects = 1;
+    private const int GoBackToIsland = 0; // Works Good
+    private const int FreezeInPlace = 1; // Works Good
+    private const int CrazyPointer = 2; // Works Good
+    private const int CrazyDirections = 3; // Works Good
 
     private Vector3 moveDirection;
     private Transform t;
@@ -156,8 +156,8 @@ public class Grandmother : MonoBehaviour
         float temp = (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
         loadingBombsPercentage = isBeaten ? 0 : temp >= 1 ? 1 : temp;
 
-        bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.LeftAlt);
-        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt);
+        bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.G);
+        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.L);
         if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage >= 1.0f)
             Fire();
         
@@ -405,10 +405,31 @@ public class Grandmother : MonoBehaviour
                 animator.SetBool("FastArrow", false);
                 break;
             case GoBackToIsland:
-                animator.SetBool("LastIsland", true);
-                GoBack();
+                animator.SetBool("Dead", true);
+                t.position = startPosition;
+                switch (id)
+                {
+                    case 1 when !isTurnRight:
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = true;
+                        break;
+                    case 2 when isTurnRight:
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = false;
+                        break;
+                }
+                
+                InitPointerPosition();
+                pointer.gameObject.SetActive(false);
+                isBeaten = true;
                 StartCoroutine(Recovery());
-                animator.SetBool("LastIsland", false);
+                animator.SetBool("Dead", false);
+
+                
+                // animator.SetBool("LastIsland", true);
+                // GoBack();
+                // StartCoroutine(Recovery());
+                // animator.SetBool("LastIsland", false);
                 break;
             case CrazyDirections:
                 // todo - add animator functions
@@ -460,27 +481,11 @@ public class Grandmother : MonoBehaviour
         if (collision.collider.name.StartsWith("Car"))
         {
             hitByCarSound.Play();
-            animator.SetBool("Dead", true);
-
-            t.position = startPosition;
-            switch (id)
-            {
-                case 1 when !isTurnRight:
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = true;
-                    break;
-                case 2 when isTurnRight:
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = false;
-                    break;
-            }
-
-            InitPointerPosition();
-            pointer.gameObject.SetActive(false);
-            isBeaten = true;
+            // return to last island
+            GoBack();
             StartCoroutine(Recovery());
-            animator.SetBool("Dead", false);
-
+            
+            
         }
     }
 
