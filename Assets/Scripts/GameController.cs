@@ -139,8 +139,10 @@ public class GameController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape) && !isGameRunning) 
         {
-            Application.Quit(); 
+            Application.Quit();
+            #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
+            #endif
         }
         
         
