@@ -71,4 +71,9 @@ public class Car : MonoBehaviour
     {
         id = newId;
     }
+
+    public int GetId()
+    {
+        return id;
+    }
 }
