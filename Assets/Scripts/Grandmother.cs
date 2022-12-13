@@ -25,7 +25,7 @@ public class Grandmother : MonoBehaviour
     
     // Types of the bombs
     private const int NumBombsEffects = 1;
-    private const int GoBackToIsland = 0; // Works Good
+    private const int GoBackToStart = 0; // Works Good
     private const int FreezeInPlace = 1; // Works Good
     private const int CrazyPointer = 2; // Works Good
     private const int CrazyDirections = 3; // Works Good
@@ -404,7 +404,7 @@ public class Grandmother : MonoBehaviour
                 PointerLoseControl();
                 animator.SetBool("FastArrow", false);
                 break;
-            case GoBackToIsland:
+            case GoBackToStart:
                 animator.SetBool("Dead", true);
                 t.position = startPosition;
                 switch (id)
@@ -424,7 +424,6 @@ public class Grandmother : MonoBehaviour
                 isBeaten = true;
                 StartCoroutine(Recovery());
                 animator.SetBool("Dead", false);
-
                 
                 // animator.SetBool("LastIsland", true);
                 // GoBack();
@@ -432,7 +431,6 @@ public class Grandmother : MonoBehaviour
                 // animator.SetBool("LastIsland", false);
                 break;
             case CrazyDirections:
-                // todo - add animator functions
                 confusedSound.Play();
                 animator.SetBool("Confused", true);
                 LoseControl();
@@ -484,8 +482,6 @@ public class Grandmother : MonoBehaviour
             // return to last island
             GoBack();
             StartCoroutine(Recovery());
-            
-            
         }
     }
 
@@ -493,9 +489,7 @@ public class Grandmother : MonoBehaviour
     {
         BombManager curBomb = col.gameObject.GetComponent<BombManager>();
         if (col.gameObject.CompareTag("Bomb") && curBomb.GetShooterId() != id)
-        {
             HitByBomb(curBomb.GetId());
-        }
 
         string objectName = col.gameObject.name;
         if (!won && objectName.EndsWith("flag HD"))

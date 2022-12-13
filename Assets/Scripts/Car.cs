@@ -28,7 +28,7 @@ public class Car : MonoBehaviour
         if (controlPosition)
             t.position = new Vector3(x, y, 0);
         if (!withoutCars)
-            speed = !controlSpeed ? id is 0 or 9 ? Random.Range(7, 13) : Random.Range(12, 18) : speed;
+            speed = !controlSpeed ? id is 0 or 9 ? Random.Range(7, 12) : Random.Range(12, 18) : speed;
 
         startPosition = t.position;
         fieldLimit = t.parent.GetComponentInParent<GameController>().GetFieldLimit();
@@ -41,7 +41,7 @@ public class Car : MonoBehaviour
         if (t.position.y > fieldLimit || t.position.y < -fieldLimit)
         {
             t.position = startPosition;
-            speed = !controlSpeed ? id is 0 or 9 ? Random.Range(7, 13) : Random.Range(12, 18) : speed;
+            speed = !controlSpeed ? id is 0 or 9 ? Random.Range(7, 12) : Random.Range(12, 18) : speed;
             spriteRenderer.sprite = GameController.CarsTypes[Random.Range(0, GameController.NumCarsTypes)];
         }
     }
