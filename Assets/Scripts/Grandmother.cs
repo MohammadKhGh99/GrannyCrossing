@@ -41,7 +41,7 @@ public class Grandmother : MonoBehaviour
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
 
-    private const float RightIslandX = 27.7f, MiddleIslandX = -1.8f, LeftIslandX = -29.3f;
+    private const float RightIslandX = 29.8f, MiddleIslandX = -1.8f, LeftIslandX = -29.9f;
     // private const float MiddleIslandX = -1.8f;
     // private const float LeftIslandX = -29.3f;
 
@@ -341,6 +341,45 @@ public class Grandmother : MonoBehaviour
         }
     }
 
+    private void ReturnLastIsland(int carId)
+    {
+        Vector3 position = t.position;
+        switch (id)
+        {
+            case 2:
+                t.position = carId switch
+                {
+                    < 1 => new Vector3(LeftIslandX, position.y, position.z),
+                    < 5 => new Vector3(MiddleIslandX, position.y, position.z),
+                    < 9 => new Vector3(RightIslandX, position.y, position.z),
+                    _ => startPosition
+                };
+                if (isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = false;
+                }
+
+                break;
+            case 1:
+                t.position = carId switch
+                {
+                    > 8 => new Vector3(RightIslandX, position.y, position.z),
+                    > 4 => new Vector3(MiddleIslandX, position.y, position.z),
+                    > 0 => new Vector3(LeftIslandX, position.y, position.z),
+                    _ => startPosition
+                };
+
+                if (!isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = true;
+                }
+
+                break;
+        }
+    }
+
     public void AddToCurBombs(int other)
     {
         curBombs += other;
@@ -482,7 +521,8 @@ public class Grandmother : MonoBehaviour
         {
             hitByCarSound.Play();
             // return to last island
-            GoBack();
+            ReturnLastIsland(collision.gameObject.GetComponent<Car>().GetId());
+            //GoBack();
             StartCoroutine(Recovery());
             
             
