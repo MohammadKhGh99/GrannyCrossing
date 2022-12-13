@@ -452,6 +452,7 @@ public class Grandmother : MonoBehaviour
     public void StartGame()
     {
         t.position = startPosition;
+        StartCoroutine(Stay());
         if (isTurnRight && id == 2 || !isTurnRight && id == 1)
         {
             //t.Rotate(Vector3.up, 180);
@@ -470,6 +471,17 @@ public class Grandmother : MonoBehaviour
         won = false;
         winner = 0;
         freezeOrNot = false;
+    }
+
+    private IEnumerator Stay()
+    {
+        for (float i = 3.75f; i >= 0; i -= Time.deltaTime)
+        {
+            t.position = startPosition;
+            moveDirection = Vector3.zero;
+            fireCoolDown = fireCollDownTime;
+            yield return null;
+        }
     }
     
     // return the id winner, 0 if game not over yet
