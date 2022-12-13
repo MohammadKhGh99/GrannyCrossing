@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -120,6 +119,12 @@ public class GameController : MonoBehaviour
     {
         if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
+            StartCoroutine(FadeOut(crossTheRoad));
             StartCoroutine(FadeOut(imagePlayer1Won));
             StartCoroutine(FadeOut(imagePlayer2Won));
 
