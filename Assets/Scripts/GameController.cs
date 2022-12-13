@@ -13,17 +13,16 @@ public class GameController : MonoBehaviour
     [SerializeField] private bool controlCarsPositions;
     [SerializeField] private bool longPress;
 
-    [SerializeField] private float[] carsPositions = { -36.8f, -25.5f, -20.4f, -15.2f, -10.1f, 10.1f, 15.2f, 20.3f, 25.6f, 37f };
+    [SerializeField] private float[] carsPositions =
+        { -36.8f, -25.5f, -20.4f, -15.2f, -10.1f, 10.1f, 15.2f, 20.3f, 25.6f, 37f };
 
-    [SerializeField] private string[] carsDirections = { "up", "down", "up", "down", "up", "down", "up", "down", "up", "down" };
+    [SerializeField] private string[] carsDirections =
+        { "up", "down", "down", "up", "up", "down", "down", "up", "up", "down" };
 
     private const int MaxCars = 10;
 
     private readonly Car[] cars = new Car[MaxCars];
     private float[] carsPos = { -36.8f, -25.5f, -20.4f, -15.2f, -10.1f, 10.1f, 15.2f, 20.3f, 25.6f, 37f };
-    
-    private int fpsCounter;
-    private float fpsTime;
 
     public static Sprite[] CarsTypes;
     private static bool _hasLoaded;
@@ -37,9 +36,11 @@ public class GameController : MonoBehaviour
     private Image imageStartGame;
     private Image imagePlayer1Won;
     private Image imagePlayer2Won;
+    private Image crossTheRoad;
+
     private bool isGameRunning;
     private bool isGameOver;
-    
+
 
     static void LoadCarsSprites()
     {
@@ -86,19 +87,23 @@ public class GameController : MonoBehaviour
             cars[i].SetId(i);
         }
 
-        fpsCounter = 0;
-        fpsTime = 1;
-        
         startGameCanvas = transform.GetChild(0).gameObject;
         imageStartGame = startGameCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
-        
+        crossTheRoad = startGameCanvas.GetComponent<Transform>().GetChild(1).GetComponent<Image>();
+        crossTheRoad.gameObject.SetActive(false);
+
         player1WonCanvas = transform.GetChild(1).gameObject;
         imagePlayer1Won = player1WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
-        
+
         player2WonCanvas = transform.GetChild(2).gameObject;
         imagePlayer2Won = player2WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
+
         GameObject players = transform.GetChild(4).gameObject;
-        grandmothers = new []{players.transform.GetChild(0).GetComponent<Grandmother>(), players.transform.GetChild(1).GetComponent<Grandmother>()};
+        grandmothers = new[]
+        {
+            players.transform.GetChild(0).GetComponent<Grandmother>(),
+            players.transform.GetChild(1).GetComponent<Grandmother>()
+        };
     }
 
     public float GetFieldLimit()
@@ -117,16 +122,11 @@ public class GameController : MonoBehaviour
         {
             StartCoroutine(FadeOut(imagePlayer1Won));
             StartCoroutine(FadeOut(imagePlayer2Won));
-    
-            //player1WonCanvas.SetActive(false);
-            //player2WonCanvas.SetActive(false);
-            foreach (var car in cars)
-            {
-                car.EndGame();
-            }
+
+            /*foreach (var car in cars)
+                car.EndGame();*/
             foreach (var granny in grandmothers)
                 granny.StartGame();
-
 
             StartCoroutine(FadeIn(imageStartGame));
 
@@ -134,39 +134,37 @@ public class GameController : MonoBehaviour
             isGameOver = false;
             return;
         }
+
         if (Input.anyKeyDown && !isGameRunning)
         {
-            //startGameCanvas.SetActive(false);
             StartCoroutine(FadeOut(imageStartGame));
+            StartCoroutine(FadeInOut(crossTheRoad));
             foreach (var granny in grandmothers)
                 granny.StartGame();
-            foreach (var car in cars)
+            /*foreach (var car in cars)
             {
                 car.gameObject.SetActive(true);
                 car.StartGame();
-            }
+            }*/
 
             isGameRunning = true;
         }
-        
+
         if (grandmothers[0].WhoWon() == 1 && !isGameOver)
         {
-            // winningSound.Play();
-            isGameOver = true;
-            foreach (var car in cars)
-                car.EndGame();
-
-            StartCoroutine(FadeIn(imagePlayer1Won));
-            // StartCoroutine(DelayForWinningSound());
-        } else if (grandmothers[1].WhoWon() == 2 && !isGameOver)
-        {
-            isGameOver = true;
-            foreach (var car in cars)
-                car.EndGame();
-
-            StartCoroutine(FadeIn(imagePlayer2Won));
-            // StartCoroutine(DelayForWinningSound());
             winningSound.Play();
+            isGameOver = true;
+            /*foreach (var car in cars)
+                car.EndGame();*/
+            StartCoroutine(FadeIn(imagePlayer1Won));
+        }
+        else if (grandmothers[1].WhoWon() == 2 && !isGameOver)
+        {
+            winningSound.Play();
+            isGameOver = true;
+            /*foreach (var car in cars)
+                car.EndGame();*/
+            StartCoroutine(FadeIn(imagePlayer2Won));
         }
     }
 
@@ -175,28 +173,54 @@ public class GameController : MonoBehaviour
         winningSound.Play();
         yield return new WaitForSeconds(5);
     }
-    
+
     private IEnumerator FadeOut(Image image)
     {
         Color c = image.color;
-        
-        for (float i = 0.25f; i >= 0; i -= Time.deltaTime) 
+
+        for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
         {
             image.color = new Color(c.r, c.g, c.b, i * 4);
             yield return null;
         }
+
         image.gameObject.SetActive(false);
     }
-    
+
     private IEnumerator FadeIn(Image image)
     {
         image.gameObject.SetActive(true);
         Color c = image.color;
-        for (float i = 0; i <= 0.25f; i += Time.deltaTime) 
+        for (float i = 0; i <= 0.25f; i += Time.deltaTime)
         {
             image.color = new Color(c.r, c.g, c.b, i * 4);
             yield return null;
         }
+
         image.color = new Color(c.r, c.g, c.b, 1);
     }
+    
+    private IEnumerator FadeInOut(Image image)
+    {
+        yield return new WaitForSeconds(0.25f);
+
+        image.gameObject.SetActive(true);
+        Color c = image.color;
+        for (float i = 0; i <= 0.25f; i += Time.deltaTime)
+        {
+            image.color = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2);
+        
+        for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
+        {
+            image.color = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+
+        image.gameObject.SetActive(false);
+    }
+    
 }

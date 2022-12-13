@@ -24,11 +24,11 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private AudioSource confusedSound;
     
     // Types of the bombs
-    private const int NumBombsEffects = 4;
-    private const int FreezeInPlace = 0; // Works Good
-    private const int CrazyPointer = 1; // Works Good
-    private const int GoBackToIsland = 2; // Works Good
-    private const int CrazyDirections = 3; // Doesn't Work
+    private const int NumBombsEffects = 1;
+    private const int GoBackToStart = 0; // Works Good
+    private const int FreezeInPlace = 1; // Works Good
+    private const int CrazyPointer = 2; // Works Good
+    private const int CrazyDirections = 3; // Works Good
 
     private Vector3 moveDirection;
     private Transform t;
@@ -41,7 +41,7 @@ public class Grandmother : MonoBehaviour
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
 
-    private const float RightIslandX = 27.7f, MiddleIslandX = -1.8f, LeftIslandX = -29.3f;
+    private const float RightIslandX = 29.8f, MiddleIslandX = -1.8f, LeftIslandX = -29.9f;
     // private const float MiddleIslandX = -1.8f;
     // private const float LeftIslandX = -29.3f;
 
@@ -156,8 +156,8 @@ public class Grandmother : MonoBehaviour
         float temp = (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
         loadingBombsPercentage = isBeaten ? 0 : temp >= 1 ? 1 : temp;
 
-        bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.LeftAlt);
-        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.RightAlt);
+        bool blueFired = id == 1 && Input.GetKeyDown(KeyCode.G);
+        bool redFired = id == 2 && Input.GetKeyDown(KeyCode.L);
         if ((blueFired || redFired) && curBombs < MaxBombs && loadingBombsPercentage >= 1.0f)
             Fire();
         
@@ -341,6 +341,45 @@ public class Grandmother : MonoBehaviour
         }
     }
 
+    private void ReturnLastIsland(int carId)
+    {
+        Vector3 position = t.position;
+        switch (id)
+        {
+            case 2:
+                t.position = carId switch
+                {
+                    < 1 => new Vector3(LeftIslandX, position.y, position.z),
+                    < 5 => new Vector3(MiddleIslandX, position.y, position.z),
+                    < 9 => new Vector3(RightIslandX, position.y, position.z),
+                    _ => startPosition
+                };
+                if (isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = false;
+                }
+
+                break;
+            case 1:
+                t.position = carId switch
+                {
+                    > 8 => new Vector3(RightIslandX, position.y, position.z),
+                    > 4 => new Vector3(MiddleIslandX, position.y, position.z),
+                    > 0 => new Vector3(LeftIslandX, position.y, position.z),
+                    _ => startPosition
+                };
+
+                if (!isTurnRight)
+                {
+                    t.Rotate(Vector3.up, 180);
+                    isTurnRight = true;
+                }
+
+                break;
+        }
+    }
+
     public void AddToCurBombs(int other)
     {
         curBombs += other;
@@ -404,14 +443,34 @@ public class Grandmother : MonoBehaviour
                 PointerLoseControl();
                 animator.SetBool("FastArrow", false);
                 break;
-            case GoBackToIsland:
-                animator.SetBool("LastIsland", true);
-                GoBack();
+            case GoBackToStart:
+                dizzySound.Play();
+                animator.SetBool("Dead", true);
+                t.position = startPosition;
+                switch (id)
+                {
+                    case 1 when !isTurnRight:
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = true;
+                        break;
+                    case 2 when isTurnRight:
+                        t.Rotate(Vector3.up, 180);
+                        isTurnRight = false;
+                        break;
+                }
+                
+                InitPointerPosition();
+                pointer.gameObject.SetActive(false);
+                isBeaten = true;
                 StartCoroutine(Recovery());
-                animator.SetBool("LastIsland", false);
+                animator.SetBool("Dead", false);
+                
+                // animator.SetBool("LastIsland", true);
+                // GoBack();
+                // StartCoroutine(Recovery());
+                // animator.SetBool("LastIsland", false);
                 break;
             case CrazyDirections:
-                // todo - add animator functions
                 confusedSound.Play();
                 animator.SetBool("Confused", true);
                 LoseControl();
@@ -460,27 +519,13 @@ public class Grandmother : MonoBehaviour
         if (collision.collider.name.StartsWith("Car"))
         {
             hitByCarSound.Play();
-            animator.SetBool("Dead", true);
-
-            t.position = startPosition;
-            switch (id)
-            {
-                case 1 when !isTurnRight:
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = true;
-                    break;
-                case 2 when isTurnRight:
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = false;
-                    break;
-            }
-
+            // return to last island
+            ReturnLastIsland(collision.gameObject.GetComponent<Car>().GetId());
+            //GoBack();
             InitPointerPosition();
             pointer.gameObject.SetActive(false);
             isBeaten = true;
             StartCoroutine(Recovery());
-            animator.SetBool("Dead", false);
-
         }
     }
 
@@ -488,9 +533,7 @@ public class Grandmother : MonoBehaviour
     {
         BombManager curBomb = col.gameObject.GetComponent<BombManager>();
         if (col.gameObject.CompareTag("Bomb") && curBomb.GetShooterId() != id)
-        {
             HitByBomb(curBomb.GetId());
-        }
 
         string objectName = col.gameObject.name;
         if (!won && objectName.EndsWith("flag HD"))

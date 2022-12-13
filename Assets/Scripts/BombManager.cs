@@ -26,7 +26,7 @@ public class BombManager : MonoBehaviour
     void Update()
     {
         t.position += direction * (Speed * Time.deltaTime);
-        t.Rotate(Vector3.forward, 1.0f);
+        t.Rotate(Vector3.forward, 0.8f);
     }
 
     public void SetDirection(Vector3 other)
