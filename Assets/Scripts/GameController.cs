@@ -117,13 +117,10 @@ public class GameController : MonoBehaviour
 
     private void Update()
     {
-        if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
+        if ((Input.GetKey(KeyCode.Space) && isGameOver) || 
+            (Input.GetKey(KeyCode.Escape) && isGameRunning))
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Application.Quit();
-                UnityEditor.EditorApplication.isPlaying = false;
-            }
+            
             StartCoroutine(FadeOut(crossTheRoad));
             StartCoroutine(FadeOut(imagePlayer1Won));
             StartCoroutine(FadeOut(imagePlayer2Won));
@@ -140,6 +137,13 @@ public class GameController : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.Escape) && !isGameRunning) 
+        {
+            Application.Quit(); 
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
+        
+        
         if (Input.anyKeyDown && !isGameRunning)
         {
             StartCoroutine(FadeOut(imageStartGame));
