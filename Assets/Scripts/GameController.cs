@@ -123,6 +123,7 @@ public class GameController : MonoBehaviour
             {
                 Application.Quit();
             }
+            StartCoroutine(FadeOut(crossTheRoad));
             StartCoroutine(FadeOut(imagePlayer1Won));
             StartCoroutine(FadeOut(imagePlayer2Won));
 
