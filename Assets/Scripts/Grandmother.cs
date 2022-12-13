@@ -147,11 +147,6 @@ public class Grandmother : MonoBehaviour
             //StartCoroutine(Move());
             PointerMove();
         }
-        else
-        {
-            t.position = startPosition; // I don't know why but without it there is a weird bug...
-            // you can go one more step after going back when hit by a car or a bomb
-        }
 
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
