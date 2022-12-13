@@ -341,7 +341,6 @@ public class Grandmother : MonoBehaviour
 
     private void ReturnLastIsland(int carId)
     {
-        Debug.Log(carId);
         Vector3 position = t.position;
         switch (id)
         {
