@@ -36,6 +36,8 @@ public class GameController : MonoBehaviour
     private Image imageStartGame;
     private Image imagePlayer1Won;
     private Image imagePlayer2Won;
+    private Image crossTheRoad;
+
     private bool isGameRunning;
     private bool isGameOver;
 
@@ -87,6 +89,7 @@ public class GameController : MonoBehaviour
 
         startGameCanvas = transform.GetChild(0).gameObject;
         imageStartGame = startGameCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
+        crossTheRoad = startGameCanvas.GetComponent<Transform>().GetChild(1).GetComponent<Image>();
 
         player1WonCanvas = transform.GetChild(1).gameObject;
         imagePlayer1Won = player1WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
@@ -134,6 +137,7 @@ public class GameController : MonoBehaviour
         if (Input.anyKeyDown && !isGameRunning)
         {
             StartCoroutine(FadeOut(imageStartGame));
+            StartCoroutine(FadeInOut(crossTheRoad));
             foreach (var granny in grandmothers)
                 granny.StartGame();
             foreach (var car in cars)
@@ -194,4 +198,28 @@ public class GameController : MonoBehaviour
 
         image.color = new Color(c.r, c.g, c.b, 1);
     }
+    
+    private IEnumerator FadeInOut(Image image)
+    {
+        yield return new WaitForSeconds(0.25f);
+
+        image.gameObject.SetActive(true);
+        Color c = image.color;
+        for (float i = 0; i <= 0.25f; i += Time.deltaTime)
+        {
+            image.color = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2);
+        
+        for (float i = 0.25f; i >= 0; i -= Time.deltaTime)
+        {
+            image.color = new Color(c.r, c.g, c.b, i * 4);
+            yield return null;
+        }
+
+        image.gameObject.SetActive(false);
+    }
+    
 }
