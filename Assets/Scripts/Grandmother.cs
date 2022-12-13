@@ -340,6 +340,7 @@ public class Grandmother : MonoBehaviour
 
     private void ReturnLastIsland(int carId)
     {
+        Debug.Log(carId);
         Vector3 position = t.position;
         switch (id)
         {
@@ -520,7 +521,6 @@ public class Grandmother : MonoBehaviour
             // return to last island
             ReturnLastIsland(collision.gameObject.GetComponent<Car>().GetId());
             //GoBack();
-            InitPointerPosition();
             pointer.gameObject.SetActive(false);
             isBeaten = true;
             StartCoroutine(Recovery());
