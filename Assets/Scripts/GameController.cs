@@ -119,7 +119,7 @@ public class GameController : MonoBehaviour
     {
         if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
         {
-            if (Input.GetKey(KeyCode.Space))
+            if (Input.GetKey(KeyCode.Escape))
             {
                 Application.Quit();
                 UnityEditor.EditorApplication.isPlaying = false;
