@@ -15,7 +15,7 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private float[] carsPositions = { -36.8f, -25.5f, -20.4f, -15.2f, -10.1f, 10.1f, 15.2f, 20.3f, 25.6f, 37f };
 
-    [SerializeField] private string[] carsDirections = { "up", "down", "up", "down", "up", "down", "up", "down", "up", "down" };
+    [SerializeField] private string[] carsDirections = { "up", "down", "down", "up", "up", "down", "down", "up", "up", "down" };
 
     private const int MaxCars = 10;
 
