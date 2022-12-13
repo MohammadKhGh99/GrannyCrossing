@@ -119,6 +119,10 @@ public class GameController : MonoBehaviour
     {
         if ((Input.GetKey(KeyCode.Space) && isGameOver) || Input.GetKey(KeyCode.Escape))
         {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                Application.Quit();
+            }
             StartCoroutine(FadeOut(imagePlayer1Won));
             StartCoroutine(FadeOut(imagePlayer2Won));
 
