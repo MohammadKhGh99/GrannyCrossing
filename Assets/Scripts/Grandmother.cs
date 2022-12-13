@@ -362,7 +362,7 @@ public class Grandmother : MonoBehaviour
                 isBeaten = true;
                 moveDirection = Vector3.zero;
                 StartCoroutine(Recovery());
-                animator.SetBool("Dead", false);
+                //animator.SetBool("Dead", false);
                 
                 // animator.SetBool("LastIsland", true);
                 // GoBack();
