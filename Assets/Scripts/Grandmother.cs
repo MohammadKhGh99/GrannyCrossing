@@ -22,7 +22,9 @@ public class Grandmother : MonoBehaviour
     [SerializeField] private AudioSource dizzySound;
     [SerializeField] private AudioSource hitByCarSound;
     [SerializeField] private AudioSource confusedSound;
-    
+
+    [SerializeField] private AudioSource hitByBombSound;
+
     // Types of the bombs
     private const int NumBombsEffects = 1;
     private const int GoBackToStart = 0; // Works Good
