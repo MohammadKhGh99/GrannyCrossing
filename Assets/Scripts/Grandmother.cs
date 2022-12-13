@@ -444,6 +444,7 @@ public class Grandmother : MonoBehaviour
                 animator.SetBool("FastArrow", false);
                 break;
             case GoBackToStart:
+                dizzySound.Play();
                 animator.SetBool("Dead", true);
                 t.position = startPosition;
                 switch (id)
@@ -521,6 +522,9 @@ public class Grandmother : MonoBehaviour
             // return to last island
             ReturnLastIsland(collision.gameObject.GetComponent<Car>().GetId());
             //GoBack();
+            InitPointerPosition();
+            pointer.gameObject.SetActive(false);
+            isBeaten = true;
             StartCoroutine(Recovery());
         }
     }

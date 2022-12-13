@@ -90,6 +90,7 @@ public class GameController : MonoBehaviour
         startGameCanvas = transform.GetChild(0).gameObject;
         imageStartGame = startGameCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
         crossTheRoad = startGameCanvas.GetComponent<Transform>().GetChild(1).GetComponent<Image>();
+        crossTheRoad.gameObject.SetActive(false);
 
         player1WonCanvas = transform.GetChild(1).gameObject;
         imagePlayer1Won = player1WonCanvas.GetComponent<Transform>().GetChild(0).GetComponent<Image>();
@@ -122,8 +123,8 @@ public class GameController : MonoBehaviour
             StartCoroutine(FadeOut(imagePlayer1Won));
             StartCoroutine(FadeOut(imagePlayer2Won));
 
-            foreach (var car in cars)
-                car.EndGame();
+            /*foreach (var car in cars)
+                car.EndGame();*/
             foreach (var granny in grandmothers)
                 granny.StartGame();
 
@@ -140,11 +141,11 @@ public class GameController : MonoBehaviour
             StartCoroutine(FadeInOut(crossTheRoad));
             foreach (var granny in grandmothers)
                 granny.StartGame();
-            foreach (var car in cars)
+            /*foreach (var car in cars)
             {
                 car.gameObject.SetActive(true);
                 car.StartGame();
-            }
+            }*/
 
             isGameRunning = true;
         }
@@ -153,16 +154,16 @@ public class GameController : MonoBehaviour
         {
             winningSound.Play();
             isGameOver = true;
-            foreach (var car in cars)
-                car.EndGame();
+            /*foreach (var car in cars)
+                car.EndGame();*/
             StartCoroutine(FadeIn(imagePlayer1Won));
         }
         else if (grandmothers[1].WhoWon() == 2 && !isGameOver)
         {
             winningSound.Play();
             isGameOver = true;
-            foreach (var car in cars)
-                car.EndGame();
+            /*foreach (var car in cars)
+                car.EndGame();*/
             StartCoroutine(FadeIn(imagePlayer2Won));
         }
     }
