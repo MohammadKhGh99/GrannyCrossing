@@ -1,11 +1,6 @@
 using System;
 using System.Collections;
-using System.Security.Cryptography;
-using Unity.Collections;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using RandomS = System.Random;
 
@@ -128,27 +123,12 @@ public class Grandmother : MonoBehaviour
 
     void Update()
     {
-        if (freezeOrNot)
-            return;
-
         if (!isBeaten)
         {
-            if (isUnderControl)
-                if (!isLongPress)
-                    SetMoveDirection();
-                else
-                    SetMoveDirectionLongPress();
-            else
-                if (!isLongPress)
-                    MoveMixDirections();
-                else
-                    MoveMixDirectionsLongPress();
-
-            //StartCoroutine(Move());
+            SetMoveDirection();
             PointerMove();
         }
         
-
         fireCoolDown -= Time.deltaTime;
         fireCoolDown = fireCoolDown < 0 ? 0 : fireCoolDown;
         float temp = (FireCoolDownMax - fireCoolDown) / FireCoolDownMax;
@@ -161,29 +141,6 @@ public class Grandmother : MonoBehaviour
         
     }
 
-    private void LoseControl()
-    {
-        MixDirections();
-        isUnderControl = false;
-        StartCoroutine(Recontrol());
-    }
-
-    private IEnumerator Recontrol()
-    {
-        yield return new WaitForSeconds(LoseControlTime);
-        isUnderControl = true;
-    }
-
-    private void MixDirections()
-    {
-        RandomS random = new RandomS();
-        int n = 4;
-        while (n > 1)
-        {
-            int k = random.Next(n--);
-            (randomDirections[n], randomDirections[k]) = (randomDirections[k], randomDirections[n]);
-        }
-    }
 
     private void MoveUp()
     {
@@ -200,7 +157,9 @@ public class Grandmother : MonoBehaviour
         moveDirection = Vector3.right;
         if (!isTurnRight)
         {
-            t.Rotate(Vector3.up, 180);
+            //t.Rotate(Vector3.up, 180);
+            //PointerTurn();
+            spriteRenderer.flipX = !spriteRenderer.flipX;
             isTurnRight = true;
         }
     }
@@ -210,33 +169,13 @@ public class Grandmother : MonoBehaviour
         moveDirection = Vector3.left;
         if (isTurnRight)
         {
-            t.Rotate(Vector3.up, 180);
+            //t.Rotate(Vector3.up, 180);
+            //PointerTurn();
+            spriteRenderer.flipX = !spriteRenderer.flipX;
             isTurnRight = false;
         }
     }
 
-    private void MoveMixDirections()
-    {
-        if ((id == 1 && Input.GetKeyDown(KeyCode.W)) || (id == 2 && Input.GetKeyDown(KeyCode.UpArrow)))
-            randomDirections[0]();
-        if ((id == 1 && Input.GetKeyDown(KeyCode.S)) || (id == 2 && Input.GetKeyDown(KeyCode.DownArrow)))
-            randomDirections[2]();
-        if ((id == 1 && Input.GetKeyDown(KeyCode.D)) || (id == 2 && Input.GetKeyDown(KeyCode.RightArrow)))
-            randomDirections[1]();
-        if ((id == 1 && Input.GetKeyDown(KeyCode.A)) || (id == 2 && Input.GetKeyDown(KeyCode.LeftArrow)))
-            randomDirections[3]();
-    }
-    private void MoveMixDirectionsLongPress()
-    {
-        if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
-            randomDirections[0]();
-        if ((id == 1 && Input.GetKey(KeyCode.S)) || (id == 2 && Input.GetKey(KeyCode.DownArrow)))
-            randomDirections[2]();
-        if ((id == 1 && Input.GetKey(KeyCode.D)) || (id == 2 && Input.GetKey(KeyCode.RightArrow)))
-            randomDirections[1]();
-        if ((id == 1 && Input.GetKey(KeyCode.A)) || (id == 2 && Input.GetKey(KeyCode.LeftArrow)))
-            randomDirections[3]();
-    }
 
     private void InitPointerPosition()
     {
@@ -262,6 +201,7 @@ public class Grandmother : MonoBehaviour
         else
             pointer.RotateAround(t.position, Vector3.forward, PointerSpeedLoseControl * Time.deltaTime);
     }
+    
 
     public Vector3 GetPointerPosition()
     {
@@ -299,45 +239,7 @@ public class Grandmother : MonoBehaviour
     {
         return bombParent;
     }
-
-    private void GoBack()
-    {
-        Vector3 position = t.position;
-        switch (id)
-        {
-            case 2:
-                t.position = position.x switch
-                {
-                    < LeftIslandX => new Vector3(LeftIslandX, position.y, position.z),
-                    < MiddleIslandX => new Vector3(MiddleIslandX, position.y, position.z),
-                    < RightIslandX => new Vector3(RightIslandX, position.y, position.z),
-                    _ => startPosition
-                };
-                if (isTurnRight)
-                {
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = false;
-                }
-
-                break;
-            case 1:
-                t.position = position.x switch
-                {
-                    > RightIslandX => new Vector3(RightIslandX, position.y, position.z),
-                    > MiddleIslandX => new Vector3(MiddleIslandX, position.y, position.z),
-                    > LeftIslandX => new Vector3(LeftIslandX, position.y, position.z),
-                    _ => startPosition
-                };
-
-                if (!isTurnRight)
-                {
-                    t.Rotate(Vector3.up, 180);
-                    isTurnRight = true;
-                }
-
-                break;
-        }
-    }
+    
 
     private void ReturnLastIsland(int carId)
     {
@@ -354,7 +256,9 @@ public class Grandmother : MonoBehaviour
                 };
                 if (isTurnRight)
                 {
-                    t.Rotate(Vector3.up, 180);
+                    //t.Rotate(Vector3.up, 180);
+                    //PointerTurn();
+                    spriteRenderer.flipX = !spriteRenderer.flipX;
                     isTurnRight = false;
                 }
 
@@ -370,7 +274,9 @@ public class Grandmother : MonoBehaviour
 
                 if (!isTurnRight)
                 {
-                    t.Rotate(Vector3.up, 180);
+                    //t.Rotate(Vector3.up, 180);
+                    //PointerTurn();
+                    spriteRenderer.flipX = !spriteRenderer.flipX;
                     isTurnRight = true;
                 }
 
@@ -395,17 +301,6 @@ public class Grandmother : MonoBehaviour
             MoveLeft();
     }
     
-    private void SetMoveDirectionLongPress()
-    {
-        if ((id == 1 && Input.GetKey(KeyCode.W)) || (id == 2 && Input.GetKey(KeyCode.UpArrow)))
-            MoveUp();
-        if ((id == 1 && Input.GetKey(KeyCode.S)) || (id == 2 && Input.GetKey(KeyCode.DownArrow)))
-            MoveDown();
-        if ((id == 1 && Input.GetKey(KeyCode.D)) || (id == 2 && Input.GetKey(KeyCode.RightArrow)))
-            MoveRight();
-        if ((id == 1 && Input.GetKey(KeyCode.A)) || (id == 2 && Input.GetKey(KeyCode.LeftArrow)))
-            MoveLeft();
-    }
 
     private IEnumerator Move()
     {
@@ -429,7 +324,7 @@ public class Grandmother : MonoBehaviour
     {
         switch (bombId)
         {
-            case FreezeInPlace:
+            /*case FreezeInPlace:
                 dizzySound.Play();
                 animator.SetBool("Freeze", true);
                 StartCoroutine(FreezeMovement());
@@ -440,20 +335,24 @@ public class Grandmother : MonoBehaviour
                 animator.SetBool("FastArrow", true);
                 PointerLoseControl();
                 animator.SetBool("FastArrow", false);
-                break;
+                break;*/
             case GoBackToStart:
                 //dizzySound.Play();
                 hitByBombSound.Play();
-                animator.SetBool("Dead", true);
+                //animator.SetBool("Dead", true);
                 t.position = startPosition;
                 switch (id)
                 {
                     case 1 when !isTurnRight:
-                        t.Rotate(Vector3.up, 180);
+                        //t.Rotate(Vector3.up, 180);
+                        //PointerTurn();
+                        spriteRenderer.flipX = !spriteRenderer.flipX;
                         isTurnRight = true;
                         break;
                     case 2 when isTurnRight:
-                        t.Rotate(Vector3.up, 180);
+                        //t.Rotate(Vector3.up, 180);
+                        //PointerTurn();
+                        spriteRenderer.flipX = !spriteRenderer.flipX;
                         isTurnRight = false;
                         break;
                 }
@@ -461,6 +360,7 @@ public class Grandmother : MonoBehaviour
                 InitPointerPosition();
                 pointer.gameObject.SetActive(false);
                 isBeaten = true;
+                moveDirection = Vector3.zero;
                 StartCoroutine(Recovery());
                 animator.SetBool("Dead", false);
                 
@@ -469,12 +369,12 @@ public class Grandmother : MonoBehaviour
                 // StartCoroutine(Recovery());
                 // animator.SetBool("LastIsland", false);
                 break;
-            case CrazyDirections:
+            /*case CrazyDirections:
                 confusedSound.Play();
                 animator.SetBool("Confused", true);
                 LoseControl();
                 animator.SetBool("Confused", false);
-                break;
+                break;*/
         }
     }
 
@@ -523,6 +423,7 @@ public class Grandmother : MonoBehaviour
             //GoBack();
             pointer.gameObject.SetActive(false);
             isBeaten = true;
+            moveDirection = Vector3.zero;
             StartCoroutine(Recovery());
         }
     }
@@ -553,7 +454,9 @@ public class Grandmother : MonoBehaviour
         t.position = startPosition;
         if (isTurnRight && id == 2 || !isTurnRight && id == 1)
         {
-            t.Rotate(Vector3.up, 180);
+            //t.Rotate(Vector3.up, 180);
+            //PointerTurn();
+            spriteRenderer.flipX = !spriteRenderer.flipX;
             isTurnRight = !isTurnRight;
         }
         for (int i = 0; i < MaxBombs; i++)
