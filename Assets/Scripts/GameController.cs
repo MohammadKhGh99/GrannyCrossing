@@ -122,6 +122,7 @@ public class GameController : MonoBehaviour
             if (Input.GetKey(KeyCode.Space))
             {
                 Application.Quit();
+                UnityEditor.EditorApplication.isPlaying = false;
             }
             StartCoroutine(FadeOut(crossTheRoad));
             StartCoroutine(FadeOut(imagePlayer1Won));
