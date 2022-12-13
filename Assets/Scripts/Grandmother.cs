@@ -430,20 +430,20 @@ public class Grandmother : MonoBehaviour
         {
             case FreezeInPlace:
                 dizzySound.Play();
-                animator.SetBool("Freeze", true);
+                // animator.SetBool("Freeze", true);
                 StartCoroutine(FreezeMovement());
-                animator.SetBool("Freeze", false);
+                // animator.SetBool("Freeze", false);
                 // dizzySound.Stop();
                 break;
             case CrazyPointer:
-                animator.SetBool("FastArrow", true);
+                // animator.SetBool("FastArrow", true);
                 PointerLoseControl();
-                animator.SetBool("FastArrow", false);
+                // animator.SetBool("FastArrow", false);
                 break;
             case GoBackToStart:
                 //dizzySound.Play();
                 hitByBombSound.Play();
-                animator.SetBool("Dead", true);
+                // animator.SetBool("Dead", true);
                 t.position = startPosition;
                 switch (id)
                 {
@@ -461,7 +461,7 @@ public class Grandmother : MonoBehaviour
                 pointer.gameObject.SetActive(false);
                 isBeaten = true;
                 StartCoroutine(Recovery());
-                animator.SetBool("Dead", false);
+                // animator.SetBool("Dead", false);
                 
                 // animator.SetBool("LastIsland", true);
                 // GoBack();
@@ -470,9 +470,9 @@ public class Grandmother : MonoBehaviour
                 break;
             case CrazyDirections:
                 confusedSound.Play();
-                animator.SetBool("Confused", true);
+                // animator.SetBool("Confused", true);
                 LoseControl();
-                animator.SetBool("Confused", false);
+                // animator.SetBool("Confused", false);
                 break;
         }
     }
