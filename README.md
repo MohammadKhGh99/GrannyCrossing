@@ -6,7 +6,9 @@ can be used to throw against the other.
 First granny to cross, wins.
 
 Credits >>
+
 Developers: Yair Klausner, Mohammad Ghanayem
+
 Designers: Ofek Mizrahi, Noam Semo
 
 Link To itch.io: https://ofex.itch.io/granny-crossing
