@@ -1,3 +1,8 @@
+![image](https://user-images.githubusercontent.com/81380413/207822038-d631f6d2-df1a-4612-a4ce-5338ffb73ead.png)
+![image](https://user-images.githubusercontent.com/81380413/207824822-7def43e3-dfdb-406a-a981-c586349c9c74.png) ![image](https://user-images.githubusercontent.com/81380413/207824858-bf5a1746-5eca-4f9e-84d4-4b26ae5a6670.png)
+
+
+
 # Granny Crossing
 They hate each others guts, but the road needs to be crossed. 
 
@@ -14,3 +19,6 @@ Developers: Yair Klausner, Mohammad Ghanayem
 Designers: Ofek Mizrahi, Noam Semo
 
 Link To itch.io: https://ofex.itch.io/granny-crossing
+
+[![Watch the video](https://user-images.githubusercontent.com/81380413/207822859-ecd07cfc-f620-4a97-a6a6-19e73dc5ed81.png)](https://youtu.be/kl3Z_eIRr-8)
+
