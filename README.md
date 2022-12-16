@@ -14,9 +14,9 @@ First granny to cross, wins.
 
 Credits >>
 
-Developers: Yair Klausner, Mohammad Ghanayem
+Developers: Yair Klausner (@yairklo), Mohammad Ghanayem (@MohammadKhGh99)
 
-Designers: Ofek Mizrahi, Noam Semo
+Designers: Ofek Mizrahi (@ofekmiz), Noam Semo (@semonoam)
 
 Link To itch.io: https://ofex.itch.io/granny-crossing
 
