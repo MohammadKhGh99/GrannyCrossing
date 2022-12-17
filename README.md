@@ -22,4 +22,6 @@ Link To itch.io: https://ofex.itch.io/granny-crossing
 
 ![Watch the video](https://youtu.be/kl3Z_eIRr-8)
 
+Download Widnows Version: 
+
 
