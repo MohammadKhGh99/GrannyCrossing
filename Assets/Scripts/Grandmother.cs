@@ -38,9 +38,8 @@ public class Grandmother : MonoBehaviour
     private float fireCoolDown = 0.8f;
     private const float FireCoolDownMax = 0.8f;
 
-    private const float RightIslandX = 29.8f, MiddleIslandX = -1.8f, LeftIslandX = -29.9f;
-    // private const float MiddleIslandX = -1.8f;
-    // private const float LeftIslandX = -29.3f;
+    private const float RightIslandX = 29.8f, LeftIslandX = -29.9f; //  MiddleIslandX = -1.8f
+    private const float MiddleIslandLeftX = -6, MiddleIslandRightX = 5;
 
     private bool isBeaten;
     private Transform pointer;
@@ -249,7 +248,7 @@ public class Grandmother : MonoBehaviour
                 t.position = carId switch
                 {
                     < 1 => new Vector3(LeftIslandX, position.y, position.z),
-                    < 5 => new Vector3(MiddleIslandX, position.y, position.z),
+                    < 5 => new Vector3(MiddleIslandLeftX, position.y, position.z),
                     < 9 => new Vector3(RightIslandX, position.y, position.z),
                     _ => startPosition
                 };
@@ -266,7 +265,7 @@ public class Grandmother : MonoBehaviour
                 t.position = carId switch
                 {
                     > 8 => new Vector3(RightIslandX, position.y, position.z),
-                    > 4 => new Vector3(MiddleIslandX, position.y, position.z),
+                    > 4 => new Vector3(MiddleIslandRightX, position.y, position.z),
                     > 0 => new Vector3(LeftIslandX, position.y, position.z),
                     _ => startPosition
                 };
