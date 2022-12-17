@@ -20,8 +20,8 @@ Designers: Ofek Mizrahi, Noam Semo
 
 Link To itch.io: https://ofex.itch.io/granny-crossing
 
-![Watch the video](https://youtu.be/kl3Z_eIRr-8)
+Gameplay Video: [Click To Watch Gameplay Video](https://youtu.be/kl3Z_eIRr-8)
 
-Download Widnows Version: https://github.com/MohammadKhGh99/GrannyCrossing/raw/master/Granny%20Crossing%20Windows%20Build.zip
+Download Widnows Version: [Download Here](https://github.com/MohammadKhGh99/GrannyCrossing/raw/master/Granny%20Crossing%20Windows%20Build.zip)
 
 
